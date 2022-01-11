@@ -26,6 +26,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+# include <signal.h>
+# include <unistd.h>
+# include <stdlib.h>
+
 typedef	struct	s_lxr	t_lxr;
 
 struct	s_lxr
@@ -33,7 +37,9 @@ struct	s_lxr
 	int		token;
 	char	*value;
 	t_lxr	*next;
-}
+};
+
+void	ft_signal(int sig, siginfo_t *sa, void *data);
 
 int	main(int ac, char **av, char **envp);
 
