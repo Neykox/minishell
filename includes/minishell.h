@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/11 15:09:52 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/11 17:49:06 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
+# include <unistd.h>
+# include <stdlib.h>
 
 typedef	struct	s_lxr	t_lxr;
 
@@ -35,6 +38,7 @@ struct	s_lxr
 	char	*value;
 	t_lxr	*next;
 };
+
 
 int	main(int ac, char **av, char **envp);
 
@@ -61,5 +65,11 @@ int	verify_quote(char *line, int j, int k, char quote);
 
 int	ft_isalnum(int c);
 char	*ft_strdup(const char *s);
+
+/*
+ * SIGNAL
+ */
+
+void	ft_signal(int sig, siginfo_t *sa, void *data);
 
 #endif
