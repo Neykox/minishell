@@ -1,36 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_quotes.c                                     :+:      :+:    :+:   */
+/*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/10 17:49:44 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/11 14:55:12 by nel-masr         ###   ########.fr       */
+/*   Created: 2022/01/11 14:48:00 by nel-masr          #+#    #+#             */
+/*   Updated: 2022/01/11 14:52:19 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	verify_quote(char *line, int j, int k, char quote)
-{
-	int pre_quotes;
-	int post_quotes;
+#include "../../includes/minishell.h"
 
-	pre_quotes = 0;
-	post_quotes = 0;
-	while (line[++j] == quote)
+void	print_lxr(t_lxr *lxr)
+{
+	t_lxr	*tmp;
+	tmp = lxr;
+	while (1)
 	{
-		pre_quotes++;
-		if (line[j + 1] == '\0')
-		{
-			if (pre_quotes % 2 != 0)
-				return (-1);
-		}
-	}
-	while (line[++j] != quote)
-		k++;
-	while (line[++j] == quote)
-		post_quotes++;
-	if (post_quotes != pre_quotes)
-		return (-1);
-	return (k);
+		printf("Token : %d | Value : %s\n", tmp->token, tmp->value);
+		if (tmp)
+			tmp = tmp->next;
+		if (!(tmp))
+			break ;
+	}	
 }

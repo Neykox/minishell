@@ -6,42 +6,55 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 15:19:46 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/11 12:28:28 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/11 17:15:08 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-t_lxr	*check_dquote(t_lxr *tmp, char *line, int *i)
+void	build_lxr(t_lxr **lxr, t_lxr *tmp)
 {
-	
+	t_lxr	*last;
+
+	if (!(*lxr))
+	{
+		*lxr = tmp;
+		return ;
+	}
+	last = *lxr;
+	while (last->next)
+		last = last->next;
+	last->next = tmp;
 }
 
 t_lxr	*check_quote(t_lxr *tmp, char *line, int *i, char quote)
 {
-	int j;
+	int	j;
 	int k;
-	int	pre_quotes;
-	int	post_quotes;
 
-	if (quote = ''')
+	j = 0;
+	if (quote == '\'')
 		tmp->token = SQUOTE;
 	else
 		tmp->token = DQUOTE;
-	j = i - 1;
-	if ((k = verify_squote(line, j, k, quote)) == -1)
+	k = 0;
+	if ((k = verify_quote(line, j, k, quote)) == -1)
 		k = 0;
 	tmp->value = malloc(sizeof(char *) * (k + 1));
 	if (!(tmp->value))
 		return (NULL);
 	k = 0;
-	while (line[++j] != quote)
+	while (line[*i] == quote)
+		*i += 1;
+	while (line[*i] != quote && line[*i])
 	{
-		tmp->value[k] = line[j];
+		tmp->value[k] = line[*i];
 		k++;
 		*i += 1;
 	}
 	tmp->value[k] = '\0';
+	while (line[*i] == quote)
+		*i += 1;
 	return (tmp);
 }
 
@@ -51,9 +64,9 @@ t_lxr	*check_alnum(t_lxr *tmp, char *line, int *i)
 	int	k;
 
 	tmp->token = WORD;
-	j = i;
+	j = *i;
 	k = 0;
-	while (line[j] != '|' && line[j] != '<' && line[j] != '>' && line[j] != ' ')
+	while (line[j] != '|' && line[j] != '<' && line[j] != '>' && line[j] != ' ' && line[j])
 	{
 		j++;
 		k++;
@@ -61,9 +74,9 @@ t_lxr	*check_alnum(t_lxr *tmp, char *line, int *i)
 	tmp->value = malloc(sizeof(char *) * (k + 1));
 	if (!(tmp->value))
 		return (NULL);
-	j = i;
+	j = *i;
 	k = 0;
-	while (line[j] != '|' && line[j] != '<' && line[j] != '>' && line[j] != ' ')
+	while (line[j] != '|' && line[j] != '<' && line[j] != '>' && line[j] != ' ' && line[j])
 	{
 		tmp->value[k] = line[j];
 		j++;
@@ -74,51 +87,64 @@ t_lxr	*check_alnum(t_lxr *tmp, char *line, int *i)
 	return (tmp);
 }
 
+t_lxr	*tokenize(t_lxr *lexer, char *line, int *i)
+{
+	t_lxr	*tmp;
+
+	tmp = malloc(sizeof(t_lxr));
+	if (!tmp)
+		return (NULL);
+	if (ft_isalnum(line[*i]))
+		tmp = check_alnum(tmp, line, i);
+	else if (line[*i] == '|')
+	{
+		tmp->token = PIPE;
+		tmp->value = ft_strdup("|");
+		*i += 1;
+	}
+	else if (line[*i] == '<' && line[*i + 1] != '<')
+	{
+		tmp->token = REDIR_STDIN;
+		tmp->value = ft_strdup("<");
+		*i += 1;
+	}
+	else if (line[*i] == '>' && line[*i + 1] != '>')
+	{
+		tmp->token = REDIR_STDOUT;
+		tmp->value = ft_strdup(">");
+		*i += 1;
+	}
+	else if (line[*i] == '<' && line[*i + 1] == '<')
+	{
+		tmp->token = DREDIR_LEFT;
+		tmp->value = ft_strdup("<<");
+		*i += 2;
+	}
+	else if (line[*i] == '>' && line[*i + 1] == '>')
+	{
+		tmp->token = DREDIR_RIGHT;
+		tmp->value = ft_strdup(">>");
+		i += 2;
+	}
+	else if (line[*i] == '\'')
+		tmp = check_quote(tmp, line, i, '\'');
+	else if (line[*i] == '"')
+		tmp = check_quote(tmp, line, i, '"');	
+	tmp->next = NULL;
+	build_lxr(&lexer, tmp);
+	return (lexer);
+}
+
 t_lxr	*lexer(t_lxr *lexer, char *line)
 {
 	int		i;
-	t_lxr	*tmp;
 
+	i = 0;
 	while (line[i])
 	{
-		if (ft_isalnum(line[i]))
-			tmp = check_alnum(tmp, line, &i);
-		else if (line[i] == '|')
-		{
-			tmp->token = PIPE;
-			tmp->value = ft_strdup("|");
+		lexer = tokenize(lexer, line, &i);
+		while (line[i] == ' ')
 			i++;
-		}
-		else if (line[i] == '<' && line[i + 1] != '<')
-		{
-			tmp->token = REDIR_LEFT;
-			tmp->value = ft_strdup("<");
-			i++;
-		}
-		else if (line[i] == '>' && line[i + 1] != '>')
-		{
-			tmp->token = REDIR_RIGHT;
-			tmp->value = ft_strdup(">");
-			i++;
-		}
-		else if (line[i] == '<' && line[i + 1] == '<')
-		{
-			tmp->token = DREDIR_LEFT;
-			tmp->value = ft_strdup("<<");
-			i += 2;
-		}
-		else if (line[i] == '>' && line[i + 1] == '>')
-		{
-			tmp->token = DREDIR_RIGHT;
-			tmp->value = ft_strdup(">>");
-			i += 2;
-		}
-		else if (line[i] == ''')
-			tmp = check_squote(tmp, line, &i);
-		else if (line[i] == '"')
-			tmp = check_dquote(tmp, line, &i);
-		else
-			i++;
-		build_lxr(&lexer, tmp);
 	}
+	return (lexer);
 }

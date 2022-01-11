@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/11 12:19:35 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/11 15:09:52 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # define DREDIR_RIGHT	7
 
 # include <stdio.h>
+# include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -33,8 +34,32 @@ struct	s_lxr
 	int		token;
 	char	*value;
 	t_lxr	*next;
-}
+};
 
 int	main(int ac, char **av, char **envp);
+
+/*
+ * PRINT
+ */
+
+void	print_lxr(t_lxr *lxr);
+
+/*
+ * LEXER
+ */
+
+t_lxr	*lexer(t_lxr *lexer, char *line);
+t_lxr	*check_alnum(t_lxr *tmp, char *line, int *i);
+t_lxr	*check_quote(t_lxr *tmp, char *line, int *i, char quote);
+void	build_lxr(t_lxr **lxr, t_lxr *tmp);
+
+int	verify_quote(char *line, int j, int k, char quote);
+
+/*
+ * UTILS
+ */
+
+int	ft_isalnum(int c);
+char	*ft_strdup(const char *s);
 
 #endif
