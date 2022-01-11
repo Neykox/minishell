@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 15:19:46 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/11 17:15:08 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/11 18:13:26 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ t_lxr	*tokenize(t_lxr *lexer, char *line, int *i)
 	{
 		tmp->token = DREDIR_RIGHT;
 		tmp->value = ft_strdup(">>");
-		i += 2;
+		*i += 2;
 	}
 	else if (line[*i] == '\'')
 		tmp = check_quote(tmp, line, i, '\'');
