@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 15:19:46 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/11 18:13:26 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/12 14:43:29 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_lxr	*check_quote(t_lxr *tmp, char *line, int *i, char quote)
 	return (tmp);
 }
 
-t_lxr	*check_alnum(t_lxr *tmp, char *line, int *i)
+t_lxr	*check_notop(t_lxr *tmp, char *line, int *i)
 {
 	int	j;
 	int	k;
@@ -94,8 +94,8 @@ t_lxr	*tokenize(t_lxr *lexer, char *line, int *i)
 	tmp = malloc(sizeof(t_lxr));
 	if (!tmp)
 		return (NULL);
-	if (ft_isalnum(line[*i]))
-		tmp = check_alnum(tmp, line, i);
+	if (ft_notop(line[*i]))
+		tmp = check_notop(tmp, line, i);
 	else if (line[*i] == '|')
 	{
 		tmp->token = PIPE;

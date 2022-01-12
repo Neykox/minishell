@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/11 18:07:20 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/12 14:45:15 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	print_lxr(t_lxr *lxr);
  */
 
 t_lxr	*lexer(t_lxr *lexer, char *line);
-t_lxr	*check_alnum(t_lxr *tmp, char *line, int *i);
+t_lxr	*check_notop(t_lxr *tmp, char *line, int *i);
 t_lxr	*check_quote(t_lxr *tmp, char *line, int *i, char quote);
 void	build_lxr(t_lxr **lxr, t_lxr *tmp);
 
@@ -63,7 +63,7 @@ int	verify_quote(char *line, int j, int k, char quote);
  * UTILS
  */
 
-int	ft_isalnum(int c);
+int	ft_notop(int c);
 char	*ft_strdup(const char *s);
 
 /*
