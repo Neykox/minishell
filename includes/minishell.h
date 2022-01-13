@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/12 14:45:15 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/13 16:56:03 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define DQUOTE			5
 # define DREDIR_LEFT	6
 # define DREDIR_RIGHT	7
+# define END			8
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -49,15 +50,21 @@ int	main(int ac, char **av, char **envp);
 void	print_lxr(t_lxr *lxr);
 
 /*
- * LEXER
+ * LEXER / PARSER
  */
 
 t_lxr	*lexer(t_lxr *lexer, char *line);
+t_lxr	*tokenize(t_lxr *lexer, char *line, int *i);
 t_lxr	*check_notop(t_lxr *tmp, char *line, int *i);
 t_lxr	*check_quote(t_lxr *tmp, char *line, int *i, char quote);
-void	build_lxr(t_lxr **lxr, t_lxr *tmp);
+t_lxr	*append_end(t_lxr *lexer);
 
-int	verify_quote(char *line, int j, int k, char quote);
+void	print_parsing_error(t_lxr *lxr, int ret);
+int		syntax_checker(t_lxr *lxr, char *line);
+int		parser(t_lxr *lxr, char *line);
+
+void	build_lxr(t_lxr **lxr, t_lxr *tmp);
+int		verify_quote(char *line, int j, int k, char quote);
 
 /*
  * UTILS
