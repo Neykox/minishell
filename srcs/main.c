@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/11 18:07:48 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/13 18:34:21 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,17 @@ int	main(int ac, char **av, char **envp)
 		if (line)
 		{
 			lxr = lexer(lxr, line);
+			if (lxr == NULL)
+			{
+				printf("Please close all quotes\n");
+				return (1);
+			}
 			print_lxr(lxr);
+			parser(lxr, line);	
 		}
 		free(line);
 		if (line == NULL)
-			break ;				
+			break ;
 	}
 	return (0);
 }
