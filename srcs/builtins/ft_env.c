@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pompt_sig.c                                        :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aleroy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/11 14:35:17 by aleroy            #+#    #+#             */
-/*   Updated: 2022/01/11 14:35:22 by aleroy           ###   ########.fr       */
+/*   Created: 2022/01/13 15:19:48 by aleroy            #+#    #+#             */
+/*   Updated: 2022/01/13 15:19:50 by aleroy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_signal(int sig, siginfo_t *sa, void *data)
+void	ft_env(char **envp)
 {
-	(void)data;
-	(void)sa;
-	if (sig == SIGINT)
+	int	i;
+
+	i = 0;
+	while (envp[i])
 	{
-		write(0, "\n", 1);
-		rl_on_new_line ();
-		rl_redisplay ();
-		return ;
+		write(1, envp[i], ft_strlen(envp[i]));
+		write(1, "\n", 1);
+		i++;
 	}
 }

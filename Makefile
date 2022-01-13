@@ -2,7 +2,7 @@ SRCS = 	srcs/main.c \
 		srcs/utils/ft_notop.c srcs/utils/ft_strdup.c srcs/utils/print.c \
 		srcs/parsing/lexer.c srcs/parsing/utils_quotes.c \
 		srcs/signaux/prompt_sig.c \
-		srcs/builtins/ft_cd.c srcs/builtins/ft_echo.c srcs/builtins/ft_env.c srcs/builtins/ft_exit.c srcs/builtins/ft_export.c srcs/builtins/ft_pdw.c srcs/builtins/ft_unset.c
+		#srcs/builtins/ft_cd.c srcs/builtins/ft_echo.c srcs/builtins/ft_env.c srcs/builtins/ft_exit.c srcs/builtins/ft_export.c srcs/builtins/ft_pdw.c srcs/builtins/ft_unset.c
 
 C.O = ${SRCS:.c=.o}
 
