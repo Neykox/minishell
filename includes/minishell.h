@@ -6,13 +6,14 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/14 14:38:54 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/14 16:06:11 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define QUOTE_ERROR	-1
 # define WORD			0
 # define PIPE			1
 # define REDIR_STDIN	2
@@ -61,8 +62,8 @@ t_lxr	*check_quote(t_lxr *tmp, char *line, int *i, char quote);
 t_lxr	*append_end(t_lxr *lexer);
 
 void	print_parsing_error(t_lxr *lxr, int ret);
-int		syntax_checker(t_lxr *lxr, char *line);
-int		parser(t_lxr *lxr, char *line);
+int		syntax_checker(t_lxr *lxr);
+int		parser(t_lxr *lxr);
 
 void	build_lxr(t_lxr **lxr, t_lxr *tmp);
 int		verify_quote(char *line, int j, int k, char quote);
@@ -73,6 +74,7 @@ int		verify_quote(char *line, int j, int k, char quote);
 
 int	ft_notop(int c);
 char	*ft_strdup(const char *s);
+size_t	ft_strlen(char const *s);
 
 /*
  * SIGNAL
