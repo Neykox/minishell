@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 17:49:44 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/13 18:44:32 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/14 15:10:52 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,35 +27,10 @@ void	build_lxr(t_lxr **lxr, t_lxr *tmp)
 	last->next = tmp;
 }
 
-/*int	verify_quote(char *line, int j, int k, char quote)
-{
-	int pre_quotes;
-	int post_quotes;
-
-	pre_quotes = 0;
-	post_quotes = 0;
-	while (line[++j] == quote)
-	{
-		pre_quotes++;
-		if (line[j + 1] == '\0')
-		{
-			if (pre_quotes % 2 != 0)
-				return (-1);
-		}
-	}
-	while (line[++j] != quote && line[j])
-		k++;
-	while (line[++j] == quote)
-		post_quotes++;
-	if (post_quotes != pre_quotes)
-		return (-1);
-	return (k);
-}*/
-
 int	verify_quote(char *line, int j, int k, char quote)
 {
 	j++;
-	while (line[j] != quote)
+	while (line[j] != quote && line[j])
 	{
 		k++;
 		j++;
