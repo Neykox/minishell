@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 15:19:46 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/13 19:16:01 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/14 14:39:13 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ t_lxr	*check_quote(t_lxr *tmp, char *line, int *i, char quote)
 			k++;
 			*i += 1;
 		}
+		*i += 1;
 	}
 	tmp->value[k] = '\0';
 	return (tmp);
@@ -132,6 +133,13 @@ t_lxr	*tokenize(t_lxr *lexer, char *line, int *i)
 		tmp = check_quote(tmp, line, i, '\'');
 	else if (line[*i] == '"')
 		tmp = check_quote(tmp, line, i, '"');	
+	else if (line[*i] == ' ')
+	{
+		tmp->token = WSPACE;
+		tmp->value = ft_strdup(" ");
+		while (line[*i] == ' ')
+			*i += 1;
+	}
 	tmp->next = NULL;
 	if (tmp == NULL)
 		return (NULL);
@@ -149,8 +157,8 @@ t_lxr	*lexer(t_lxr *lexer, char *line)
 	while (line[i])
 	{
 		lexer = tokenize(lexer, line, &i);
-		while (line[i] == ' ')
-			i++;
+		/*while (line[i] == ' ')
+			i++;*/
 	}
 	if (lexer == NULL)
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/13 16:56:03 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/14 14:38:54 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # define DREDIR_LEFT	6
 # define DREDIR_RIGHT	7
 # define END			8
+# define WSPACE			9
 
 # include <stdio.h>
 # include <stdlib.h>
