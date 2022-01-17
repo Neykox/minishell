@@ -30,8 +30,10 @@ int	ft_isalnum(int c)
 char	*copy_till_eg(char *line)
 {
 	int	i;
+	char	*tmp;
 
 	i = 0;
+	tmp = NULL;
 	while (line[i] != '=')
 		i++;
 	tmp = malloc(sizeof(char) * (i + 1));
@@ -47,7 +49,7 @@ char	*copy_till_eg(char *line)
 	return (tmp);
 }
 
-int check_value(t_lxr *lxr, char *line)
+int check_value_export(t_lxr *lxr, char *line)
 {
 	int i;
 	char	*value;
@@ -78,32 +80,18 @@ int check_value(t_lxr *lxr, char *line)
 	return (0);
 }
 
-int	destroy_env(char **envp, int size_env, char *line)
-{
-	int	i;
-
-	i = 0;
-	while (i < size_env)
-	{
-		free(envp[i]);
-		i++;
-	}
-	free(envp);
-	free(line);
-	return (-2);
-}
-
 int	not_in_env(char **envp, char *line, int size_env)
 {
 	char	**tmp;
+	int	i;
 
-	tmp = malloc(sizeof(char*) * i);
+	tmp = malloc(sizeof(char*) * size_env);
 	if (tmp == NULL)
 	{
 		free(line);
 		return (-2);
 	}
-	tmp[i] = NULL;
+	tmp[size_env] = NULL;
 	i = 0;
 	while (envp[i])
 	{
@@ -159,13 +147,13 @@ int	ft_export(t_lxr *lxr, char **envp)
 	while (lxr->token == 0 || lxr->token == 4 || lxr->token == 5 || lxr->token == 9)//word/quote/space
 	{
 		if (lxr->token == 0 || lxr->token == 4 || lxr->token == 5)
-			error = check_value(lxr, line);
+			error = check_value_export(lxr, line);
 		if (error == -2)
 			return (error);//malloc issue but arg was correct
 		if (error == -1)
 			ret = -1;
 
-		if (lxr->token == 0 || lxr->token == 4 || lxr->token == 5 && error == 0)
+		if ((lxr->token == 0 || lxr->token == 4 || lxr->token == 5) && error == 0)
 			error = add_line(envp, line);
 		if (error == -2)
 			return (error);//malloc issue
