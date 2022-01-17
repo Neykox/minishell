@@ -1,36 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   ft_expender.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aleroy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/13 15:19:48 by aleroy            #+#    #+#             */
-/*   Updated: 2022/01/13 15:19:50 by aleroy           ###   ########.fr       */
+/*   Created: 2022/01/17 14:01:37 by aleroy            #+#    #+#             */
+/*   Updated: 2022/01/17 14:01:39 by aleroy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// void	ft_env(char **envp)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (envp[i])
-// 	{
-// 		write(1, envp[i], ft_strlen(envp[i]));
-// 		write(1, "\n", 1);
-// 		i++;
-// 	}
-// }
-
-void	ft_env(t_env *envp)
+char	*ft_expander(char **envp, char *target)//remove $ before sending target
 {
-	while (envp)
+	int	i;
+
+	i = 0;
+	while (envp[i])
 	{
-		write(1, envp->line, ft_strlen(envp->line));
-		write(1, "\n", 1);
-		envp = envp->next;
+		if (ft_strlen(target) - ft_strlen(envp[i]) == 0)
+		{
+			if (ft_strncmp(target, envp[i], ft_strlen(target)) == 0)
+				return (envp[i]);//target has been found
+		}
+		i++;
 	}
+	return (NULL);
 }

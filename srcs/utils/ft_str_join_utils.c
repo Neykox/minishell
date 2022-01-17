@@ -28,35 +28,35 @@ char	*ft_strjoin_utils(char *line, char *buf)
 	return (line);
 }
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
+// size_t	ft_strlen(const char *s)
+// {
+// 	size_t	i;
 
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
+// 	i = 0;
+// 	while (s[i])
+// 		i++;
+// 	return (i);
+// }
 
-char	*ft_strdup(const char *s1)
-{
-	char	*copie;
-	char	*str;
-	int		i;
+// char	*ft_strdup(const char *s1)
+// {
+// 	char	*copie;
+// 	char	*str;
+// 	int		i;
 
-	i = 0;
-	str = (char *) s1;
-	copie = (char *)malloc((ft_strlen(str) + 1) * sizeof(char));
-	if (copie == NULL)
-		return (NULL);
-	while (str[i])
-	{
-		copie[i] = str[i];
-		i++;
-	}
-	copie[i] = '\0';
-	return (copie);
-}
+// 	i = 0;
+// 	str = (char *) s1;
+// 	copie = (char *)malloc((ft_strlen(str) + 1) * sizeof(char));
+// 	if (copie == NULL)
+// 		return (NULL);
+// 	while (str[i])
+// 	{
+// 		copie[i] = str[i];
+// 		i++;
+// 	}
+// 	copie[i] = '\0';
+// 	return (copie);
+// }
 
 char	*ft_strjoin(char const *s1, char const *s2, int i)
 {

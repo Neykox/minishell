@@ -42,6 +42,11 @@ struct	s_lxr
 	t_lxr	*next;
 };
 
+typedef struct      s_env
+{
+    char    *line;
+    struct s_env   *next;
+}                   t_env;
 
 int	main(int ac, char **av, char **envp);
 
@@ -75,11 +80,30 @@ int		verify_quote(char *line, int j, int k, char quote);
 int	ft_notop(int c);
 char	*ft_strdup(const char *s);
 size_t	ft_strlen(char const *s);
+int ft_strncmp(const char *s1, const char *s2, size_t n);
+char    *ft_strjoin_utils(char *line, char *buf);
+char    *ft_strjoin(char const *s1, char const *s2, int i);
 
 /*
  * SIGNAL
  */
 
 void	ft_signal(int sig, siginfo_t *sa, void *data);
+
+/*
+ * BUILTINS
+ */
+
+void    ft_pwd(void);
+void    ft_env(t_env *envp);
+
+int ft_isalpha(int c);
+int ft_export(t_lxr *lxr, char **envp);
+int ft_unset(t_lxr *lxr, char **envp);
+
+void    ft_lstclear(t_env **lst);
+void    ft_lstadd_back(t_env **alst, t_env *new);
+t_env   *ft_lstnew(char *line);
+t_env *ft_copy_env(char **envp);
 
 #endif
