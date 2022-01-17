@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/14 16:06:11 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/17 17:30:52 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_lxr	*check_notop(t_lxr *tmp, char *line, int *i);
 t_lxr	*check_quote(t_lxr *tmp, char *line, int *i, char quote);
 t_lxr	*append_end(t_lxr *lexer);
 
-void	print_parsing_error(t_lxr *lxr, int ret);
+void	print_parsing_error(char *value, int ret);
 int		syntax_checker(t_lxr *lxr);
 int		parser(t_lxr *lxr);
 

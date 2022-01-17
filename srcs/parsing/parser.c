@@ -6,78 +6,117 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/14 16:47:05 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/17 18:59:58 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	print_parsing_error(t_lxr *lxr, int ret)
+void	print_parsing_error(char *value, int ret)
 {
 	if (ret == 1)
 	{
 		write(2, "minishell: syntax error near unexpected token '", 47);
-		write(2, lxr->next->value, ft_strlen(lxr->next->value));
+		write(2, value, ft_strlen(value));
 		write(2, "'", 1);
 		write(2, "\n", 1);
 	}
 	if (ret == 2)
 		write(2, "minishell: syntax error: uneven number of quotes\n", 49);
 	if (ret == 3)
-		write(2, "minishell: failed allocating proper memory for token values\n", 60);
+		write(2, "minishell: failed allocating memory for token values\n", 53);
 	if (ret == 4)
 	{
 		write(2, "minishell: syntax error near unexpected token '", 47);
-		write(2, lxr->next->next->value, ft_strlen(lxr->next->value));
+		write(2, value, ft_strlen(value));
 		write(2, "'", 1);
 		write(2, "\n", 1);
-	}	
+	}
 }
 
 int	syntax_checker(t_lxr *lxr)
 {
-	t_lxr*	parser;
+	t_lxr	*parser;
 
 	if (!lxr)
 		return (3);
 	parser = lxr;
 	if (parser->token == PIPE)
+	{
+		if (parser->next->token != WSPACE)
+			print_parsing_error(parser->next->value, 1);
+		else
+			print_parsing_error(parser->next->next->value, 1);
 		return (1);
+	}
 	while (1)
 	{
 		if (!parser)
 			return (0);
-		/*
-		 * <| for example
-		 */
-		if (parser->next && parser->next->token != WSPACE)
+		if (parser->token == QUOTE_ERROR)
+			return (2);
+		if (parser->token == WSPACE || parser->token == WORD || parser->token == END
+			|| parser->token == SQUOTE || parser->token == DQUOTE)
+			parser = parser->next;
+		else if (parser->token == REDIR_STDIN || parser->token == REDIR_STDOUT
+			|| parser->token == DREDIR_LEFT || parser->token == DREDIR_RIGHT)
 		{
-			if (parser->token == PIPE && parser->next->token != WORD)
-				return (1);
-			if (parser->token == REDIR_STDIN && parser->next->token != WORD)
-				return (1);
-			if (parser->token == REDIR_STDOUT && parser->next->token != WORD)
-				return (1);
-			if (parser->token == DREDIR_LEFT && parser->next->token != WORD)
-				return (1);
-			if (parser->token == DREDIR_RIGHT && parser->next->token != WORD)
-				return (1);
+			parser = parser->next;
+			if (parser->token == WSPACE)
+				parser = parser->next;
 			if (parser->token == QUOTE_ERROR)
 				return (2);
+			else if (parser->token != WORD && parser->token != SQUOTE && 
+				parser->token != DQUOTE)
+			{
+				print_parsing_error(parser->value, 1);
+				return (1);
+			}
+			//parser = parser->next;
 		}
-		/*
-		 * < | for example, basically we look past the WSPACE token in parser->next->next
-		 */
+		else if (parser->token == PIPE)
+		{
+			parser = parser->next;
+			while (parser->token == WSPACE)
+				parser = parser->next;
+			if (parser->token == QUOTE_ERROR)
+				return (2);
+			else if (parser->token == END)
+			{
+				print_parsing_error(parser->value, 1);
+				return (1);
+			}
+		}
+		/*else if (parser->next && parser->next->token != WSPACE)
+		{
+			if (parser->next->token != WORD && (parser->token == PIPE
+					|| parser->token == REDIR_STDIN
+					|| parser->token == REDIR_STDOUT
+					|| parser->token == DREDIR_LEFT
+					|| parser->token == DREDIR_LEFT))
+			{
+				print_parsing_error(parser->next->value, 1);
+				return (1);
+			}
+			parser = parser->next;
+			//if (parser->token == QUOTE_ERROR)
+				//return (2);
+		}
 		else if (parser->next && parser->next->next)
 		{
-			if (parser->next->next->token != WORD && (parser->token == PIPE ||
-				parser->token == REDIR_STDIN || parser->token == REDIR_STDOUT ||
-				parser->token == DREDIR_LEFT || parser->token == DREDIR_LEFT))
+			if (parser->next->next->token != WORD && (parser->token == PIPE
+					|| parser->token == REDIR_STDIN
+					|| parser->token == REDIR_STDOUT
+					|| parser->token == DREDIR_LEFT
+					|| parser->token == DREDIR_LEFT))
+			{
+				print_parsing_error(parser->next->next->value, 4);
 				return (4);
+			}
+			parser = parser->next;
 			if (parser->token == QUOTE_ERROR)
 				return (2);
-		}
-		parser = parser->next;
+		}*/
 	}
 }
 
@@ -86,7 +125,7 @@ int	parser(t_lxr *lxr)
 	int	ret;
 
 	ret = syntax_checker(lxr);
-	if (ret != 0)
-		print_parsing_error(lxr, ret);
+	if (ret == 2 || ret == 3)
+		print_parsing_error(NULL, ret);
 	return (ret);
 }

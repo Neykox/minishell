@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 17:49:44 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/14 15:22:42 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/17 14:11:11 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	build_lxr(t_lxr **lxr, t_lxr *tmp)
 {
-	t_lxr   *last;
+	t_lxr	*last;
 
 	if (!(*lxr))
 	{
@@ -25,6 +25,18 @@ void	build_lxr(t_lxr **lxr, t_lxr *tmp)
 	while (last->next)
 		last = last->next;
 	last->next = tmp;
+}
+
+t_lxr	*append_end(t_lxr *lexer)
+{
+	t_lxr	*tmp;
+
+	tmp = malloc(sizeof(t_lxr));
+	tmp->token = END;
+	tmp->value = ft_strdup("newline");
+	tmp->next = NULL;
+	build_lxr(&lexer, tmp);
+	return (lexer);
 }
 
 int	verify_quote(char *line, int j, int k, char quote)
