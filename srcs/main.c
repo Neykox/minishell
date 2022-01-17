@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/17 18:01:59 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/17 19:33:13 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,15 @@ int	main(int ac, char **av, char **envp)
 			lxr = lexer(lxr, line);
 			print_lxr(lxr);
 			parser(lxr);	
+			free(line);
 		}
-		free(line);
-		if (ft_strncmp(lxr->value, "pwd ", 4) == 0)
-			ft_pwd();
-		if (ft_strncmp(lxr->value, "env ", 4) == 0)
-			ft_env(new_env);
+		if (lxr)
+		{
+			if (ft_strncmp(lxr->value, "pwd ", 4) == 0)
+				ft_pwd();
+			if (ft_strncmp(lxr->value, "env ", 4) == 0)
+				ft_env(new_env);
+		}
 		// if (ft_strncmp(lxr->value, "export ", 7) == 0)
 		// {
 		// 	ft_export(lxr, new_env);
