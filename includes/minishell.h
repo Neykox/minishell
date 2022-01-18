@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/17 17:30:52 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/18 17:13:44 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,15 @@ typedef struct      s_env
     struct s_env   *next;
 }                   t_env;
 
+typedef	struct	s_exec
+{
+	char	***cmds;
+	char	**pipe_content;
+	char	*redirection_stdin;
+	char	*redirection_stdout;
+	int		nb_pipe;
+}					t_exec;
+
 int	main(int ac, char **av, char **envp);
 
 /*
@@ -55,6 +64,7 @@ int	main(int ac, char **av, char **envp);
  */
 
 void	print_lxr(t_lxr *lxr);
+void	print_pipes(t_exec *exec);
 
 /*
  * LEXER / PARSER
@@ -68,7 +78,7 @@ t_lxr	*append_end(t_lxr *lexer);
 
 void	print_parsing_error(char *value, int ret);
 int		syntax_checker(t_lxr *lxr);
-int		parser(t_lxr *lxr);
+int		parser(t_lxr *lxr, t_exec *exec);
 
 void	build_lxr(t_lxr **lxr, t_lxr *tmp);
 int		verify_quote(char *line, int j, int k, char quote);
@@ -83,7 +93,8 @@ size_t	ft_strlen(char const *s);
 int ft_strncmp(const char *s1, const char *s2, size_t n);
 char    *ft_strjoin_utils(char *line, char *buf);
 char    *ft_strjoin(char const *s1, char const *s2, int i);
-
+char	*tw_strjoin(char *s1, char *s2);
+void	*ft_memmove(void *dest, const void *src, size_t n);
 /*
  * SIGNAL
  */

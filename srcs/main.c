@@ -6,11 +6,20 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/17 19:33:13 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/18 17:20:25 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+/*void	init_exec(t_exec *exec)
+{
+	exec->cmds = NULL;
+	exec->pipe_content = NULL;
+	exec->redirection_stdin = NULL;
+	exec->redirection_stdin = NULL;
+	exec->nb_pipe = 0;
+}*/
 
 int	main(int ac, char **av, char **envp)
 {
@@ -18,6 +27,7 @@ int	main(int ac, char **av, char **envp)
 	t_lxr	*lxr;
 	t_env	*new_env;
 	struct sigaction sa;
+	t_exec	*exec;
 	
 	(void)ac;
 	(void)av;
@@ -25,6 +35,12 @@ int	main(int ac, char **av, char **envp)
 	if (new_env == NULL)
 		return (-2);
 	sa.sa_sigaction = &ft_signal;
+	exec = malloc(sizeof(t_exec));
+	if (!(exec))
+	{
+		print_parsing_error(NULL, 3);
+		return (3);
+	}
 	while (1)
 	{
 		sigaction(SIGINT, &sa, NULL);
@@ -36,7 +52,8 @@ int	main(int ac, char **av, char **envp)
 		{
 			lxr = lexer(lxr, line);
 			print_lxr(lxr);
-			parser(lxr);	
+			parser(lxr, exec);	
+			print_pipes(exec);
 			free(line);
 		}
 		if (lxr)

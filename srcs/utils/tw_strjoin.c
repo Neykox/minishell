@@ -1,46 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print.c                                            :+:      :+:    :+:   */
+/*   tw_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/11 14:48:00 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/18 17:21:22 by nel-masr         ###   ########.fr       */
+/*   Created: 2022/01/18 16:31:33 by nel-masr          #+#    #+#             */
+/*   Updated: 2022/01/18 16:31:54 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	print_lxr(t_lxr *lxr)
+char	*tw_strjoin(char *s1, char *s2)
 {
-	t_lxr	*tmp;
-	tmp = lxr;
-	while (1)
-	{
-		if (tmp)
-			printf("Token : %d | Value : %s\n", tmp->token, tmp->value);
-		if (tmp)
-			tmp = tmp->next;
-		if (!(tmp))
-			break ;
-	}	
+	int		len_s1;
+	int		len_s2;
+	int		len_total;
+	char	*result;
+
+	if (!s1 && !s2)
+		return (0);
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	len_total = len_s1 + len_s2 + 1;
+	if (!(result = malloc(sizeof(char) * len_total)))
+		return (0);
+	ft_memmove(result, s1, len_s1);
+	ft_memmove(result + len_s1, s2, len_s2);
+	result[len_total - 1] = '\0';
+	free(s1);
+	return (result);
 }
 
-void	print_pipes(t_exec *exec)
-{
-	int	i;
-
-	i = 0;
-	if (!exec->pipe_content)
-		return ;
-	else
-	{
-		while (exec->pipe_content[i])
-		{
-			write(1, exec->pipe_content[i], ft_strlen(exec->pipe_content[i]));
-			write(1, "\n", 1);
-			i++;
-		}
-	}
-}
