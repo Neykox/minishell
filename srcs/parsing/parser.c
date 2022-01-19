@@ -6,13 +6,11 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/19 13:24:50 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/19 18:54:26 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-
 
 void	print_parsing_error(char *value, int ret)
 {
@@ -79,8 +77,7 @@ int	syntax_checker(t_lxr *lxr)
 		{
 			parser = parser->next;
 			if (parser->token == WSPACE)
-				
-					parser = parser->next;
+				parser = parser->next;
 			if (parser->token == QUOTE_ERROR)
 				return (2);
 			else if (parser->token == END)
@@ -92,7 +89,7 @@ int	syntax_checker(t_lxr *lxr)
 	}
 }
 
-int	count_pipes(t_lxr *lxr)
+int	count_token(t_lxr *lxr, int token)
 {
 	int		i;
 	t_lxr	*tmp;
@@ -103,9 +100,9 @@ int	count_pipes(t_lxr *lxr)
 	{
 		if (tmp->token == END)
 			return (i);
-		if (tmp->token != PIPE)
+		if (tmp->token != token)
 			tmp = tmp->next;
-		else if (tmp->token == PIPE)
+		else if (tmp->token == token)
 		{
 			i++;
 			tmp = tmp->next;
@@ -113,39 +110,119 @@ int	count_pipes(t_lxr *lxr)
 	}
 }
 
-int	parse_values(t_lxr *lxr, t_exec *exec)
+t_exec *parse_pipes(t_exec *exec, t_lxr *lxr)
 {
-	int	i;
-	t_lxr	*parser;
+	int		i;
+	t_lxr	*pipe_parser;
 	t_lxr	*tmp;
 
 	i = 0;
-	parser = lxr;
+	pipe_parser = lxr;
 	tmp = lxr;
-	exec->nb_pipe = count_pipes(lxr);
-	exec->pipe_content = malloc(sizeof(char *) * ((exec->nb_pipe + 1) + 1));
-	if (!(exec->pipe_content))
-		return (3);
 	while (1)
 	{
-		if (!parser)
+		if (!pipe_parser)
 			break ;
-		if (parser->token != PIPE && parser->token != END)
-			parser = parser->next;
-		else if (parser->token == PIPE || parser->token == END)
+		if (pipe_parser->token != PIPE && pipe_parser->token != END)
+			pipe_parser = pipe_parser->next;
+		else if (pipe_parser->token == PIPE || pipe_parser->token == END)
 		{
 			while (tmp->token != PIPE && tmp->token != END)
 			{
-				if (!exec->pipe_content)
-					exec->pipe_content[i] = ft_strdup(tmp->value);
+				if (!(exec->pipes[i].pipe_content))
+					exec->pipes[i].pipe_content = ft_strdup(tmp->value);
 				else
-					exec->pipe_content[i] = tw_strjoin(exec->pipe_content[i], tmp->value);
+					exec->pipes[i].pipe_content = tw_strjoin(exec->pipes[i].pipe_content, tmp->value);
 				tmp = tmp->next;
 			}
 			i++;
 			tmp = tmp->next;
-			parser = parser->next;
+			pipe_parser = pipe_parser->next;
 		}
+	}
+	return (exec);
+}
+
+int	count_redir(char *content, char redir)
+{
+	int	i;
+	int ret;
+
+	i = 0;
+	ret = 0;
+	while (content[i])
+	{
+		if (content[i] == redir)
+			ret++;
+		i++;
+	}
+	return (ret);
+}
+
+char	**parse_redir(int nb_redir, t_lxr *lxr, int token, int pos)
+{
+	int		i;
+	int		j;
+	char	**ret;
+	t_lxr	*tmp;
+
+	i = 0;
+	j = 0;
+	tmp = lxr;
+	ret = malloc(sizeof(char *) * (nb_redir + 1));
+	if (!(ret))
+		return (NULL);
+	while (1)
+	{
+		if (j == pos)
+			break ;
+		if (tmp->token != PIPE)
+			tmp = tmp->next;
+		else if (tmp->token == PIPE)
+		{
+			j++;
+			tmp = tmp->next;
+		}
+	}
+	while (1)
+	{
+		if (!tmp || tmp->token == PIPE)
+			break ;
+		if (tmp->token != token)
+			tmp = tmp->next;
+		else if (tmp->token == token)
+		{
+			tmp = tmp->next;
+			if (tmp->token != WSPACE)
+				ret[i] = ft_strdup(tmp->value);
+			else
+				ret[i] = ft_strdup(tmp->next->value);
+			i++;
+		}
+	}
+	ret[i] = '\0';
+	return (ret);
+}
+
+int	parse_values(t_lxr *lxr, t_exec *exec)
+{
+	int	i;
+
+	i = 0;
+	exec->nb_pipe = count_token(lxr, PIPE);
+	exec->pipes = malloc(sizeof(t_pipes) * (exec->nb_pipe + 1));
+	if (!(exec->pipes))
+		return (3);
+	exec = parse_pipes(exec, lxr);
+	while (i <= exec->nb_pipe)
+	{
+		exec->pipes[i].nb_redir_stdin = count_redir(exec->pipes[i].pipe_content, '<');
+		if (exec->pipes[i].nb_redir_stdin != 0)
+			exec->pipes[i].redir_stdin = parse_redir(exec->pipes[i].nb_redir_stdin, lxr, REDIR_STDIN, i);
+		exec->pipes[i].nb_redir_stdout = count_redir(exec->pipes[i].pipe_content, '>');
+		if (exec->pipes[i].nb_redir_stdout != 0)
+			exec->pipes[i].redir_stdout = parse_redir(exec->pipes[i].nb_redir_stdout, lxr, REDIR_STDOUT, i);
+		i++;
 	}
 	return (0);
 }
