@@ -68,13 +68,13 @@ int	main(int ac, char **av, char **envp)
 				ft_env(new_env);
 			if (ft_strncmp(lxr->value, "export ", 7) == 0)
 			{
-				ret = ft_export(lxr, new_env);
+				ret = ft_export(lxr->next, new_env);
 				if (ret == -2)
 					return (ret);
 			}
 			if (ft_strncmp(lxr->value, "unset ", 6) == 0)
 			{
-				ret = ft_unset(lxr, new_env);
+				ret = ft_unset(lxr->next, new_env);
 				if (ret == -2)
 					return (ret);
 			}
