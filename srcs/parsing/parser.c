@@ -6,11 +6,13 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/18 17:24:43 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/19 13:24:50 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+
 
 void	print_parsing_error(char *value, int ret)
 {
@@ -120,16 +122,10 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 	i = 0;
 	parser = lxr;
 	tmp = lxr;
-	//exec = malloc(sizeof(t_exec));
-	//if (!(exec))
-	//	return (3);
 	exec->nb_pipe = count_pipes(lxr);
-	if (exec->nb_pipe != 0)
-	{
-		exec->pipe_content = malloc(sizeof(char *) * ((exec->nb_pipe + 1) + 1));
-		if (!(exec->pipe_content))
-			return (3);
-	}
+	exec->pipe_content = malloc(sizeof(char *) * ((exec->nb_pipe + 1) + 1));
+	if (!(exec->pipe_content))
+		return (3);
 	while (1)
 	{
 		if (!parser)
@@ -138,7 +134,6 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 			parser = parser->next;
 		else if (parser->token == PIPE || parser->token == END)
 		{
-			//exec->nb_pipe++;
 			while (tmp->token != PIPE && tmp->token != END)
 			{
 				if (!exec->pipe_content)
