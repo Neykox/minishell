@@ -271,7 +271,6 @@ int	ft_export(t_lxr *lxr, t_env *envp)
 	{
 		if (lxr->token == 0 || lxr->token == 4 || lxr->token == 5)
 			error = check_value_export(lxr, &line);
-		printf("line = %s\n", line);
 		if (error == -2)
 			return (error);//malloc issue but arg was correct
 		if (error == -1)
