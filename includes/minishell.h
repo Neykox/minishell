@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/18 17:13:44 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/19 15:04:45 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,19 @@ typedef struct      s_env
     struct s_env   *next;
 }                   t_env;
 
-typedef	struct	s_exec
+typedef	struct	s_pipes
 {
+	int		nb_redir_stdout;
+	int		nb_redir_stdin;
+	char	**redirection_stdout;
+	char	**redirection_stdin;
 	char	***cmds;
 	char	**pipe_content;
-	char	*redirection_stdin;
-	char	*redirection_stdout;
+}				t_pipes;
+
+typedef	struct	s_exec
+{
+	t_pipes	*pipes;
 	int		nb_pipe;
 }					t_exec;
 
