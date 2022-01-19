@@ -12,6 +12,9 @@
 
 #include "../../includes/minishell.h"
 
+
+#include "../../includes/minishell.h"
+
 // int	destroy_env(char **envp, int size_env, char *line)
 // {
 // 	int	i;
@@ -94,7 +97,7 @@ t_env	*ft_lstnew(char *line)
 	if (tmp == NULL)
 		return (NULL);
 	tmp->line = ft_strdup(line);
-	if (line == NULL)
+	if (tmp->line == NULL)//changed was : if (line == NULL)
 	{
 		free(tmp);
 		return (NULL);
