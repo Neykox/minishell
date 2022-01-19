@@ -119,14 +119,26 @@ int check_value_unset(t_lxr *lxr, char **line)
 	int i;
 
 	i = 0;
-	while (lxr->value[i] && ft_isalpha(lxr->value[i]) == 1)
+	while (lxr->value[i] && ft_isalpha_underscore(lxr->value[i]) == 1)
 		i++;
-	if (i == 0 || (ft_isalpha(lxr->value[i]) == 0 && lxr->value[i] != '\0'))
+	if (i == 0 || (ft_isalpha_underscore(lxr->value[i]) == 0 && lxr->value[i] != '\0'))
 		return (-1);
 	//should be HELLO at this point
 	*line = ft_strdup(lxr->value);
 	if (*line == NULL)
 		return (-2);
+	return (0);
+}
+
+int check_size(char *env, char *line)
+{
+	int i;
+
+	i = 0;
+	while (env[i] && env[i] != '=')
+		i++;
+	if (ft_strlen(line) - i == 0)
+		return (1);
 	return (0);
 }
 
@@ -141,7 +153,7 @@ void	find_line(t_env *envp, char *line)
 	i = 0;
 	while (curr)
 	{
-		if (curr && ft_strncmp(curr->line, line, ft_strlen(line)) == 0)
+		if (curr && check_size(curr->line, line) == 1 && ft_strncmp(curr->line, line, ft_strlen(line)) == 0)
 		{
 			prev->next = curr->next;
 			free(curr->line);

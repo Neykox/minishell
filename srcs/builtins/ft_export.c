@@ -12,9 +12,9 @@
 
 #include "../../includes/minishell.h"
 
-int	ft_isalpha(int c)
+int	ft_isalpha_underscore(int c)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_')
 		return (1);
 	return (0);
 }
@@ -165,59 +165,39 @@ int	ft_isalnum(int c)
 // 	return (ret);
 // }
 
-char	*copy_till_eg(char *line)
-{
-	int	i;
-	char	*tmp;
-
-	i = 0;
-	tmp = NULL;
-	while (line[i] != '=')
-		i++;
-	tmp = malloc(sizeof(char) * (i + 1));
-	if (tmp == NULL)
-		return (NULL);
-	i = 0;
-	while (line[i] != '=')
-	{
-		tmp[i] = line[i];
-		i++;
-	}
-	tmp[i] = '\0';
-	return (tmp);
-}
-
-int check_value_export(t_lxr *lxr, char *line)
+int check_value_export(t_lxr *lxr, char **line)
 {
 	int i;
 	char	*value;
 
 	i = 0;
 	value = NULL;
-	while (lxr->value[i] && lxr->value[i] != '=' && ft_isalpha(lxr->value[i]) == 1)
+	while (lxr->value[i] && lxr->value[i] != '=' && ft_isalpha_underscore(lxr->value[i]) == 1)
 		i++;
 	if (i == 0 || lxr->value[i] != '=')
 		return (-1);
-	if (ft_isalnum(lxr->value[i + 1]) == 0 && (lxr->next->token != 4 || lxr->next->token != 5))
-		return (-1);
 	//should be HELLO= at this point
-	line = copy_till_eg(lxr->value);
+	*line = ft_strdup(lxr->value);
 	if (line == NULL)
 		return (-2);
-	if (lxr->next->token == 4 || lxr->next->token == 5)
-	{
-		i = 0;
+	if (ft_isalnum(lxr->value[i + 1])== 1)
 		lxr = lxr->next;
-	}
-	value = ft_strdup(&lxr->value[i]);
-	if (value == NULL)
+	else
 	{
-		free(line);
-		return (-2);
+		if (lxr->next->token == 4 || lxr->next->token == 5)
+		{
+			lxr = lxr->next;
+			value = ft_strdup(lxr->value);
+			if (value == NULL)
+			{
+				free(*line);
+				return (-2);
+			}
+			*line = ft_strjoin_utils(*line, value);
+			if (*line == NULL)
+				return (-2);
+		}
 	}
-	line = ft_strjoin_utils(line, value);
-	if (line == NULL)
-		return (-2);
 	return (0);
 }
 
@@ -290,7 +270,8 @@ int	ft_export(t_lxr *lxr, t_env *envp)
 	while (lxr->token == 0 || lxr->token == 4 || lxr->token == 5 || lxr->token == 9)//word/quote/space
 	{
 		if (lxr->token == 0 || lxr->token == 4 || lxr->token == 5)
-			error = check_value_export(lxr, line);
+			error = check_value_export(lxr, &line);
+		printf("line = %s\n", line);
 		if (error == -2)
 			return (error);//malloc issue but arg was correct
 		if (error == -1)

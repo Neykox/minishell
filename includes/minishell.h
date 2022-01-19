@@ -108,10 +108,10 @@ void	ft_signal(int sig, siginfo_t *sa, void *data);
 void    ft_pwd(void);
 void    ft_env(t_env *envp);
 
-int ft_isalpha(int c);
+int ft_isalpha_underscore(int c);
 int ft_isalnum(int c);
 char    *copy_till_eg(char *line);
-int check_value_export(t_lxr *lxr, char *line);
+int check_value_export(t_lxr *lxr, char **line);
 int not_in_env(t_env *envp, char *line);
 int add_line(t_env *envp, char *line);
 int ft_export(t_lxr *lxr, t_env *envp);
