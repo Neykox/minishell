@@ -241,9 +241,6 @@ int	not_in_env(t_env *envp, char *line)
 {
 	t_env *tmp;
 
-	while (envp && envp->next)
-		envp = envp->next;
-
 	tmp = ft_lstnew(line);
 	if  (tmp == NULL)
 	{
@@ -257,22 +254,29 @@ int	not_in_env(t_env *envp, char *line)
 
 int	add_line(t_env *envp, char *line)
 {
-	while (envp && envp->next)
+	t_env *tmp;
+	int	eg;
+
+	eg = 0;
+	tmp = envp;
+	while (line[eg] != '=')
+		eg++;
+	while (tmp)
 	{
-		if (ft_strncmp(envp->line, line, eg) == 0)
+		if (ft_strncmp(tmp->line, line, eg) == 0)
 		{
-			free(envp->line);
-			envp->line = ft_strdup(line);
-			if (envp->line == NULL)
+			free(tmp->line);
+			tmp->line = ft_strdup(line);
+			if (tmp->line == NULL)
 			{
-				// destroy_env(envp);
+				// destroy_env(tmp);
 				return (-2);
 			}
 			return (0);
 		}
-		envp = envp->next;
+		tmp = tmp->next;
 	}
-	return (not_in_env(envp, line, i + 1));
+	return (not_in_env(envp, line));
 }
 
 int	ft_export(t_lxr *lxr, t_env *envp)

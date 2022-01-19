@@ -28,12 +28,16 @@ int	main(int ac, char **av, char **envp)
 	t_env	*new_env;
 	struct sigaction sa;
 	t_exec	*exec;
+	int ret;
 	
 	(void)ac;
 	(void)av;
 	new_env = ft_copy_env(envp);
 	if (new_env == NULL)
+	{
+		printf("new_env failed\n");
 		return (-2);
+	}
 	sa.sa_sigaction = &ft_signal;
 	exec = malloc(sizeof(t_exec));
 	if (!(exec))
@@ -62,19 +66,19 @@ int	main(int ac, char **av, char **envp)
 				ft_pwd();
 			if (ft_strncmp(lxr->value, "env ", 4) == 0)
 				ft_env(new_env);
+			if (ft_strncmp(lxr->value, "export ", 7) == 0)
+			{
+				ret = ft_export(lxr, new_env);
+				if (ret == -2)
+					return (ret);
+			}
+			if (ft_strncmp(lxr->value, "unset ", 6) == 0)
+			{
+				ret = ft_unset(lxr, new_env);
+				if (ret == -2)
+					return (ret);
+			}
 		}
-		// if (ft_strncmp(lxr->value, "export ", 7) == 0)
-		// {
-		// 	ft_export(lxr, new_env);
-		// 	if (ret != 0)
-		// 		return (ret);
-		// }
-		// if (ft_strncmp(lxr->value, "unset ", 6) == 0)
-		// {
-		// 	ft_unset(lxr, new_env);
-		// 	if (ret != 0)
-		// 		return (ret);
-		// }
 		if (line == NULL)
 			break ;
 	}

@@ -105,13 +105,6 @@
 // 	return (ret);
 // }
 
-int	ft_isalpha(int c)
-{
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
-		return (1);
-	return (0);
-}
-
 void	ft_lstdelone(t_env *lst)
 {
 	t_env *tmp;
@@ -139,27 +132,27 @@ int check_value_unset(t_lxr *lxr, char **line)
 
 void	find_line(t_env *envp, char *line)
 {
-	t_env *tmp;
+	t_env *prev;
+	t_env *curr;
+	int i;
 
-	tmp = envp;
-	if (tmp && ft_strncmp(tmp->line, line, ft_strlen(line)) == 0)
+	prev = envp;
+	curr = envp;
+	i = 0;
+	while (curr)
 	{
-		envp->next = tmp->next;
-		free(tmp->line);
-		free(tmp);
-	}
-	else
-		tmp = tmp->next;
-	while (envp)
-	{
-		if (tmp && ft_strncmp(tmp->line, line, ft_strlen(line)) == 0)
+		if (curr && ft_strncmp(curr->line, line, ft_strlen(line)) == 0)
 		{
-			envp->next = tmp->next;
-			free(tmp->line);
-			free(tmp);
+			prev->next = curr->next;
+			free(curr->line);
+			free(curr);
+			break ;
 		}
-		else
-			envp = envp->next;
+		curr = curr->next;
+		if (i == 1)
+			prev = prev->next;
+		if (i == 0)
+			i++;
 	}
 }
 
