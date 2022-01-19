@@ -29,6 +29,7 @@ int	main(int ac, char **av, char **envp)
 	struct sigaction sa;
 	t_exec	*exec;
 	int ret;
+	char *tmp = NULL;
 	
 	(void)ac;
 	(void)av;
@@ -64,19 +65,25 @@ int	main(int ac, char **av, char **envp)
 		{
 			if (ft_strncmp(lxr->value, "pwd ", 4) == 0)
 				ft_pwd();
-			if (ft_strncmp(lxr->value, "env ", 4) == 0)
+			else if (ft_strncmp(lxr->value, "env ", 4) == 0)
 				ft_env(new_env);
-			if (ft_strncmp(lxr->value, "export ", 7) == 0)
+			else if (ft_strncmp(lxr->value, "export ", 7) == 0)
 			{
 				ret = ft_export(lxr->next, new_env);
 				if (ret == -2)
 					return (ret);
 			}
-			if (ft_strncmp(lxr->value, "unset ", 6) == 0)
+			else if (ft_strncmp(lxr->value, "unset ", 6) == 0)
 			{
 				ret = ft_unset(lxr->next, new_env);
 				if (ret == -2)
 					return (ret);
+			}
+			else if (lxr->value[0] == '$')
+			{
+				tmp = ft_get_expand(lxr, new_env);
+				printf("exp = %s\n", tmp);
+				free(tmp);
 			}
 		}
 		if (line == NULL)
