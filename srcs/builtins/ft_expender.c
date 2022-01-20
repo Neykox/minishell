@@ -6,7 +6,7 @@
 /*   By: aleroy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 14:01:37 by aleroy            #+#    #+#             */
-/*   Updated: 2022/01/17 14:01:39 by aleroy           ###   ########.fr       */
+/*   Updated: 2022/01/20 12:03:59 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ char	*check_exp(t_lxr *lxr, t_env *envp)
 	return (tmp);
 }
 
-char	ft_get_expand(t_lxr *lxr, t_env *envp)
+char	*ft_get_expand(t_lxr *lxr, t_env *envp)
 {
 	char	*ret;
 
