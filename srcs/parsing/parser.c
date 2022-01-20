@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/20 17:52:30 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/20 18:17:45 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,8 +288,14 @@ int		count_commands(t_lxr *lxr, int pos)
 			//if (tmp->token == WORD || tmp->token == SQUOTE || tmp->token == DQUOTE)
 				//tmp = tmp->next;
 		}
-		else if (tmp->token == WORD || tmp->token == SQUOTE || tmp->token == DQUOTE)
+		else if ((tmp->token == WORD || tmp->token == SQUOTE || tmp->token == DQUOTE) && tmp->value)
+		{
 			ret++;
+			while (tmp->next->token == WORD || tmp->next->token == SQUOTE || tmp->next->token == DQUOTE)
+			{
+				tmp = tmp->next;
+			}
+		}
 		tmp = tmp->next;
 	}
 	return (ret);
@@ -332,9 +338,14 @@ char	**parse_commands(int nb_cmds, t_lxr *lxr, int pos)
 			//if (tmp->token == WORD || tmp->token == SQUOTE || tmp->token == DQUOTE)
 				//tmp = tmp->next;
 		}
-		else if (tmp->token == WORD || tmp->token == SQUOTE || tmp->token == DQUOTE)
+		else if ((tmp->token == WORD || tmp->token == SQUOTE || tmp->token == DQUOTE) && tmp->value)
 		{
 			cmds[i] = ft_strdup(tmp->value);
+			while (tmp->next->token == WORD || tmp->next->token == SQUOTE || tmp->next->token == DQUOTE)
+			{
+				tmp = tmp->next;
+				cmds[i] = ft_strjoin(cmds[i], tmp->value, 0);
+			}
 			i++;
 		}
 		tmp = tmp->next;
