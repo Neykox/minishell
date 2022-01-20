@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/19 16:52:01 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/20 16:20:00 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	main(int ac, char **av, char **envp)
 	{
 		sigaction(SIGINT, &sa, NULL);
 		signal(SIGQUIT, SIG_IGN);
-		line = readline("minishell$ ");
+		line = readline("\e[1;33mminishell$ \e[0m");
 		add_history(line);
 		lxr = NULL;
 		if (line)
