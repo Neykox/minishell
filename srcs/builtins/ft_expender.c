@@ -51,6 +51,7 @@ char	*ft_copy_till_exp(char *line)
 	return (tmp);
 }
 
+
 char	*check_exp(t_lxr *lxr, t_env *envp)
 {
 	int		i;
@@ -74,6 +75,9 @@ char	*check_exp(t_lxr *lxr, t_env *envp)
 			tmp = ft_strjoin_utils(tmp, exp);
 			if (tmp == NULL)
 				return (NULL);
+			i++;
+			while (ft_isalpha_underscore(lxr->value[i]) == 1)
+				i++;
 		}
 		else
 		{
@@ -87,32 +91,43 @@ char	*check_exp(t_lxr *lxr, t_env *envp)
 			tmp = ft_strjoin_utils(tmp, exp);
 			if (tmp == NULL)
 				return (NULL);
+			while (lxr->value[i] && lxr->value[i] != '$')
+				i++;
 		}
-		i++;
 	}
 	return (tmp);
 }
 
-char	*ft_get_expand(t_lxr *lxr, t_env *envp)
+int	ft_get_expand(t_lxr *lxr, t_env *envp)
 {
-	char	*ret;
+	char	*tmp;
 
 	// while (lxr->token == 0 || lxr->token == 4 || lxr->token == 5)//modif 0 to value that isnt a keyword/num
 	// {
 		if (lxr->token == 4)
-		{
-			ret = ft_strdup(lxr->value);
-			if (ret == NULL)
-			return (NULL);
-		}
+			return (0);
 		else
-			ret = check_exp(lxr, envp);
-		//add space when changing to next : add space between arg
-		if (ret == NULL)
-			return (NULL);
-		lxr = lxr->next;
+			tmp = check_exp(lxr, envp);
+		if (tmp == NULL)
+			return (-2);
+		free(lxr->value);
+		lxr->value = ft_strdup(tmp);
+		free(tmp);
+		if (lxr->value == NULL)
+			return (-2);
+		// lxr = lxr->next;
 	// }
-	return (ret);
+	return (0);
+}
+
+int	ft_strlen_target(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && ft_isalpha_underscore(str[i]) == 1)
+		i++;
+	return (i);
 }
 
 char	*ft_expander(t_env *envp, char *target)//remove $ before sending target
@@ -125,10 +140,10 @@ char	*ft_expander(t_env *envp, char *target)//remove $ before sending target
 		i = 0;
 		while (envp->line[i] && envp->line[i] != '=')
 			i++;
-		if (ft_strlen(target) - i == 0)
+		if (ft_strlen_target(target) - i == 0)
 		{
 			i++;
-			if (ft_strncmp(target, envp->line, ft_strlen(target)) == 0)
+			if (ft_strncmp(target, envp->line, ft_strlen_target(target)) == 0)
 			{
 				return (ft_strdup(&envp->line[i]));
 				// return (envp->line);//target has been found

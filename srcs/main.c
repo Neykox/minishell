@@ -29,7 +29,6 @@ int	main(int ac, char **av, char **envp)
 	struct sigaction sa;
 	t_exec	*exec;
 	int ret;
-	char *tmp = NULL;
 	
 	(void)ac;
 	(void)av;
@@ -79,11 +78,13 @@ int	main(int ac, char **av, char **envp)
 				if (ret == -2)
 					return (ret);
 			}
-			else if (lxr->value[0] == '$')
+			while (lxr)
 			{
-				tmp = ft_get_expand(lxr, new_env);
-				printf("exp = %s\n", tmp);
-				free(tmp);
+				ret = ft_get_expand(lxr, new_env);
+				printf("exp = %s\n", lxr->value);
+				if (ret == -2)
+					return (printf("malloc error\n"));
+				lxr = lxr->next;
 			}
 		}
 		if (line == NULL)
