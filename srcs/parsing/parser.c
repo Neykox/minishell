@@ -6,25 +6,21 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/21 14:47:36 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/21 15:56:16 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int		count_token(t_lxr *lxr, int token, int pos)
+t_lxr	*move_tmp(t_lxr *tmp, int pos)
 {
-	t_lxr	*tmp;
-	int		i;
-	int		j;
+	int	j;
 
-	tmp = lxr;
-	i = 0;
 	j = 0;
 	while (1)
 	{
 		if (j == pos)
-			break ;
+			return (tmp) ;
 		if (tmp->token != PIPE)
 			tmp = tmp->next;
 		else if (tmp->token == PIPE)
@@ -33,6 +29,14 @@ int		count_token(t_lxr *lxr, int token, int pos)
 			tmp = tmp->next;
 		}
 	}
+}
+
+int		count_token(t_lxr *lxr, int token, int pos, int i)
+{
+	t_lxr	*tmp;
+
+	tmp = lxr;
+	tmp = move_tmp(tmp, pos);
 	while (1)
 	{
 		if (token == PIPE)
@@ -57,28 +61,15 @@ int		count_token(t_lxr *lxr, int token, int pos)
 char	**parse_redir(int nb_redir, t_lxr *lxr, int token, int pos)
 {
 	int		i;
-	int		j;
 	char	**ret;
 	t_lxr	*tmp;
 
 	i = 0;
-	j = 0;
 	tmp = lxr;
 	ret = malloc(sizeof(char *) * (nb_redir + 1));
 	if (!(ret))
 		return (NULL);
-	while (1)
-	{
-		if (j == pos)
-			break ;
-		if (tmp->token != PIPE)
-			tmp = tmp->next;
-		else if (tmp->token == PIPE)
-		{
-			j++;
-			tmp = tmp->next;
-		}
-	}
+	tmp = move_tmp(tmp, pos);
 	while (1)
 	{
 		if (!tmp || tmp->token == PIPE)
@@ -102,24 +93,11 @@ char	**parse_redir(int nb_redir, t_lxr *lxr, int token, int pos)
 int		count_commands(t_lxr *lxr, int pos)
 {
 	int		ret;
-	int		j;
 	t_lxr	*tmp;
 
 	tmp = lxr;
 	ret = 0;
-	j = 0;
-	while (1)
-	{
-		if (j == pos)
-			break ;
-		if (tmp->token != PIPE)
-			tmp = tmp->next;
-		else if (tmp->token == PIPE)
-		{
-			j++;
-			tmp = tmp->next;
-		}
-	}
+	tmp = move_tmp(tmp, pos);
 	while (1)
 	{
 		if (!tmp || tmp->token == PIPE)
@@ -129,8 +107,6 @@ int		count_commands(t_lxr *lxr, int pos)
 			tmp = tmp->next;
 			if (tmp->token == WSPACE)
 				tmp = tmp->next;
-			//if (tmp->token == WORD || tmp->token == SQUOTE || tmp->token == DQUOTE)
-				//tmp = tmp->next;
 		}
 		else if ((tmp->token == WORD || tmp->token == SQUOTE || tmp->token == DQUOTE) && tmp->value)
 		{
@@ -148,28 +124,15 @@ int		count_commands(t_lxr *lxr, int pos)
 char	**parse_commands(int nb_cmds, t_lxr *lxr, int pos)
 {
 	int		i;
-	int		j;
 	char	**cmds;
 	t_lxr	*tmp;
 
 	i = 0;
-	j = 0;
 	tmp = lxr;
 	cmds = malloc(sizeof(char *) * (nb_cmds + 1));
 	if (!cmds)
 		return (NULL);
-	while (1)
-	{
-		if (j == pos)
-			break ;
-		if (tmp->token != PIPE)
-			tmp = tmp->next;
-		else if (tmp->token == PIPE)
-		{
-			j++;
-			tmp = tmp->next;
-		}
-	}
+	tmp = move_tmp(tmp, pos);
 	while (1)
 	{
 		if (!tmp || tmp->token == PIPE)
@@ -179,8 +142,6 @@ char	**parse_commands(int nb_cmds, t_lxr *lxr, int pos)
 			tmp = tmp->next;
 			if (tmp->token == WSPACE)
 				tmp = tmp->next;
-			//if (tmp->token == WORD || tmp->token == SQUOTE || tmp->token == DQUOTE)
-				//tmp = tmp->next;
 		}
 		else if ((tmp->token == WORD || tmp->token == SQUOTE || tmp->token == DQUOTE) && tmp->value)
 		{
@@ -203,22 +164,22 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 	int	i;
 
 	i = -1;
-	exec->nb_pipe = count_token(lxr, PIPE, 0);
+	exec->nb_pipe = count_token(lxr, PIPE, 0, 0);
 	exec->pipes = malloc(sizeof(t_pipes) * (exec->nb_pipe + 1));
 	if (!(exec->pipes))
 		return (3);
 	while (++i <= exec->nb_pipe)
 	{
-		exec->pipes[i].nb_redir_stdin = count_token(lxr, REDIR_STDIN, i);
+		exec->pipes[i].nb_redir_stdin = count_token(lxr, REDIR_STDIN, i, 0);
 		if (exec->pipes[i].nb_redir_stdin != 0)
 			exec->pipes[i].redir_stdin = parse_redir(exec->pipes[i].nb_redir_stdin, lxr, REDIR_STDIN, i);
-		exec->pipes[i].nb_redir_stdout = count_token(lxr, REDIR_STDOUT, i);
+		exec->pipes[i].nb_redir_stdout = count_token(lxr, REDIR_STDOUT, i, 0);
 		if (exec->pipes[i].nb_redir_stdout != 0)
 			exec->pipes[i].redir_stdout = parse_redir(exec->pipes[i].nb_redir_stdout, lxr, REDIR_STDOUT, i);
-		exec->pipes[i].nb_dredir_right = count_token(lxr, DREDIR_RIGHT, i);
+		exec->pipes[i].nb_dredir_right = count_token(lxr, DREDIR_RIGHT, i, 0);
 		if (exec->pipes[i].nb_dredir_right != 0)
 			exec->pipes[i].dredir_right = parse_redir(exec->pipes[i].nb_redir_stdin, lxr, DREDIR_RIGHT, i);
-		exec->pipes[i].nb_dredir_left = count_token(lxr, DREDIR_LEFT, i);
+		exec->pipes[i].nb_dredir_left = count_token(lxr, DREDIR_LEFT, i, 0);
 		if (exec->pipes[i].nb_dredir_left != 0)
 			exec->pipes[i].dredir_left = parse_redir(exec->pipes[i].nb_redir_stdout, lxr, DREDIR_LEFT, i);
 		exec->pipes[i].nb_cmds = count_commands(lxr, i);

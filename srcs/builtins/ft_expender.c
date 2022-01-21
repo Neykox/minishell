@@ -6,7 +6,7 @@
 /*   By: aleroy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 14:01:37 by aleroy            #+#    #+#             */
-/*   Updated: 2022/01/20 12:03:59 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/21 16:05:53 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,8 @@ int	ft_get_expand(t_lxr *lxr, t_env *envp)
 {
 	char	*tmp;
 
-	// while (lxr->token == 0 || lxr->token == 4 || lxr->token == 5)//modif 0 to value that isnt a keyword/num
-	// {
+	while (lxr)//->token == 0 || lxr->token == 4 || lxr->token == 5)//modif 0 to value that isnt a keyword/num
+	{
 		if (lxr->token == 4)
 			return (0);
 		else
@@ -115,8 +115,9 @@ int	ft_get_expand(t_lxr *lxr, t_env *envp)
 		free(tmp);
 		if (lxr->value == NULL)
 			return (-2);
-		// lxr = lxr->next;
-	// }
+		// NEED MESSAGE D'ERREUR
+		lxr = lxr->next;
+	}
 	return (0);
 }
 

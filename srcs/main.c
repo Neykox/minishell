@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/20 16:20:00 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/21 15:35:18 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int	main(int ac, char **av, char **envp)
 		{
 			lxr = lexer(lxr, line);
 			print_lxr(lxr);
+			ft_get_expand(lxr, new_env);
 			parser(lxr, exec);	
 			print_pipes(exec);
 			free(line);
