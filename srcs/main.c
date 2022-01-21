@@ -56,7 +56,12 @@ int	main(int ac, char **av, char **envp)
 		{
 			lxr = lexer(lxr, line);
 			print_lxr(lxr);
-			ft_get_expand(lxr, new_env);
+			// ft_get_expand(lxr, new_env);
+			// while (lxr)
+			// {
+			// 	printf("exp = %s\n", lxr->value);
+			// 	lxr = lxr->next;
+			// }
 			parser(lxr, exec);	
 			print_pipes(exec);
 			free(line);

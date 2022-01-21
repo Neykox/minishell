@@ -105,16 +105,18 @@ int	ft_get_expand(t_lxr *lxr, t_env *envp)
 	while (lxr)//->token == 0 || lxr->token == 4 || lxr->token == 5)//modif 0 to value that isnt a keyword/num
 	{
 		if (lxr->token == 4)
-			return (0);
+			;
 		else
+		{
 			tmp = check_exp(lxr, envp);
-		if (tmp == NULL)
-			return (-2);
-		free(lxr->value);
-		lxr->value = ft_strdup(tmp);
-		free(tmp);
-		if (lxr->value == NULL)
-			return (-2);
+			if (tmp == NULL)
+				return (-2);
+			free(lxr->value);
+			lxr->value = ft_strdup(tmp);
+			free(tmp);
+			if (lxr->value == NULL)
+				return (-2);
+		}
 		// NEED MESSAGE D'ERREUR
 		lxr = lxr->next;
 	}
