@@ -6,7 +6,7 @@
 /*   By: aleroy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 14:01:37 by aleroy            #+#    #+#             */
-/*   Updated: 2022/01/21 16:05:53 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/21 16:32:36 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,27 +98,29 @@ char	*check_exp(t_lxr *lxr, t_env *envp)
 	return (tmp);
 }
 
-int	ft_get_expand(t_lxr *lxr, t_env *envp)
+int    ft_get_expand(t_lxr *lxr, t_env *envp)
 {
-	char	*tmp;
+    char    *tmp;
 
-	while (lxr)//->token == 0 || lxr->token == 4 || lxr->token == 5)//modif 0 to value that isnt a keyword/num
-	{
-		if (lxr->token == 4)
-			return (0);
-		else
-			tmp = check_exp(lxr, envp);
-		if (tmp == NULL)
-			return (-2);
-		free(lxr->value);
-		lxr->value = ft_strdup(tmp);
-		free(tmp);
-		if (lxr->value == NULL)
-			return (-2);
-		// NEED MESSAGE D'ERREUR
-		lxr = lxr->next;
-	}
-	return (0);
+    while (lxr)//->token == 0 || lxr->token == 4 || lxr->token == 5)//modif 0 to value that isnt a keyword/num
+    {
+        if (lxr->token == 4)
+            ;
+        else
+        {
+            tmp = check_exp(lxr, envp);
+            if (tmp == NULL)
+                return (-2);
+            free(lxr->value);
+            lxr->value = ft_strdup(tmp);
+            free(tmp);
+            if (lxr->value == NULL)
+                return (-2);
+        }
+        // NEED MESSAGE D'ERREUR
+        lxr = lxr->next;
+    }
+    return (0);
 }
 
 int	ft_strlen_target(char *str)
