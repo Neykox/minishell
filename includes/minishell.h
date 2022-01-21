@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/21 12:07:01 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/21 14:29:07 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	print_lxr(t_lxr *lxr);
 void	print_pipes(t_exec *exec);
 
 /*
- * LEXER / PARSER
+ * LEXER
  */
 
 t_lxr	*lexer(t_lxr *lexer, char *line);
@@ -88,12 +88,24 @@ t_lxr	*check_notop(t_lxr *tmp, char *line, int *i);
 t_lxr	*check_quote(t_lxr *tmp, char *line, int *i, char quote);
 t_lxr	*append_end(t_lxr *lexer);
 
-void	print_parsing_error(char *value, int ret);
-int		syntax_checker(t_lxr *lxr);
-int		parser(t_lxr *lxr, t_exec *exec);
-
 void	build_lxr(t_lxr **lxr, t_lxr *tmp);
 int		verify_quote(char *line, int j, int k, char quote);
+
+/*
+ * SYNTAX
+ */
+
+void	print_parsing_error(char *value, int ret);
+int		syntax_checker(t_lxr *lxr, int ret);
+int		syntax_checker_cont(t_lxr **parser, int ret);
+int		check_pipe(t_lxr **parser);
+int		check_redir(t_lxr **parser);
+
+/*
+ * PARSER
+ */
+
+int		parser(t_lxr *lxr, t_exec *exec);
 
 /*
  * UTILS
@@ -105,8 +117,6 @@ size_t	ft_strlen(char const *s);
 int ft_strncmp(const char *s1, const char *s2, size_t n);
 char    *ft_strjoin_utils(char *line, char *buf);
 char    *ft_strjoin(char const *s1, char const *s2, int i);
-char	*tw_strjoin(char *s1, char *s2);
-void	*ft_memmove(void *dest, const void *src, size_t n);
 char	**ft_split(char const *s, char c);
 
 /*
