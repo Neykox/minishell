@@ -134,7 +134,7 @@ void    ft_env(t_env *envp);
 
 char    *ft_copy_till_exp(char *line);
 char    *check_exp(t_lxr *lxr, t_env *envp);
-char    *ft_get_expand(t_lxr *lxr, t_env *envp);
+int	ft_get_expand(t_lxr *lxr, t_env *envp);
 char    *ft_expander(t_env *envp, char *target);
 
 int ft_isalpha_underscore(int c);
