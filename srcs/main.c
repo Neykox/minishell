@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/21 15:35:18 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/21 16:48:37 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,14 +84,14 @@ int	main(int ac, char **av, char **envp)
 				if (ret == -2)
 					return (ret);
 			}
-			while (lxr)
+			/*while (lxr)
 			{
 				ret = ft_get_expand(lxr, new_env);
 				printf("exp = %s\n", lxr->value);
 				if (ret == -2)
 					return (printf("malloc error\n"));
 				lxr = lxr->next;
-			}
+			}*/
 		}
 		if (line == NULL)
 			break ;
