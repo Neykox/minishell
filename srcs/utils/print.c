@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 14:48:00 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/20 17:04:09 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/21 12:32:39 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	print_pipes(t_exec *exec)
 	int	j;
 	int	k;
 	int	l;
+	int	m;
+	int	n;
 
 	i = 0;
 	j = 0;
@@ -65,6 +67,21 @@ void	print_pipes(t_exec *exec)
 				k++;
 			}
 			k = 0;
+			printf("nb_dredir_right : %d | nb_dredir_left : %d\n", exec->pipes[i].nb_dredir_right, exec->pipes[i].nb_dredir_left);
+			while (m < exec->pipes[i].nb_dredir_right)
+			{
+				//if (exec->pipes[i].redir_stdin[j])
+					printf("pipes[%d]->dredir_right[%d] : %s\n", i, m, exec->pipes[i].dredir_right[m]);
+				m++;
+			}
+			m = 0;
+			while (n < exec->pipes[i].nb_dredir_left)
+			{
+				//if (exec->pipes[i].redir_stdout[k])
+					printf("pipes[%d]->dredir_left[%d] : %s\n", i, n, exec->pipes[i].dredir_left[n]);
+				n++;
+			}
+			n = 0;
 			while (l < exec->pipes[i].nb_cmds)
 			{
 				printf("pipes[%d]->cmds[%d] : |%s|\n", i, l, exec->pipes[i].cmds[l]);

@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/20 18:17:45 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/21 12:22:39 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -365,13 +365,18 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 		return (3);
 	while (i <= exec->nb_pipe)
 	{
-		//exec->pipes[i].pipe_content = parse_pipes(exec, lxr);
 		exec->pipes[i].nb_redir_stdin = count_token(/*exec->pipes[i].pipe_content*/lxr, /*'<'*/REDIR_STDIN, i);
 		if (exec->pipes[i].nb_redir_stdin != 0)
 			exec->pipes[i].redir_stdin = parse_redir(exec->pipes[i].nb_redir_stdin, lxr, REDIR_STDIN, i);
 		exec->pipes[i].nb_redir_stdout = count_token(/*exec->pipes[i].pipe_content*/lxr, /*'>'*/REDIR_STDOUT, i);
 		if (exec->pipes[i].nb_redir_stdout != 0)
 			exec->pipes[i].redir_stdout = parse_redir(exec->pipes[i].nb_redir_stdout, lxr, REDIR_STDOUT, i);
+		exec->pipes[i].nb_dredir_right = count_token(/*exec->pipes[i].pipe_content*/lxr, /*'<'*/DREDIR_RIGHT, i);
+		if (exec->pipes[i].nb_dredir_right != 0)
+			exec->pipes[i].dredir_right = parse_redir(exec->pipes[i].nb_redir_stdin, lxr, DREDIR_RIGHT, i);
+		exec->pipes[i].nb_dredir_left = count_token(/*exec->pipes[i].pipe_content*/lxr, /*'>'*/DREDIR_LEFT, i);
+		if (exec->pipes[i].nb_dredir_left != 0)
+			exec->pipes[i].dredir_left = parse_redir(exec->pipes[i].nb_redir_stdout, lxr, DREDIR_LEFT, i);
 		exec->pipes[i].nb_cmds = count_commands(lxr, i);
 		exec->pipes[i].cmds = parse_commands(exec->pipes[i].nb_cmds, lxr, i);
 		i++;

@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/20 16:04:48 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/21 12:07:01 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,12 @@ typedef	struct	s_pipes
 	int		nb_redir_stdout;
 	int		nb_redir_stdin;
 	int		nb_cmds;
+	int		nb_dredir_right;
+	int		nb_dredir_left;
 	char	**redir_stdout;
 	char	**redir_stdin;
+	char	**dredir_right;
+	char	**dredir_left;
 	char	**cmds;
 	t_lxr	*pipe_content;
 }				t_pipes;
