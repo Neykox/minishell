@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/21 14:29:07 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/24 16:46:02 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@
 # include <signal.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <sys/wait.h>
+# include <fcntl.h>
 
 typedef	struct	s_lxr	t_lxr;
 
@@ -60,6 +64,10 @@ typedef	struct	s_pipes
 	char	**dredir_right;
 	char	**dredir_left;
 	char	**cmds;
+	int		*fd_redir_stdin;
+	int		*fd_redir_stdout;
+	int		*fd_dredir_left;
+	int		*fd_dredir_right;
 	t_lxr	*pipe_content;
 }				t_pipes;
 
@@ -108,16 +116,23 @@ int		check_redir(t_lxr **parser);
 int		parser(t_lxr *lxr, t_exec *exec);
 
 /*
+ * EXECUTION
+ */
+
+int		execute(t_exec *exec, char **envp);
+
+/*
  * UTILS
  */
 
-int	ft_notop(int c);
+int		ft_notop(int c);
 char	*ft_strdup(const char *s);
 size_t	ft_strlen(char const *s);
-int ft_strncmp(const char *s1, const char *s2, size_t n);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char    *ft_strjoin_utils(char *line, char *buf);
 char    *ft_strjoin(char const *s1, char const *s2, int i);
 char	**ft_split(char const *s, char c);
+char	**tweaked_split(char const *s, char c);
 
 /*
  * SIGNAL
