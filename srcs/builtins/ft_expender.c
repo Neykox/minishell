@@ -52,14 +52,63 @@ char	*ft_copy_till_exp(char *line)
 }
 
 
-char	*check_exp(t_lxr *lxr, t_env *envp)
+// int	check_exp(t_lxr *lxr, t_env *envp, char **tmp)
+// {
+// 	int		i;
+// 	char	*exp;
+
+// 	i = 0;
+// 	exp = NULL;
+// 	while (lxr->value[i])
+// 	{
+// 		if (lxr->value[i] == '$')
+// 		{
+// 			exp = ft_expander(envp, &lxr->value[i + 1]);
+// 			if (exp == NULL)
+// 			{
+// 				if (*tmp != NULL)
+// 					free(*tmp);
+// 				return (-2);
+// 			}
+// 			*tmp = ft_strjoin_utils(*tmp, exp);
+// 			if (*tmp == NULL)
+// 				return (-2);
+// 			i++;
+// 			while (ft_isalpha_underscore(lxr->value[i]) == 1)
+// 				i++;
+// 		}
+// 		else
+// 		{
+// 			exp = ft_copy_till_exp(&lxr->value[i]);
+// 			if (exp == NULL)
+// 			{
+// 				if (*tmp != NULL)
+// 					free(*tmp);
+// 				return (-2);
+// 			}
+// 			*tmp = ft_strjoin_utils(*tmp, exp);
+// 			if (*tmp == NULL)
+// 				return (-2);
+// 			while (lxr->value[i] && lxr->value[i] != '$')
+// 				i++;
+// 		}
+// 	}
+// 	if (i == 0)
+// 	{
+// 		*tmp = ft_strdup(lxr->value);
+// 		if (*tmp == NULL)
+// 				return (-2);
+// 	}
+// 	return (0);
+// }
+
+char	*check_exp(t_lxr *lxr, t_env *envp, int *ret)
 {
 	int		i;
-	char	*tmp;
+	char *tmp = NULL;
 	char	*exp;
 
 	i = 0;
-	tmp = NULL;
 	exp = NULL;
 	while (lxr->value[i])
 	{
@@ -70,29 +119,46 @@ char	*check_exp(t_lxr *lxr, t_env *envp)
 			{
 				if (tmp != NULL)
 					free(tmp);
+				*ret = -2;
 				return (NULL);
 			}
 			tmp = ft_strjoin_utils(tmp, exp);
 			if (tmp == NULL)
+			{
+				*ret =-2;
 				return (NULL);
+			}
 			i++;
 			while (ft_isalpha_underscore(lxr->value[i]) == 1)
 				i++;
 		}
 		else
 		{
-			exp = ft_copy_till_exp(lxr->value);
+			exp = ft_copy_till_exp(&lxr->value[i]);
 			if (exp == NULL)
 			{
 				if (tmp != NULL)
 					free(tmp);
+				*ret = -2;
 				return (NULL);
 			}
 			tmp = ft_strjoin_utils(tmp, exp);
 			if (tmp == NULL)
+			{
+				*ret = -2;
 				return (NULL);
+			}
 			while (lxr->value[i] && lxr->value[i] != '$')
 				i++;
+		}
+	}
+	if (i == 0)
+	{
+		tmp = ft_strdup(lxr->value);
+		if (tmp == NULL)
+		{
+			*ret = -2;
+			return (NULL);
 		}
 	}
 	return (tmp);
@@ -101,14 +167,21 @@ char	*check_exp(t_lxr *lxr, t_env *envp)
 int    ft_get_expand(t_lxr *lxr, t_env *envp)
 {
     char    *tmp;
+    int		ret;
 
+    tmp = NULL;
+    ret = 0;
 	while (lxr)
 	{
 		if (lxr->token == 0 || lxr->token == 5)
 		{
-			tmp = check_exp(lxr, envp);
-			if (tmp == NULL)
+			tmp = check_exp(lxr, envp, &ret);
+			if (ret == -2)
+			{
+				if (tmp != NULL)
+					free(tmp);
 				return (-2);
+			}
 			free(lxr->value);
 			lxr->value = ft_strdup(tmp);
 			free(tmp);
@@ -120,6 +193,36 @@ int    ft_get_expand(t_lxr *lxr, t_env *envp)
 	}
 	return (0);
 }
+
+// int    ft_get_expand(t_lxr *lxr, t_env *envp)
+// {
+//     char    *tmp;
+//     int		ret;
+
+//     tmp = NULL;
+//     ret = 0;
+// 	while (lxr)
+// 	{
+// 		if (lxr->token == 0 || lxr->token == 5)
+// 		{
+// 			ret = check_exp(lxr, envp, &tmp);
+// 			if (ret == -2)
+// 			{
+// 				if (tmp != NULL)
+// 					free(tmp);
+// 				return (-2);
+// 			}
+// 			free(lxr->value);
+// 			lxr->value = ft_strdup(tmp);
+// 			free(tmp);
+// 			if (lxr->value == NULL)
+// 				return (-2);
+// 		}
+// 		// NEED MESSAGE D'ERREUR
+// 		lxr = lxr->next;
+// 	}
+// 	return (0);
+// }
 
 int	ft_strlen_target(char *str)
 {
