@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/24 17:56:00 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/25 12:53:36 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,37 +64,39 @@ int	pipe_things_up(t_exec *exec, int *pipefd[2], char **envp)
 			if (j < exec->nb_pipe)
 			{
 				if (dup2(pipefd[j/* + 1*/][1], 1) < 0)
-					exit(1);
+					exit (1);
 			}
 			if (j != 0)
 			{
 				if (dup2(pipefd[j][0], 0) < 0)
-					exit(1);
+					exit (1);
 			}
 			while (k < exec->nb_pipe)
 			{
-				//if (k != j)
+				if (k != j)
+				{
 					close(pipefd[k][0]);
-				//if (k + 1 != j)
 					close(pipefd[k][1]);
+				}
 				k++;
 			}
 			k = 0;
 			while (k < exec->pipes[i].nb_redir_stdin)
 			{
 				if (dup2(exec->pipes[i].fd_redir_stdin[k], 0) < 0)
-					exit(1);
+					exit (1);
 				k++;
 			}
 			k = 0;
 			while (k < exec->pipes[i].nb_redir_stdout)
 			{
 				if (dup2(exec->pipes[i].fd_redir_stdout[k], 1) < 0)
-					exit(1);
+					exit (1);
 				k++;
 			}
 			k = 0;
 			exec_commands(exec->pipes[i].cmds, envp);
+			exit (1);
 		}
 		i++;
 		j++;
@@ -106,8 +108,11 @@ int	pipe_things_up(t_exec *exec, int *pipefd[2], char **envp)
 		k++;
 	}
 	i = 0;
-	while (i < exec->nb_pipe)
+	while (i <= exec->nb_pipe)
+	{
 		wait(NULL);
+		i++;
+	}
 	return (0);
 }
 
@@ -170,7 +175,10 @@ int	execute(t_exec *exec, char **envp)
 			{
 				exec->pipes[i].fd_redir_stdin[j] = open(exec->pipes[i].redir_stdin[j], O_RDONLY);
 				if (exec->pipes[i].fd_redir_stdin[j] < 0)
+				{
+					perror(exec->pipes[i].redir_stdin[j]);
 					return (2);
+				}
 				j++;
 			}
 			j = 0;
@@ -181,7 +189,10 @@ int	execute(t_exec *exec, char **envp)
 			{
 				exec->pipes[i].fd_redir_stdout[j] = open(exec->pipes[i].redir_stdout[j], O_TRUNC | O_RDWR | O_CREAT, 0644);
 				if (exec->pipes[i].fd_redir_stdout[j] < 0)
+				{
+					perror(exec->pipes[i].redir_stdout[j]);
 					return (2);
+				}
 				j++;
 			}
 			j = 0;
