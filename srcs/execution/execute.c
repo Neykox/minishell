@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/25 12:53:36 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/25 14:42:59 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	exec_commands(char **cmds, char **envp)
 	char	**cmd_paths;
 	int		i;
 	char	*finalcmd;
+	char	*error;
 
 	i = 0;
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
@@ -34,10 +35,13 @@ void	exec_commands(char **cmds, char **envp)
 			i++;
 		free(finalcmd);
 	}
-	perror(cmds[0]);
+	//perror(cmds[0]);
+	error = strerror(errno);
+	write(2, error, ft_strlen(error));
+	write(2, "\n", 1);
 }
 
-int	pipe_things_up(t_exec *exec, int *pipefd[2], char **envp)
+int	pipe_things_up(t_exec *exec, int **pipefd, char **envp)
 {
 	int	i;
 	int	j;
@@ -63,12 +67,12 @@ int	pipe_things_up(t_exec *exec, int *pipefd[2], char **envp)
 		{
 			if (j < exec->nb_pipe)
 			{
-				if (dup2(pipefd[j/* + 1*/][1], 1) < 0)
+				if (dup2(pipefd[j][1], 1) < 0)
 					exit (1);
 			}
 			if (j != 0)
 			{
-				if (dup2(pipefd[j][0], 0) < 0)
+				if (dup2(pipefd[j - 1][0], 0) < 0)
 					exit (1);
 			}
 			while (k < exec->nb_pipe)
