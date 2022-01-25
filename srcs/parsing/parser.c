@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/21 15:56:16 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/25 16:43:27 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,32 @@ char	**parse_commands(int nb_cmds, t_lxr *lxr, int pos)
 	return (cmds);
 }
 
+t_exec	*check_cmds(t_exec *exec)
+{
+	int		i;
+	char	*tmp;
+	char	*pwd;
+	char	*pwd_slash;
+
+	i = 0;
+	pwd = NULL;
+	while (i <= exec->nb_pipe)
+	{
+		if (!(ft_strncmp(exec->pipes[i].cmds[0], "./", 2)))
+		{
+			tmp = tweaked_strdup(exec->pipes[i].cmds[0]);
+			pwd = getcwd(pwd, 0);
+			pwd_slash = ft_add_char(pwd, '/');
+			free(exec->pipes[i].cmds[0]);
+			exec->pipes[i].cmds[0] = ft_strjoin(pwd_slash, tmp, 0);
+			free(tmp);
+			free(pwd_slash);
+		}
+		i++;
+	}
+	return (exec);
+}
+
 int	parse_values(t_lxr *lxr, t_exec *exec)
 {
 	int	i;
@@ -185,6 +211,7 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 		exec->pipes[i].nb_cmds = count_commands(lxr, i);
 		exec->pipes[i].cmds = parse_commands(exec->pipes[i].nb_cmds, lxr, i);
 	}
+	exec = check_cmds(exec);
 	return (0);
 }
 
