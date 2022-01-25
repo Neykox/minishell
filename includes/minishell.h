@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/24 16:46:02 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/25 14:41:22 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # define WSPACE			9
 
 # include <stdio.h>
+# include <errno.h>
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
