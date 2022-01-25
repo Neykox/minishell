@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/25 14:42:59 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/25 16:46:44 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,31 @@ void	exec_commands(char **cmds, char **envp)
 	char	**cmd_paths;
 	int		i;
 	char	*finalcmd;
-	char	*error;
 
 	i = 0;
-	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
-		i++;
-	path = envp[i] + 5;
-	cmd_paths = tweaked_split(path, ':');
-	i = 0;
-	while (cmd_paths[i])
+	if (cmds[0][0] == '/')
 	{
-		finalcmd = ft_strjoin(cmd_paths[i], cmds[0], 0);
-		if (!(access(finalcmd, F_OK)))
-			execve(finalcmd, cmds, envp);
-		else
-			i++;
-		free(finalcmd);
+		if (!(access(cmds[0], F_OK)))
+			execve(cmds[0], cmds, envp);
 	}
-	//perror(cmds[0]);
-	error = strerror(errno);
-	write(2, error, ft_strlen(error));
-	write(2, "\n", 1);
+	else
+	{
+		while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
+			i++;
+		path = envp[i] + 5;
+		cmd_paths = tweaked_split(path, ':');
+		i = 0;
+		while (cmd_paths[i])
+		{
+			finalcmd = ft_strjoin(cmd_paths[i], cmds[0], 0);
+			if (!(access(finalcmd, F_OK)))
+				execve(finalcmd, cmds, envp);
+			else
+				i++;
+			free(finalcmd);
+		}
+	}
+	perror(cmds[0]);
 }
 
 int	pipe_things_up(t_exec *exec, int **pipefd, char **envp)
@@ -95,6 +99,13 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp)
 			while (k < exec->pipes[i].nb_redir_stdout)
 			{
 				if (dup2(exec->pipes[i].fd_redir_stdout[k], 1) < 0)
+					exit (1);
+				k++;
+			}
+			k = 0;
+			while (k < exec->pipes[i].nb_dredir_right)
+			{
+				if (dup2(exec->pipes[i].fd_dredir_right[k], 1) < 0)
 					exit (1);
 				k++;
 			}
@@ -195,6 +206,20 @@ int	execute(t_exec *exec, char **envp)
 				if (exec->pipes[i].fd_redir_stdout[j] < 0)
 				{
 					perror(exec->pipes[i].redir_stdout[j]);
+					return (2);
+				}
+				j++;
+			}
+			j = 0;
+		}
+		if (exec->pipes[i].nb_dredir_right)
+		{
+			while (j < exec->pipes[i].nb_dredir_right)
+			{
+				exec->pipes[i].fd_dredir_right[j] = open(exec->pipes[i].dredir_right[j], O_APPEND | O_RDWR | O_CREAT, 0644);
+				if (exec->pipes[i].fd_dredir_right[j] < 0)
+				{
+					perror(exec->pipes[i].dredir_right[j]);
 					return (2);
 				}
 				j++;

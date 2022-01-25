@@ -1,27 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prompt_sig.c                                       :+:      :+:    :+:   */
+/*   ft_add_char.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aleroy <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/11 14:35:17 by aleroy            #+#    #+#             */
-/*   Updated: 2022/01/25 16:55:00 by nel-masr         ###   ########.fr       */
+/*   Created: 2022/01/25 16:32:20 by nel-masr          #+#    #+#             */
+/*   Updated: 2022/01/25 16:37:47 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_signal(int sig, siginfo_t *sa, void *data)
+char	*ft_add_char(char *s, char c)
 {
-	(void)data;
-	(void)sa;
-	if (sig == SIGINT)
+	char	*result;
+	int		i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	result = malloc(sizeof(char) * (i + 2));
+	if (!result)
+		return (NULL);
+	i = 0;
+	while (s[i])
 	{
-		write(0, "\n", 1);
-		rl_replace_line ("", 1);//not sure about the diff between 0 or non zero
-		rl_on_new_line ();
-		rl_redisplay ();
-		//return ;
+		result[i] = s[i];
+		i++;
 	}
+	result[i] = c;
+	result[i + 1] = '\0';
+	return (result);
 }
