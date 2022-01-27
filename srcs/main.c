@@ -75,24 +75,26 @@ int	main(int ac, char **av, char **envp)
 			execute(exec, envp);
 			free(line);
 		}
-		if (lxr)
+		if (exec && exec->pipes)
 		{
-			if (ft_strncmp(lxr->value, "pwd ", 4) == 0)
-				ft_pwd();
-			else if (ft_strncmp(lxr->value, "env ", 4) == 0)
-				ft_env(new_env);
-			else if (ft_strncmp(lxr->value, "export ", 7) == 0)
-			{
-				ret = ft_export(lxr->next, new_env);
+			if (ft_strncmp(lxr->value, "echo ", 5) == 0)
+				ret =ft_echo(exec->pipes);
+			// if (ft_strncmp(lxr->value, "pwd ", 4) == 0)
+			// 	ft_pwd();
+			// else if (ft_strncmp(lxr->value, "env ", 4) == 0)
+			// 	ft_env(new_env);
+			// else if (ft_strncmp(lxr->value, "export ", 7) == 0)
+			// {
+			// 	ret = ft_export(lxr->next, new_env);
 				if (ret == -2)
 					return (ret);
-			}
-			else if (ft_strncmp(lxr->value, "unset ", 6) == 0)
-			{
-				ret = ft_unset(lxr->next, new_env);
-				if (ret == -2)
-					return (ret);
-			}
+			// }
+			// else if (ft_strncmp(lxr->value, "unset ", 6) == 0)
+			// {
+			// 	ret = ft_unset(lxr->next, new_env);
+			// 	if (ret == -2)
+			// 		return (ret);
+			// }
 			/*while (lxr)
 			{
 				ret = ft_get_expand(lxr, new_env);
