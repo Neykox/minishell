@@ -29,12 +29,10 @@ int	ft_echo(t_pipes *pipes)
 	int	i;
 	char	*ret;
 
-	i = 1;
 	ret = NULL;
-	printf("nb_cmds = %d\n", pipes->nb_cmds);
-	if (i < pipes->nb_cmds)
+	if (pipes->cmds[1])
 		i = check_echo_flag(pipes->cmds[1], &n);
-	while (i < pipes->nb_cmds && pipes->cmds[i])
+	while (pipes->cmds[1] && pipes->cmds[i])
 	{
 		ret = ft_strjoin_utils(ret, pipes->cmds[i]);
 		if (ret == NULL)
@@ -42,18 +40,17 @@ int	ft_echo(t_pipes *pipes)
 		i++;
 		if (pipes->cmds[i])
 		{
-			ret = ft_strjoin_utils(ret, " ");//might segfault because freeing a non freeable var
+			ret = ft_strjoin_utils(ret, " ");
 			if (ret == NULL)
 				return (-2);
 		}
 	}
-
-	if (n == 0)
-	{
-		ret = ft_strjoin_utils(ret, "\n");//might segfault because freeing a non freeable var
-		if (ret == NULL)
-			return (-2);
-	}
+	if (n == 0 || !(pipes->cmds[1]))
+		ret = ft_strjoin_utils(ret, "\n");
+	else
+		ret = ft_strjoin_utils(ret, "");
+	if (ret == NULL)
+		return (-2);
 	write(1, ret, ft_strlen(ret));
 	free(ret);
 	return (0);
