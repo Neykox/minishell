@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/25 16:41:49 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/27 14:21:23 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@
 # include <fcntl.h>
 
 typedef	struct	s_lxr	t_lxr;
+typedef	struct	s_redir	t_redir;
 
 struct	s_lxr
 {
@@ -53,6 +54,14 @@ typedef struct      s_env
     struct s_env   *next;
 }                   t_env;
 
+struct	s_redir
+{
+	char	*redir;
+	int		type;
+	int		fd;
+	t_redir	*next;
+};
+
 typedef	struct	s_pipes
 {
 	int		nb_redir_stdout;
@@ -60,16 +69,8 @@ typedef	struct	s_pipes
 	int		nb_cmds;
 	int		nb_dredir_right;
 	int		nb_dredir_left;
-	char	**redir_stdout;
-	char	**redir_stdin;
-	char	**dredir_right;
-	char	**dredir_left;
+	t_redir	*redir;
 	char	**cmds;
-	int		*fd_redir_stdin;
-	int		*fd_redir_stdout;
-	int		*fd_dredir_left;
-	int		*fd_dredir_right;
-	t_lxr	*pipe_content;
 }				t_pipes;
 
 typedef	struct	s_exec
@@ -86,6 +87,7 @@ int	main(int ac, char **av, char **envp);
 
 void	print_lxr(t_lxr *lxr);
 void	print_pipes(t_exec *exec);
+void	print_fd(t_redir *redir);
 
 /*
  * LEXER
@@ -95,10 +97,11 @@ t_lxr	*lexer(t_lxr *lexer, char *line);
 t_lxr	*tokenize(t_lxr *lexer, char *line, int *i);
 t_lxr	*check_notop(t_lxr *tmp, char *line, int *i);
 t_lxr	*check_quote(t_lxr *tmp, char *line, int *i, char quote);
-t_lxr	*append_end(t_lxr *lexer);
 
 void	build_lxr(t_lxr **lxr, t_lxr *tmp);
+void	build_redir_ll(t_redir **redir, t_redir *tmp);
 int		verify_quote(char *line, int j, int k, char quote);
+t_lxr	*append_end(t_lxr *lexer);
 
 /*
  * SYNTAX
@@ -121,6 +124,12 @@ int		parser(t_lxr *lxr, t_exec *exec);
  */
 
 int		execute(t_exec *exec, char **envp);
+
+/*
+ * FREE
+ */
+
+void	free_exec(t_exec *exec);
 
 /*
  * UTILS

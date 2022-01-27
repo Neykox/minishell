@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 17:49:44 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/17 14:11:11 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/26 16:22:50 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,19 @@ int	verify_quote(char *line, int j, int k, char quote)
 	if (!(line[j]))
 		return (-1);
 	return (k);
+}
+
+void	build_redir_ll(t_redir **redir, t_redir *tmp)
+{
+	t_redir	*last;
+
+	if (!(*redir))
+	{
+		*redir = tmp;
+		return ;
+	}
+	last = *redir;
+	while (last->next)
+		last = last->next;
+	last->next = tmp;
 }

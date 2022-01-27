@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/25 16:46:44 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/27 15:29:04 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,34 @@ void	exec_commands(char **cmds, char **envp)
 		}
 	}
 	perror(cmds[0]);
+}
+
+int	exec_redir(t_redir *redir)
+{
+	t_redir *tmp;
+	int		ret;
+
+	tmp = redir;
+	ret = 0;
+	while (1)
+	{
+		if (!tmp)
+			break ;
+		else if (tmp->type == REDIR_STDIN)
+		{
+			ret = dup2(tmp->fd, 0);
+			if (ret < 0)
+				return (ret);
+		}
+		else if (tmp->type == REDIR_STDOUT || tmp->type == DREDIR_RIGHT)
+		{
+			ret = dup2(tmp->fd, 1);
+			if (ret < 0)
+				return (ret);
+		}
+		tmp = tmp->next;
+	}
+	return (ret);
 }
 
 int	pipe_things_up(t_exec *exec, int **pipefd, char **envp)
@@ -89,27 +117,12 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp)
 				k++;
 			}
 			k = 0;
-			while (k < exec->pipes[i].nb_redir_stdin)
+			if (exec->pipes[i].redir != NULL)
 			{
-				if (dup2(exec->pipes[i].fd_redir_stdin[k], 0) < 0)
+				k = exec_redir(exec->pipes[i].redir);
+				if (k < 0)
 					exit (1);
-				k++;
 			}
-			k = 0;
-			while (k < exec->pipes[i].nb_redir_stdout)
-			{
-				if (dup2(exec->pipes[i].fd_redir_stdout[k], 1) < 0)
-					exit (1);
-				k++;
-			}
-			k = 0;
-			while (k < exec->pipes[i].nb_dredir_right)
-			{
-				if (dup2(exec->pipes[i].fd_dredir_right[k], 1) < 0)
-					exit (1);
-				k++;
-			}
-			k = 0;
 			exec_commands(exec->pipes[i].cmds, envp);
 			exit (1);
 		}
@@ -131,14 +144,53 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp)
 	return (0);
 }
 
+t_redir	*open_redir_fd(t_redir *redir)
+{
+	t_redir *tmp;
+
+	tmp = redir;
+	while (1)
+	{
+		if (!tmp)
+			break ;
+		else if (tmp->type == REDIR_STDIN)
+		{
+			tmp->fd = open(tmp->redir, O_RDONLY);
+			if (tmp->fd < 0)
+			{
+				perror(tmp->redir);
+				return (NULL);
+			}
+		}
+		else if (tmp->type == REDIR_STDOUT)
+		{
+			tmp->fd = open(tmp->redir, O_TRUNC | O_RDWR | O_CREAT, 0644);
+			if (tmp->fd < 0)
+			{
+				perror(tmp->redir);
+				return (NULL);
+			}
+		}
+		else if (tmp->type == DREDIR_RIGHT)
+		{
+			tmp->fd = open(tmp->redir, O_APPEND | O_RDWR | O_CREAT, 0644);
+			if (tmp->fd < 0)
+			{
+				perror(tmp->redir);
+				return (NULL);
+			}
+		}
+		tmp = tmp->next;
+	}
+	return (redir);
+}
+
 int	execute(t_exec *exec, char **envp)
 {
 	int		**pipefd;
 	int		i;
-	int		j;
 
 	i = 0;
-	j = 0;
 	if (exec->nb_pipe)
 	{
 		pipefd = malloc(sizeof(int *) * (exec->nb_pipe));
@@ -155,79 +207,15 @@ int	execute(t_exec *exec, char **envp)
 	i = 0;
 	while (i <= exec->nb_pipe)
 	{
-		if (exec->pipes[i].nb_redir_stdin)
+		if (exec->pipes[i].redir != NULL)
 		{
-			exec->pipes[i].fd_redir_stdin = malloc(sizeof(int) * (exec->pipes[i].nb_redir_stdin));
-			if (!(exec->pipes[i].fd_redir_stdin))
-				return (1);
-		}
-		if (exec->pipes[i].nb_redir_stdout)
-		{
-			exec->pipes[i].fd_redir_stdout = malloc(sizeof(int) * (exec->pipes[i].nb_redir_stdout));
-			if (!(exec->pipes[i].fd_redir_stdout))
-				return (1);
-		}
-		if (exec->pipes[i].nb_dredir_left)
-		{
-			exec->pipes[i].fd_dredir_left = malloc(sizeof(int) * (exec->pipes[i].nb_dredir_left));
-			if (!(exec->pipes[i].fd_dredir_left))
-				return (1);
-		}
-		if (exec->pipes[i].nb_dredir_right)
-		{
-			exec->pipes[i].fd_dredir_right = malloc(sizeof(int) * (exec->pipes[i].nb_dredir_right));
-			if (!(exec->pipes[i].fd_dredir_right))
-				return (1);
+			exec->pipes[i].redir = open_redir_fd(exec->pipes[i].redir);
+			if (exec->pipes[i].redir == NULL)
+				return (2);
 		}
 		i++;
 	}
-	i = 0;
-	while (i <= exec->nb_pipe)
-	{
-		if (exec->pipes[i].nb_redir_stdin)
-		{
-			while (j < exec->pipes[i].nb_redir_stdin)
-			{
-				exec->pipes[i].fd_redir_stdin[j] = open(exec->pipes[i].redir_stdin[j], O_RDONLY);
-				if (exec->pipes[i].fd_redir_stdin[j] < 0)
-				{
-					perror(exec->pipes[i].redir_stdin[j]);
-					return (2);
-				}
-				j++;
-			}
-			j = 0;
-		}
-		if (exec->pipes[i].nb_redir_stdout)
-		{
-			while (j < exec->pipes[i].nb_redir_stdout)
-			{
-				exec->pipes[i].fd_redir_stdout[j] = open(exec->pipes[i].redir_stdout[j], O_TRUNC | O_RDWR | O_CREAT, 0644);
-				if (exec->pipes[i].fd_redir_stdout[j] < 0)
-				{
-					perror(exec->pipes[i].redir_stdout[j]);
-					return (2);
-				}
-				j++;
-			}
-			j = 0;
-		}
-		if (exec->pipes[i].nb_dredir_right)
-		{
-			while (j < exec->pipes[i].nb_dredir_right)
-			{
-				exec->pipes[i].fd_dredir_right[j] = open(exec->pipes[i].dredir_right[j], O_APPEND | O_RDWR | O_CREAT, 0644);
-				if (exec->pipes[i].fd_dredir_right[j] < 0)
-				{
-					perror(exec->pipes[i].dredir_right[j]);
-					return (2);
-				}
-				j++;
-			}
-			j = 0;
-		}
-		i++;
-	}
+	print_pipes(exec);
 	pipe_things_up(exec, pipefd, envp);
 	return (0);
 }

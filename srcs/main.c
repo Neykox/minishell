@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/25 16:51:15 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/27 14:22:03 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ int	main(int ac, char **av, char **envp)
 		return (-2);
 	}
 	sa.sa_sigaction = &ft_signal;
-	exec = malloc(sizeof(t_exec));
-	if (!(exec))
-	{
-		print_parsing_error(NULL, 3);
-		return (3);
-	}
+	//exec = malloc(sizeof(t_exec));
+	//if (!(exec))
+	//{
+	//	print_parsing_error(NULL, 3);
+	//	return (3);
+	//}
 	while (1)
 	{
 		sigaction(SIGINT, &sa, NULL);
@@ -52,10 +52,18 @@ int	main(int ac, char **av, char **envp)
 		line = readline("\e[1;33mminishell$ \e[0m");
 		add_history(line);
 		lxr = NULL;
+		if (exec)
+			free_exec(exec);
+		exec = malloc(sizeof(t_exec));
+		if (!(exec))
+		{
+			print_parsing_error(NULL, 3);
+			return (3);
+		}
 		if (line)
 		{
 			lxr = lexer(lxr, line);
-			print_lxr(lxr);
+			//print_lxr(lxr);
 			ft_get_expand(lxr, new_env);
 			// while (lxr)
 			// {
@@ -63,7 +71,7 @@ int	main(int ac, char **av, char **envp)
 			// 	lxr = lxr->next;
 			// }
 			parser(lxr, exec);	
-			print_pipes(exec);
+			//print_pipes(exec);
 			execute(exec, envp);
 			free(line);
 		}
