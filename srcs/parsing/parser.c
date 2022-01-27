@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/27 14:41:53 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/27 16:41:34 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,8 @@ t_exec	*check_cmds(t_exec *exec)
 
 	i = 0;
 	pwd = NULL;
+	if (!(exec->pipes[i].nb_cmds))
+		return (exec);
 	while (i <= exec->nb_pipe)
 	{
 		if (!(ft_strncmp(exec->pipes[i].cmds[0], "./", 2)))
@@ -215,7 +217,8 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 			|| exec->pipes[i].nb_dredir_right != 0 || exec->pipes[i].nb_dredir_left != 0)
 			exec->pipes[i].redir = parse_redir(lxr, i, exec->pipes[i].redir);
 		exec->pipes[i].nb_cmds = count_commands(lxr, i);
-		exec->pipes[i].cmds = parse_commands(exec->pipes[i].nb_cmds, lxr, i);
+		if (exec->pipes[i].nb_cmds)
+			exec->pipes[i].cmds = parse_commands(exec->pipes[i].nb_cmds, lxr, i);
 	}
 	exec = check_cmds(exec);
 	return (0);

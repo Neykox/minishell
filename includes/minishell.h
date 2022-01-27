@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/27 14:21:23 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/27 17:34:49 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ int		parser(t_lxr *lxr, t_exec *exec);
  */
 
 int		execute(t_exec *exec, char **envp);
+int		heredoc_implementation(t_redir *redir);
 
 /*
  * FREE

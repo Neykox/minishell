@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/27 14:22:03 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/27 16:36:00 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int ac, char **av, char **envp)
 	t_env	*new_env;
 	struct sigaction sa;
 	t_exec	*exec;
-	int ret;
+	//int ret;
 	
 	(void)ac;
 	(void)av;
@@ -75,10 +75,10 @@ int	main(int ac, char **av, char **envp)
 			execute(exec, envp);
 			free(line);
 		}
-		if (exec && exec->pipes)
-		{
-			if (ft_strncmp(lxr->value, "echo ", 5) == 0)
-				ret =ft_echo(exec->pipes);
+		//if (exec && exec->pipes)
+		//{
+		//	if (ft_strncmp(lxr->value, "echo ", 5) == 0)
+		//		ret =ft_echo(exec->pipes);
 			// if (ft_strncmp(lxr->value, "pwd ", 4) == 0)
 			// 	ft_pwd();
 			// else if (ft_strncmp(lxr->value, "env ", 4) == 0)
@@ -86,8 +86,8 @@ int	main(int ac, char **av, char **envp)
 			// else if (ft_strncmp(lxr->value, "export ", 7) == 0)
 			// {
 			// 	ret = ft_export(lxr->next, new_env);
-				if (ret == -2)
-					return (ret);
+		//		if (ret == -2)
+		//			return (ret);
 			// }
 			// else if (ft_strncmp(lxr->value, "unset ", 6) == 0)
 			// {
@@ -103,7 +103,7 @@ int	main(int ac, char **av, char **envp)
 					return (printf("malloc error\n"));
 				lxr = lxr->next;
 			}*/
-		}
+		//}
 		if (line == NULL)
 			break ;
 	}

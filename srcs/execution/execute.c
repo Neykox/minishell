@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/27 15:29:04 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/27 18:46:13 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,21 @@ int	exec_redir(t_redir *redir)
 			ret = dup2(tmp->fd, 0);
 			if (ret < 0)
 				return (ret);
+			close(tmp->fd);
 		}
 		else if (tmp->type == REDIR_STDOUT || tmp->type == DREDIR_RIGHT)
 		{
 			ret = dup2(tmp->fd, 1);
 			if (ret < 0)
 				return (ret);
+			close(tmp->fd);
 		}
+		//else if (tmp->type == DREDIR_LEFT)
+		//{
+		//	ret = heredoc_implementation(tmp);
+		//	if (ret < 0)
+		//		return (ret);
+		//}
 		tmp = tmp->next;
 	}
 	return (ret);
