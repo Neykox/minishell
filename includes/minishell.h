@@ -147,6 +147,9 @@ void	ft_signal(int sig, siginfo_t *sa, void *data);
  * BUILTINS
  */
 
+int check_echo_flag(char *ag, int *n);
+int	ft_echo(t_pipes *pipes);
+
 void    ft_pwd(void);
 void    ft_env(t_env *envp);
 

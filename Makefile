@@ -3,7 +3,7 @@ SRCS = 	srcs/main.c \
 		srcs/execution/execute.c \
 		srcs/utils/ft_notop.c srcs/utils/ft_strdup.c srcs/utils/print.c srcs/utils/ft_strlen.c  srcs/utils/ft_strncmp.c srcs/utils/ft_str_join_utils.c srcs/utils/ft_strjoin.c srcs/utils/ft_memmove.c srcs/utils/ft_split.c srcs/utils/tweaked_split.c srcs/utils/tweaked_strdup.c srcs/utils/ft_add_char.c \
 		srcs/signaux/prompt_sig.c \
-		srcs/builtins/ft_copy_env.c srcs/builtins/ft_env.c srcs/builtins/ft_pwd.c srcs/builtins/ft_export.c srcs/builtins/ft_unset.c srcs/builtins/ft_expender.c \
+		srcs/builtins/ft_copy_env.c srcs/builtins/ft_env.c srcs/builtins/ft_pwd.c srcs/builtins/ft_export.c srcs/builtins/ft_unset.c srcs/builtins/ft_expender.c srcs/builtins/ft_echo.c\
 
 C.O = ${SRCS:.c=.o}
 
