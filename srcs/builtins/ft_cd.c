@@ -10,4 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../includes/minishell.h"
 
+// chdir(path_name);
+// On success, zero is returned.  On error, -1 is returned, and
+//        errno is set to indicate the error.
+
+int	ft_cd(t_pipes *pipes, t_env *env)
+{
+	(void)env;
+	int	ret;
+
+	ret = 0;
+	if (pipes->nb_cmds > 2)
+		return (-1);
+	ret = chdir(pipes->cmds[1]);
+	if (ret == -1)
+	{
+		perror("ft_cd");
+		return (-1);
+	}
+	//change env
+	return (ret);
+}

@@ -19,9 +19,22 @@ void	ft_signal(int sig, siginfo_t *sa, void *data)
 	if (sig == SIGINT)
 	{
 		write(0, "\n", 1);
-		rl_replace_line ("", 1);//not sure about the diff between 0 or non zero
+		rl_replace_line ("", 1);//destroy char before ^C to make next line clean
 		rl_on_new_line ();
 		rl_redisplay ();
+		// usleep(2000);
 		//return ;
 	}
 }
+
+// void	ft_signal(int sig)
+// {
+// 	if (sig == SIGINT)
+// 	{
+// 		write(0, "\n", 1);
+// 		rl_replace_line ("", 0);//not sure about the diff between 0 or non zero
+// 		rl_on_new_line ();
+// 		rl_redisplay ();
+// 		//return ;
+// 	}
+// }

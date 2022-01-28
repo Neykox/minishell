@@ -114,17 +114,33 @@ void	ft_lstdelone(t_env *lst)
 	free(tmp);
 }
 
-int check_value_unset(t_lxr *lxr, char **line)
+// int check_value_unset(t_lxr *lxr, char **line)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	while (lxr->value[i] && ft_isalpha_underscore(lxr->value[i]) == 1)
+// 		i++;
+// 	if (i == 0 || (ft_isalpha_underscore(lxr->value[i]) == 0 && lxr->value[i] != '\0'))
+// 		return (-1);
+// 	//should be HELLO at this point
+// 	*line = ft_strdup(lxr->value);
+// 	if (*line == NULL)
+// 		return (-2);
+// 	return (0);
+// }
+
+int check_value_unset(char *cmds, char **line)
 {
 	int i;
 
 	i = 0;
-	while (lxr->value[i] && ft_isalpha_underscore(lxr->value[i]) == 1)
+	while (cmds[i] && ft_isalpha_underscore(cmds[i]) == 1)
 		i++;
-	if (i == 0 || (ft_isalpha_underscore(lxr->value[i]) == 0 && lxr->value[i] != '\0'))
+	if (i == 0 || (ft_isalpha_underscore(cmds[i]) == 0 && cmds[i] != '\0'))
 		return (-1);
 	//should be HELLO at this point
-	*line = ft_strdup(lxr->value);
+	*line = ft_strdup(cmds);
 	if (*line == NULL)
 		return (-2);
 	return (0);
@@ -168,27 +184,53 @@ void	find_line(t_env *envp, char *line)
 	}
 }
 
-int	ft_unset(t_lxr *lxr, t_env *envp)
+// int	ft_unset(t_lxr *lxr, t_env *envp)
+// {
+// 	char	*line;
+// 	int	error;
+// 	int	ret;
+
+// 	line = NULL;
+// 	ret = 0;
+// 	while (lxr->token == 0 || lxr->token == 4 || lxr->token == 5 || lxr->token == 9)//word/quote/space
+// 	{
+// 		if (lxr->token == 0 || lxr->token == 4 || lxr->token == 5)
+// 			error = check_value_unset(lxr, &line);
+// 		if (error == -2)
+// 			return (error);//malloc issue but arg was correct
+// 		if (error == -1)
+// 			ret = -1;
+
+// 		if ((lxr->token == 0 || lxr->token == 4 || lxr->token == 5) && error == 0)
+// 			find_line(envp, line);
+
+// 		lxr = lxr->next;
+// 	}
+// 	return (ret);
+// }
+
+int	ft_unset(char **cmds, t_env *envp)
 {
 	char	*line;
 	int	error;
 	int	ret;
+	int	i;
 
 	line = NULL;
 	ret = 0;
-	while (lxr->token == 0 || lxr->token == 4 || lxr->token == 5 || lxr->token == 9)//word/quote/space
+	i = 1;
+	while (cmds[i])
 	{
-		if (lxr->token == 0 || lxr->token == 4 || lxr->token == 5)
-			error = check_value_unset(lxr, &line);
+		error = check_value_unset(cmds[i], &line);
 		if (error == -2)
 			return (error);//malloc issue but arg was correct
 		if (error == -1)
 			ret = -1;
 
-		if ((lxr->token == 0 || lxr->token == 4 || lxr->token == 5) && error == 0)
+		if (error == 0)
 			find_line(envp, line);
 
-		lxr = lxr->next;
+		i++;
 	}
 	return (ret);
 }

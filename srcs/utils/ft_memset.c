@@ -1,14 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aleroy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/12 15:41:43 by user42            #+#    #+#             */
-/*   Updated: 2022/01/12 15:41:44 by user42           ###   ########.fr       */
+/*   Created: 2022/01/28 14:07:14 by aleroy            #+#    #+#             */
+/*   Updated: 2022/01/28 14:07:34 by aleroy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-kill(pid, SIGKILL);
-exit();
+#include <string.h>
+
+void	*ft_memset(void *b, int c, size_t len)
+{
+	size_t	i;
+	char	*str;
+
+	i = 0;
+	str = (char*)b;
+	while (i < len)
+	{
+		str[i] = (unsigned char)c;
+		i++;
+	}
+	return (b);
+}
+

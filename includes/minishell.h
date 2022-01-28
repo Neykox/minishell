@@ -136,6 +136,7 @@ void	free_exec(t_exec *exec);
  * UTILS
  */
 
+void	*ft_memset(void *b, int c, size_t len);;
 int		ft_notop(int c);
 char	*ft_strdup(const char *s);
 size_t	ft_strlen(char const *s);
@@ -152,10 +153,13 @@ char	*tweaked_strdup(const char *s);
  */
 
 void	ft_signal(int sig, siginfo_t *sa, void *data);
+// void	ft_signal(int sig);
 
 /*
  * BUILTINS
  */
+
+int	ft_cd(t_pipes *pipes, t_env *env);
 
 int check_echo_flag(char *ag, int *n);
 int	ft_echo(t_pipes *pipes);
@@ -171,15 +175,19 @@ char    *ft_expander(t_env *envp, char *target);
 int ft_isalpha_underscore(int c);
 int ft_isalnum(int c);
 char    *copy_till_eg(char *line);
-int check_value_export(t_lxr *lxr, char **line);
+// int check_value_export(t_lxr *lxr, char **line);
+int check_value_export(char *cmds, char **line);
 int not_in_env(t_env *envp, char *line);
 int add_line(t_env *envp, char *line);
-int ft_export(t_lxr *lxr, t_env *envp);
+// int ft_export(t_lxr *lxr, t_env *envp);
+int	ft_export(char **cmds, t_env *envp);
 
 void    ft_lstdelone(t_env *lst);
-int check_value_unset(t_lxr *lxr, char **line);
+// int check_value_unset(t_lxr *lxr, char **line);
+int check_value_unset(char *cmds, char **line);
 void    find_line(t_env *envp, char *line);
-int ft_unset(t_lxr *lxr, t_env *envp);
+// int ft_unset(t_lxr *lxr, t_env *envp);
+int ft_unset(char **cmds, t_env *envp);
 
 void    ft_lstclear(t_env **lst);
 void    ft_lstadd_back(t_env **alst, t_env *new);
