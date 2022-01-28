@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/27 18:46:13 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/28 17:25:45 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ void	exec_commands(char **cmds, char **envp)
 	char	*finalcmd;
 
 	i = 0;
-	if (cmds[0][0] == '/')
+	if (cmds[0][0] == '/' || cmds[0][0] == '.')
 	{
-		if (!(access(cmds[0], F_OK)))
+		if (!(access(cmds[0], X_OK)))
 			execve(cmds[0], cmds, envp);
 	}
 	else
@@ -35,7 +35,7 @@ void	exec_commands(char **cmds, char **envp)
 		while (cmd_paths[i])
 		{
 			finalcmd = ft_strjoin(cmd_paths[i], cmds[0], 0);
-			if (!(access(finalcmd, F_OK)))
+			if (!(access(finalcmd, F_OK & X_OK)))
 				execve(finalcmd, cmds, envp);
 			else
 				i++;
@@ -70,14 +70,39 @@ int	exec_redir(t_redir *redir)
 				return (ret);
 			close(tmp->fd);
 		}
-		//else if (tmp->type == DREDIR_LEFT)
-		//{
-		//	ret = heredoc_implementation(tmp);
-		//	if (ret < 0)
-		//		return (ret);
-		//}
+		else if (tmp->type == DREDIR_LEFT)
+		{
+			ret = dup2(tmp->fd, 0);
+			if (ret < 0)
+				return (ret);
+			close(tmp->fd);
+		}
 		tmp = tmp->next;
 	}
+	return (ret);
+}
+
+int	builtin_checker(char **cmds)
+{
+	int ret;
+
+	ret = 1;
+	if (!(ft_strncmp(cmds[0], "echo", 4)))
+		//send to echo fct
+	else if (!(ft_strncmp(cmds[0], "unset", 6)))
+		//send to unset fct
+	else if (!(ft_strncmp(cmds[0], "cd", 2)))
+		//send to cd fct
+	else if (!(ft_strncmp(cmds[0], "pwd", 3)))
+		//send to pwd fct
+	else if (!(ft_strncmp(cmds[0], "export", 6)))
+		//send to export fct
+	else if (!(ft_strncmp(cmds[0], "env", 3)))
+		//send to enc fct
+	else if (!(ft_strncmp(cmds[0], "exit", 4)))
+		//send to exit fct
+	else
+		ret = 0;
 	return (ret);
 }
 
@@ -131,7 +156,8 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp)
 				if (k < 0)
 					exit (1);
 			}
-			exec_commands(exec->pipes[i].cmds, envp);
+			if (!(builtin_checker(exec->pipes[i].cmds)))
+				exec_commands(exec->pipes[i].cmds, envp);
 			exit (1);
 		}
 		i++;
@@ -149,7 +175,29 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp)
 		wait(NULL);
 		i++;
 	}
+	i = 0;
+	while (i <= exec->nb_pipe)
+	{
+		if (exec->pipes[i].redir != NULL)
+			close_redir_fd(exec->pipes[i].redir);
+		i++;
+	}
 	return (0);
+}
+
+void	close_redir_fd(t_redir *redir)
+{
+	t_redir *tmp;
+
+	tmp = redir;
+	while (1)
+	{
+		if (!tmp)
+			break ;
+		else if (tmp->fd)
+			close(tmp->fd);
+		tmp = tmp->next;
+	}
 }
 
 t_redir	*open_redir_fd(t_redir *redir)
@@ -187,6 +235,17 @@ t_redir	*open_redir_fd(t_redir *redir)
 				perror(tmp->redir);
 				return (NULL);
 			}
+		}
+		else if (tmp->type == DREDIR_LEFT)
+		{
+			tmp->fd = open(".tmp_heredoc", O_WRONLY | O_CREAT | O_EXCL | O_TRUNC, 0600);
+			if (tmp->fd < 0)
+			{
+				perror(tmp->redir);
+				return (NULL);
+			}
+			if (heredoc_implementation(tmp) < 0)
+				return (NULL);
 		}
 		tmp = tmp->next;
 	}
