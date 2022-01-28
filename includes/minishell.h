@@ -163,7 +163,7 @@ void	ft_signal(int sig, siginfo_t *sa, void *data);
 int	ft_cd(t_pipes *pipes, t_env *env);
 
 int check_echo_flag(char *ag, int *n);
-int	ft_echo(t_pipes *pipes);
+int	ft_echo(char **cmds);
 
 void    ft_pwd(void);
 void    ft_env(t_env *envp);

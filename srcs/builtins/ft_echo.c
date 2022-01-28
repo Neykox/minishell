@@ -23,29 +23,62 @@ int check_echo_flag(char *ag, int *n)
 	return (1);
 }
 
-int	ft_echo(t_pipes *pipes)
+// int	ft_echo(t_pipes *pipes)
+// {
+// 	int	n;
+// 	int	i;
+// 	char	*ret;
+
+// 	ret = NULL;
+// 	if (pipes->cmds[1])
+// 		i = check_echo_flag(pipes->cmds[1], &n);
+// 	while (pipes->cmds[1] && pipes->cmds[i])
+// 	{
+// 		ret = ft_strjoin_utils(ret, pipes->cmds[i]);
+// 		if (ret == NULL)
+// 			return (-2);
+// 		i++;
+// 		if (pipes->cmds[i])
+// 		{
+// 			ret = ft_strjoin_utils(ret, " ");
+// 			if (ret == NULL)
+// 				return (-2);
+// 		}
+// 	}
+// 	if (n == 0 || !(pipes->cmds[1]))
+// 		ret = ft_strjoin_utils(ret, "\n");
+// 	else
+// 		ret = ft_strjoin_utils(ret, "");
+// 	if (ret == NULL)
+// 		return (-2);
+// 	write(1, ret, ft_strlen(ret));
+// 	free(ret);
+// 	return (0);
+// }
+
+int	ft_echo(char **cmds)
 {
 	int	n;
 	int	i;
 	char	*ret;
 
 	ret = NULL;
-	if (pipes->cmds[1])
-		i = check_echo_flag(pipes->cmds[1], &n);
-	while (pipes->cmds[1] && pipes->cmds[i])
+	if (cmds[1])
+		i = check_echo_flag(cmds[1], &n);
+	while (cmds[1] && cmds[i])
 	{
-		ret = ft_strjoin_utils(ret, pipes->cmds[i]);
+		ret = ft_strjoin_utils(ret, cmds[i]);
 		if (ret == NULL)
 			return (-2);
 		i++;
-		if (pipes->cmds[i])
+		if (cmds[i])
 		{
 			ret = ft_strjoin_utils(ret, " ");
 			if (ret == NULL)
 				return (-2);
 		}
 	}
-	if (n == 0 || !(pipes->cmds[1]))
+	if (n == 0 || !(cmds[1]))
 		ret = ft_strjoin_utils(ret, "\n");
 	else
 		ret = ft_strjoin_utils(ret, "");

@@ -86,7 +86,7 @@ int	main(int ac, char **av, char **envp)
 			if (ft_strncmp(lxr->value, "cd ", 3) == 0)
 				ret = ft_cd(exec->pipes, new_env);
 			else if (ft_strncmp(lxr->value, "echo ", 5) == 0)
-				ret = ft_echo(exec->pipes);
+				ret = ft_echo(exec->pipes->cmds);
 			else if (ft_strncmp(lxr->value, "pwd ", 4) == 0)
 				ft_pwd();
 			else if (ft_strncmp(lxr->value, "env ", 4) == 0)
