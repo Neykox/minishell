@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/28 17:48:48 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/28 17:55:14 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,13 @@ int	builtin_checker(char **cmds, t_env *new_env)
 	int ret;
 
 	ret = 1;
+	printf("hello from builtin\n");
 	if (!(ft_strncmp(cmds[0], "echo", 4)))
 		ft_echo(cmds);
 	else if (!(ft_strncmp(cmds[0], "unset", 6)))
 		ft_unset(cmds, new_env);
-	else if (!(ft_strncmp(cmds[0], "cd", 2)))
-		ft_cd(cmds, new_env);
+	//else if (!(ft_strncmp(cmds[0], "cd", 2)))
+	//	ft_cd(cmds, new_env);
 	else if (!(ft_strncmp(cmds[0], "pwd", 3)))
 		ft_pwd();
 	else if (!(ft_strncmp(cmds[0], "export", 6)))
@@ -157,7 +158,10 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 					exit (1);
 			}
 			if (!(builtin_checker(exec->pipes[i].cmds, new_env)))
+			{
 				exec_commands(exec->pipes[i].cmds, envp);
+				printf("just came back from execve\n");
+			}
 			exit (1);
 		}
 		i++;

@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/28 17:49:03 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/28 17:53:56 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int ac, char **av, char **envp)
 	t_env	*new_env;
 	struct sigaction sa;
 	t_exec	*exec;
-	int ret;
+	//int ret;
 	
 	// (void)ac;
 	(void)av;
@@ -81,7 +81,7 @@ int	main(int ac, char **av, char **envp)
 			execute(exec, envp, new_env);
 			free(line);
 		}
-		if (exec && exec->pipes)
+		/*if (exec && exec->pipes)
 		{
 			if (ft_strncmp(lxr->value, "cd ", 3) == 0)
 				ret = ft_cd(exec->pipes, new_env);
@@ -103,15 +103,15 @@ int	main(int ac, char **av, char **envp)
 				if (ret == -2)
 					return (ret);
 			}
-			/*while (lxr)
+			while (lxr)
 			{
 				ret = ft_get_expand(lxr, new_env);
 				printf("exp = %s\n", lxr->value);
 				if (ret == -2)
 					return (printf("malloc error\n"));
 				lxr = lxr->next;
-			}*/
-		}
+			}
+		}*/
 		if (line == NULL)
 			break ;
 	}
