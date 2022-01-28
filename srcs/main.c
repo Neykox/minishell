@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/28 13:59:19 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/28 17:49:03 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	main(int ac, char **av, char **envp)
 			// }
 			parser(lxr, exec);	
 			print_pipes(exec);
-			execute(exec, envp);
+			execute(exec, envp, new_env);
 			free(line);
 		}
 		if (exec && exec->pipes)
