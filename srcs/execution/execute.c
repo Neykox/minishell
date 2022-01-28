@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/28 17:25:45 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/28 17:48:48 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,31 +82,31 @@ int	exec_redir(t_redir *redir)
 	return (ret);
 }
 
-int	builtin_checker(char **cmds)
+int	builtin_checker(char **cmds, t_env *new_env)
 {
 	int ret;
 
 	ret = 1;
 	if (!(ft_strncmp(cmds[0], "echo", 4)))
-		//send to echo fct
+		ft_echo(cmds);
 	else if (!(ft_strncmp(cmds[0], "unset", 6)))
-		//send to unset fct
+		ft_unset(cmds, new_env);
 	else if (!(ft_strncmp(cmds[0], "cd", 2)))
-		//send to cd fct
+		ft_cd(cmds, new_env);
 	else if (!(ft_strncmp(cmds[0], "pwd", 3)))
-		//send to pwd fct
+		ft_pwd();
 	else if (!(ft_strncmp(cmds[0], "export", 6)))
-		//send to export fct
+		ft_export(cmds, new_env);
 	else if (!(ft_strncmp(cmds[0], "env", 3)))
-		//send to enc fct
-	else if (!(ft_strncmp(cmds[0], "exit", 4)))
+		ft_env(new_env);
+	//else if (!(ft_strncmp(cmds[0], "exit", 4)))
 		//send to exit fct
 	else
 		ret = 0;
 	return (ret);
 }
 
-int	pipe_things_up(t_exec *exec, int **pipefd, char **envp)
+int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 {
 	int	i;
 	int	j;
@@ -156,7 +156,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp)
 				if (k < 0)
 					exit (1);
 			}
-			if (!(builtin_checker(exec->pipes[i].cmds)))
+			if (!(builtin_checker(exec->pipes[i].cmds, new_env)))
 				exec_commands(exec->pipes[i].cmds, envp);
 			exit (1);
 		}
@@ -252,7 +252,7 @@ t_redir	*open_redir_fd(t_redir *redir)
 	return (redir);
 }
 
-int	execute(t_exec *exec, char **envp)
+int	execute(t_exec *exec, char **envp, t_env *new_env)
 {
 	int		**pipefd;
 	int		i;
@@ -283,6 +283,6 @@ int	execute(t_exec *exec, char **envp)
 		i++;
 	}
 	print_pipes(exec);
-	pipe_things_up(exec, pipefd, envp);
+	pipe_things_up(exec, pipefd, envp, new_env);
 	return (0);
 }
