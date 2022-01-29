@@ -66,10 +66,8 @@ int	ft_isalnum(int c)
 int check_value_export(char *cmds, char **line)
 {
 	int i;
-	// char	*value;
 
 	i = 0;
-	// value = NULL;
 	while (cmds[i] && cmds[i] != '=' && ft_isalpha_underscore(cmds[i]) == 1)
 		i++;
 	if (i == 0 || cmds[i] != '=')
@@ -78,24 +76,6 @@ int check_value_export(char *cmds, char **line)
 	*line = ft_strdup(cmds);
 	if (line == NULL)
 		return (-2);
-	// if (ft_isalnum(cmds[i + 1])== 1)
-	// 	i++;
-	// else
-	// {
-	// 	if (cmds[i + 1])
-	// 	{
-	// 		i++;
-	// 		value = ft_strdup(cmds);
-	// 		if (value == NULL)
-	// 		{
-	// 			free(*line);
-	// 			return (-2);
-	// 		}
-	// 		*line = ft_strjoin_utils(*line, value);
-	// 		if (*line == NULL)
-	// 			return (-2);
-	// 	}
-	// }
 	return (0);
 }
 

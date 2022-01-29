@@ -16,6 +16,8 @@ char	*ft_strjoin_utils(char *line, char *buf)
 {
 	char	*line2;
 
+	if (buf == NULL)//new if
+		return (NULL);
 	line2 = ft_strdup(buf);
 	if (line2 == NULL)
 		return (NULL);
