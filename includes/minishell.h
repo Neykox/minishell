@@ -175,8 +175,8 @@ char	*check_exp(t_lxr *lxr, t_env *envp, int *ret);
 int	ft_get_expand(t_lxr *lxr, t_env *envp);
 char    *ft_expander(t_env *envp, char *target);
 
-int ft_isalpha_underscore(int c);
-int ft_isalnum(int c);
+int	ft_isalpha_underscore(int c);
+int	ft_isalnum_underscore(int c);
 char    *copy_till_eg(char *line);
 // int check_value_export(t_lxr *lxr, char **line);
 int check_value_export(char *cmds, char **line);

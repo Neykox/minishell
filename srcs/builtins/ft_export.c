@@ -19,10 +19,10 @@ int	ft_isalpha_underscore(int c)
 	return (0);
 }
 
-int	ft_isalnum(int c)
+int	ft_isalnum_underscore(int c)
 {
 	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-		(c >= '0' && c <= '9'))
+		(c >= '0' && c <= '9') || c == '_')
 		return (1);
 	return (0);
 }
@@ -32,8 +32,11 @@ int check_value_export(char *cmds, char **line)
 	int i;
 
 	i = 0;
-	while (cmds[i] && cmds[i] != '=' && ft_isalpha_underscore(cmds[i]) == 1)
+	if (cmds[i] && cmds[i] != '=' && ft_isalpha_underscore(cmds[i]) == 1)
 		i++;
+	if (i > 0)
+		while (cmds[i] && cmds[i] != '=' && ft_isalnum_underscore(cmds[i]) == 1)
+			i++;
 	if (i == 0 || cmds[i] != '=')
 		return (-1);
 	//should be HELLO= at this point

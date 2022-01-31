@@ -135,8 +135,11 @@ int check_value_unset(char *cmds, char **line)
 	int i;
 
 	i = 0;
-	while (cmds[i] && ft_isalpha_underscore(cmds[i]) == 1)
+	if (cmds[i] && ft_isalpha_underscore(cmds[i]) == 1)
 		i++;
+	if (i > 0)
+		while (cmds[i] && ft_isalnum_underscore(cmds[i]) == 1)
+			i++;
 	if (i == 0 || (ft_isalpha_underscore(cmds[i]) == 0 && cmds[i] != '\0'))
 		return (-1);
 	//should be HELLO at this point
