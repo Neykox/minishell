@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/28 17:49:24 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/31 19:09:47 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ int		check_redir(t_lxr **parser);
  */
 
 int		parser(t_lxr *lxr, t_exec *exec);
+int		parse_values(t_lxr *lxr, t_exec *exec);
 
 /*
  * EXECUTION
@@ -132,6 +133,7 @@ void	close_redir_fd(t_redir *redir);
  */
 
 void	free_exec(t_exec *exec);
+t_lxr	*free_lxr(t_lxr *lxr);
 
 /*
  * UTILS
@@ -167,8 +169,8 @@ int	ft_cd(char **cmds, int nb_cmds, t_env *env);
 int check_echo_flag(char *ag, int *n);
 int	ft_echo(char **cmds);
 
-void    ft_pwd(void);
-void    ft_env(t_env *envp);
+int	ft_pwd(void);
+int	ft_env(t_env *envp);
 
 char    *ft_copy_till_exp(char *line);
 char	*check_exp(t_lxr *lxr, t_env *envp, int *ret);

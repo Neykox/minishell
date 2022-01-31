@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/28 17:53:56 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/31 19:07:33 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,15 @@ int	main(int ac, char **av, char **envp)
 	t_env	*new_env;
 	struct sigaction sa;
 	t_exec	*exec;
-	//int ret;
+	int ret;
 	
 	// (void)ac;
 	(void)av;
+	if (ac != 1)
+	{
+		write(1, "Please launch program without any args.\n", 40);
+		return (1);
+	}
 	new_env = ft_copy_env(envp);
 	if (new_env == NULL)
 	{
@@ -40,12 +45,7 @@ int	main(int ac, char **av, char **envp)
 	}
 	ft_memset(&sa, 0, sizeof(sa));
 	sa.sa_sigaction = &ft_signal;
-	//exec = malloc(sizeof(t_exec));
-	//if (!(exec))
-	//{
-	//	print_parsing_error(NULL, 3);
-	//	return (3);
-	//}
+	ret = 0;
 	while (1)
 	{
 		sigaction(SIGINT, &sa, NULL);
@@ -58,27 +58,39 @@ int	main(int ac, char **av, char **envp)
 			line = readline("\e[1;31mminishell$ \e[0m");
 		add_history(line);
 		lxr = NULL;
-		if (exec)
-			free_exec(exec);
-		exec = malloc(sizeof(t_exec));
-		if (!(exec))
-		{
-			print_parsing_error(NULL, 3);
-			return (3);
-		}
+		//if (exec)
+		//	free_exec(exec);
+		//exec = malloc(sizeof(t_exec));
+		//if (!(exec))
+		//{
+		//	print_parsing_error(NULL, 3);
+		//	return (3);
+	//	}
 		if (line)
 		{
 			lxr = lexer(lxr, line);
-			print_lxr(lxr);
+			//print_lxr(lxr);
 			ft_get_expand(lxr, new_env);
-			parser(lxr, exec);	
-			print_pipes(exec);
-			execute(exec, envp, new_env);
+			ret = parser(lxr, exec);	
+			//print_pipes(exec);
+			if (ret == 0)
+			{
+				exec = malloc(sizeof(t_exec));
+				if (!(exec))
+				{
+					print_parsing_error(NULL, 3);
+					return (3);
+				}
+				ret = parse_values(lxr, exec);
+				execute(exec, envp, new_env);
+				free_exec(exec);
+			}
+			//free_lxr(lxr);
 			free(line);
 		}
 		// if (exec && exec->pipes)
 		// {
-			int ret = 0;
+		/*	int ret = 0;
 			if (ft_strncmp(lxr->value, "cd", 3) == 0)
 				ret = ft_cd(exec->pipes->cmds, exec->nb_pipe, new_env);
 			else if (ft_strncmp(lxr->value, "echo", 5) == 0)
@@ -99,7 +111,7 @@ int	main(int ac, char **av, char **envp)
 			// 	if (ret == -2)
 			// 		return (ret);
 			// }
-		// }
+		// }*/
 		if (line == NULL)
 			break ;
 	}

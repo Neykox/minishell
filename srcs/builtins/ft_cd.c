@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:40:45 by user42            #+#    #+#             */
-/*   Updated: 2022/01/12 15:40:47 by user42           ###   ########.fr       */
+/*   Updated: 2022/01/31 17:22:31 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int modif_pwd(t_env *env)
 	line = NULL;
 	ret = 0;
 	pwd[0] = NULL;
-	line = getcwd(line, 0);// si le malloc de getcwd fail, check errno
+	line = getcwd(NULL, 0);// si le malloc de getcwd fail, check errno
 	if (line == NULL)
 		return (-2);
 	pwd[1] = ft_strjoin_utils("PWD=", line);

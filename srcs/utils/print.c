@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 14:48:00 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/27 14:51:24 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/31 15:50:39 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ void	print_pipes(t_exec *exec)
         	{   
         		printf("pipes[%d]->cmds[%d] : |%s|\n", i, l, exec->pipes[i].cmds[l]);
         		l++;
-        	} 
+        	}
+			l = 0;	
 			printf("\n");
 			i++;
 		}
