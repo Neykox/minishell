@@ -82,7 +82,119 @@ int	exec_redir(t_redir *redir)
 	return (ret);
 }
 
-// int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env)
+int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env)
+{
+	int ret;
+
+	ret = 1;
+	int ret2 = 0;
+	printf("hello from builtin\n");
+
+	return 1;
+
+	if (!(ft_strncmp(cmds[0], "echo", 4)))
+		ret2 = ft_echo(cmds);
+	else if (!(ft_strncmp(cmds[0], "unset", 5)))
+		ret2=ft_unset(cmds, new_env);
+	else if (!(ft_strncmp(cmds[0], "cd", 2)))
+		ret2=ft_cd(cmds, nb_cmds, new_env);
+	else if (!(ft_strncmp(cmds[0], "pwd", 3)))
+		ft_pwd();
+	else if (!(ft_strncmp(cmds[0], "export", 6)))
+		ret2=ft_export(cmds, new_env);
+	else if (!(ft_strncmp(cmds[0], "env", 3)))
+		ft_env(new_env);
+	//else if (!(ft_strncmp(cmds[0], "exit", 4)))
+		//send to exit fct
+	else
+		ret = 0;
+	printf("ret2 = %d\n", ret2);
+	return (ret);
+}
+
+int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
+{
+	int	i;
+	int	j;
+	int	childpid;
+	int	k;
+
+	i = 0;
+	j = 0;
+	k = 0;
+	while (i < exec->nb_pipe)
+	{
+		if (pipe(pipefd[i]) == -1)
+			return (1);
+		i++;
+	}
+	i = 0;
+	while (i <= exec->nb_pipe)
+	{
+		childpid = fork();
+		if (childpid == -1)
+			return (2);
+		else if (childpid == 0)
+		{
+			if (j < exec->nb_pipe)
+			{
+				if (dup2(pipefd[j][1], 1) < 0)
+					exit (1);
+			}
+			if (j != 0)
+			{
+				if (dup2(pipefd[j - 1][0], 0) < 0)
+					exit (1);
+			}
+			while (k < exec->nb_pipe)
+			{
+				if (k != j)
+				{
+					close(pipefd[k][0]);
+					close(pipefd[k][1]);
+				}
+				k++;
+			}
+			k = 0;
+			if (exec->pipes[i].redir != NULL)
+			{
+				k = exec_redir(exec->pipes[i].redir);
+				if (k < 0)
+					exit (1);
+			}
+			if (!(builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env)))
+			{
+				exec_commands(exec->pipes[i].cmds, envp);
+				printf("just came back from execve\n");
+			}
+			exit (1);
+		}
+		i++;
+		j++;
+	}
+	while (k < exec->nb_pipe)
+	{
+		close(pipefd[k][0]);
+		close(pipefd[k][1]);
+		k++;
+	}
+	i = 0;
+	while (i <= exec->nb_pipe)
+	{
+		wait(NULL);
+		i++;
+	}
+	i = 0;
+	while (i <= exec->nb_pipe)
+	{
+		if (exec->pipes[i].redir != NULL)
+			close_redir_fd(exec->pipes[i].redir);
+		i++;
+	}
+	return (0);
+}
+
+// int	builtin_checker(char **cmds, t_env *new_env)
 // {
 // 	int ret;
 
@@ -92,8 +204,8 @@ int	exec_redir(t_redir *redir)
 // 		ft_echo(cmds);
 // 	else if (!(ft_strncmp(cmds[0], "unset", 5)))
 // 		ft_unset(cmds, new_env);
-// 	else if (!(ft_strncmp(cmds[0], "cd", 2)))
-// 		ft_cd(cmds, nb_cmds, new_env);
+// 	//else if (!(ft_strncmp(cmds[0], "cd", 2)))
+// 	//	ft_cd(cmds, new_env);
 // 	else if (!(ft_strncmp(cmds[0], "pwd", 3)))
 // 		ft_pwd();
 // 	else if (!(ft_strncmp(cmds[0], "export", 6)))
@@ -157,7 +269,7 @@ int	exec_redir(t_redir *redir)
 // 				if (k < 0)
 // 					exit (1);
 // 			}
-// 			if (!(builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env)))
+// 			if (!(builtin_checker(exec->pipes[i].cmds, new_env)))
 // 			{
 // 				exec_commands(exec->pipes[i].cmds, envp);
 // 				printf("just came back from execve\n");
@@ -188,113 +300,6 @@ int	exec_redir(t_redir *redir)
 // 	}
 // 	return (0);
 // }
-
-int	builtin_checker(char **cmds, t_env *new_env)
-{
-	int ret;
-
-	ret = 1;
-	printf("hello from builtin\n");
-	if (!(ft_strncmp(cmds[0], "echo", 4)))
-		ft_echo(cmds);
-	else if (!(ft_strncmp(cmds[0], "unset", 5)))
-		ft_unset(cmds, new_env);
-	//else if (!(ft_strncmp(cmds[0], "cd", 2)))
-	//	ft_cd(cmds, new_env);
-	else if (!(ft_strncmp(cmds[0], "pwd", 3)))
-		ft_pwd();
-	else if (!(ft_strncmp(cmds[0], "export", 6)))
-		ft_export(cmds, new_env);
-	else if (!(ft_strncmp(cmds[0], "env", 3)))
-		ft_env(new_env);
-	//else if (!(ft_strncmp(cmds[0], "exit", 4)))
-		//send to exit fct
-	else
-		ret = 0;
-	return (ret);
-}
-
-int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
-{
-	int	i;
-	int	j;
-	int	childpid;
-	int	k;
-
-	i = 0;
-	j = 0;
-	k = 0;
-	while (i < exec->nb_pipe)
-	{
-		if (pipe(pipefd[i]) == -1)
-			return (1);
-		i++;
-	}
-	i = 0;
-	while (i <= exec->nb_pipe)
-	{
-		childpid = fork();
-		if (childpid == -1)
-			return (2);
-		else if (childpid == 0)
-		{
-			if (j < exec->nb_pipe)
-			{
-				if (dup2(pipefd[j][1], 1) < 0)
-					exit (1);
-			}
-			if (j != 0)
-			{
-				if (dup2(pipefd[j - 1][0], 0) < 0)
-					exit (1);
-			}
-			while (k < exec->nb_pipe)
-			{
-				if (k != j)
-				{
-					close(pipefd[k][0]);
-					close(pipefd[k][1]);
-				}
-				k++;
-			}
-			k = 0;
-			if (exec->pipes[i].redir != NULL)
-			{
-				k = exec_redir(exec->pipes[i].redir);
-				if (k < 0)
-					exit (1);
-			}
-			if (!(builtin_checker(exec->pipes[i].cmds, new_env)))
-			{
-				exec_commands(exec->pipes[i].cmds, envp);
-				printf("just came back from execve\n");
-			}
-			exit (1);
-		}
-		i++;
-		j++;
-	}
-	while (k < exec->nb_pipe)
-	{
-		close(pipefd[k][0]);
-		close(pipefd[k][1]);
-		k++;
-	}
-	i = 0;
-	while (i <= exec->nb_pipe)
-	{
-		wait(NULL);
-		i++;
-	}
-	i = 0;
-	while (i <= exec->nb_pipe)
-	{
-		if (exec->pipes[i].redir != NULL)
-			close_redir_fd(exec->pipes[i].redir);
-		i++;
-	}
-	return (0);
-}
 
 void	close_redir_fd(t_redir *redir)
 {

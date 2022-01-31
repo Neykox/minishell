@@ -71,47 +71,35 @@ int	main(int ac, char **av, char **envp)
 			lxr = lexer(lxr, line);
 			print_lxr(lxr);
 			ft_get_expand(lxr, new_env);
-			// while (lxr)
-			// {
-			// 	printf("exp = %s\n", lxr->value);
-			// 	lxr = lxr->next;
-			// }
 			parser(lxr, exec);	
 			print_pipes(exec);
 			execute(exec, envp, new_env);
 			free(line);
 		}
-		/*if (exec && exec->pipes)
-		{
-			if (ft_strncmp(lxr->value, "cd ", 3) == 0)
-				ret = ft_cd(exec->pipes, new_env);
-			else if (ft_strncmp(lxr->value, "echo ", 5) == 0)
+		// if (exec && exec->pipes)
+		// {
+			int ret = 0;
+			if (ft_strncmp(lxr->value, "cd", 3) == 0)
+				ret = ft_cd(exec->pipes->cmds, exec->nb_pipe, new_env);
+			else if (ft_strncmp(lxr->value, "echo", 5) == 0)
 				ret = ft_echo(exec->pipes->cmds);
-			else if (ft_strncmp(lxr->value, "pwd ", 4) == 0)
+			else if (ft_strncmp(lxr->value, "pwd", 4) == 0)
 				ft_pwd();
-			else if (ft_strncmp(lxr->value, "env ", 4) == 0)
+			else if (ft_strncmp(lxr->value, "env", 4) == 0)
 				ft_env(new_env);
-			else if (ft_strncmp(lxr->value, "export ", 7) == 0)
+			else if (ft_strncmp(lxr->value, "export", 7) == 0)
 			{
 				ret = ft_export(exec->pipes->cmds, new_env);
 				if (ret == -2)
 					return (ret);
 			}
-			else if (ft_strncmp(lxr->value, "unset ", 6) == 0)
-			{
+			else if (ft_strncmp(lxr->value, "unset", 6) == 0)
 				ret = ft_unset(exec->pipes->cmds, new_env);
-				if (ret == -2)
-					return (ret);
-			}
-			while (lxr)
-			{
-				ret = ft_get_expand(lxr, new_env);
-				printf("exp = %s\n", lxr->value);
-				if (ret == -2)
-					return (printf("malloc error\n"));
-				lxr = lxr->next;
-			}
-		}*/
+			printf("main ret = %d\n", ret);
+			// 	if (ret == -2)
+			// 		return (ret);
+			// }
+		// }
 		if (line == NULL)
 			break ;
 	}

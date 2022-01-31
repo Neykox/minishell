@@ -16,42 +16,40 @@
 // On success, zero is returned.  On error, -1 is returned, and
 //        errno is set to indicate the error.
 
-// int	ft_cd(t_pipes *pipes, t_env *env)
-// {
-// 	(void)env;
-// 	int	ret;
+char	*remove_eg(char *str)
+{
+	int	i;
+	char	*tmp;
 
-// 	ret = 0;
-// 	if (pipes->nb_cmds > 2)
-// 		return (-1);
-// 	ret = chdir(pipes->cmds[1]);
-// 	if (ret == -1)
-// 	{
-// 		perror("ft_cd");
-// 		return (-1);
-// 	}
-// 	//change env
-// 	return (ret);
-// }
+	i = 0;
+	tmp = NULL;
+	while (str[i] && str[i] != '=')
+		i++;
+	if ( str[i] == '=')
+		i++;
+	tmp = ft_strdup(&str[i]);
+	return (tmp);
+}
 
 char	*find_in_env(t_env *envp, char *line, int *ret)
 {
 	t_env *tmp;
-	char *line2;
+	char	*str;
 	int	eg;
 
 	eg = 0;
+	str = NULL;
 	tmp = envp;
-	while (line[eg] != '=')
+	while (line[eg])
 		eg++;
 	while (tmp)
 	{
 		if (ft_strncmp(tmp->line, line, eg) == 0)
 		{
-			line2 = ft_strdup(tmp->line);
-			if (ret == NULL)
+			str = remove_eg(tmp->line);
+			if (str == NULL)
 				*ret = -2;
-			return (line2);
+			return (str);
 		}
 		tmp = tmp->next;
 	}
@@ -61,23 +59,24 @@ char	*find_in_env(t_env *envp, char *line, int *ret)
 int modif_oldpwd(t_env *env)
 {
 	char *line;
-	char *oldpwd[2];
+	char *oldpwd[3];
 	int ret;
 
 	ret = 0;
-	line = find_in_env(env, "PWD", &ret);
+	oldpwd[0] = NULL;
+	line = find_in_env(env, "PWD=", &ret);
 	if (ret == -2)
 		return (-2);
 	if (line == NULL)
-		oldpwd[0] = ft_strjoin_utils("OLDPWD=", "");
+		oldpwd[1] = ft_strjoin_utils("OLDPWD=", "");
 	else
-		oldpwd[0] = ft_strjoin_utils("OLDPWD=", line);
+		oldpwd[1] = ft_strjoin_utils("OLDPWD=", line);
 	if (line == NULL)
 		return (-2);
-	oldpwd[1] = NULL;
+	oldpwd[2] = NULL;
 	ret = ft_export(oldpwd, env);
 	free(line);
-	free(oldpwd[0]);
+	free(oldpwd[1]);
 	if (ret == -2)
 		return (-2);
 	return (0);
@@ -86,23 +85,25 @@ int modif_oldpwd(t_env *env)
 int modif_pwd(t_env *env)
 {
 	char *line;
-	char *pwd[2];
+	char *pwd[3];
 	int ret;
 
 	line = NULL;
 	ret = 0;
+	pwd[0] = NULL;
 	line = getcwd(line, 0);// si le malloc de getcwd fail, check errno
 	if (line == NULL)
 		return (-2);
-	pwd[0] = ft_strjoin_utils("PWD=", line);
+	pwd[1] = ft_strjoin_utils("PWD=", line);
 	free(line);
-	if (pwd[0] == NULL)
+	if (pwd[1] == NULL)
 		return (-2);
-	pwd[1] = NULL;
+	pwd[2] = NULL;
 	ret = ft_export(pwd, env);
-	free(pwd[0]);
+	free(pwd[1]);
 	if (ret == -2)
 		return (-2);
+	return (0);
 }
 
 int	ft_cd(char **cmds, int nb_cmds, t_env *env)
@@ -118,28 +119,12 @@ int	ft_cd(char **cmds, int nb_cmds, t_env *env)
 		perror("ft_cd");
 		return (-1);
 	}
+	// (void)env;
 	ret = modif_oldpwd(env);
 	if (ret == -2)
 		return (-2);
 	ret = modif_pwd(env);
 	if (ret == -2)
-		return (-2);
+		return (-3);
 	return (0);
 }
-
-// char *line;
-
-// line = find_in_env(env, "PWD");
-// if (line == NULL)
-// 	OLDPWD[0] = ft_strjoin_utils("OLDPWD=", "");
-// else
-// 	OLDPWD[0] = ft_strjoin_utils("OLDPWD=", line);
-// OLDPWD[1] = NULL;
-// ret = ft_export(OLDPWD, env);
-
-// cd;
-
-// char *pwd[2];
-// pwd[0] = ft_strjoin_utils("PWD=", getcwd());
-// pwd[1] = NULL;
-// ret = ft_export(pwd, env);
