@@ -6,7 +6,7 @@
 /*   By: aleroy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/13 14:10:28 by aleroy            #+#    #+#             */
-/*   Updated: 2022/01/13 14:10:30 by aleroy           ###   ########.fr       */
+/*   Updated: 2022/01/31 17:04:30 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int	ft_echo(char **cmds)
 	int	n;
 	int	i;
 	char	*ret;
+	int	ret2;
 
 	ret = NULL;
 	if (cmds[1])
@@ -69,13 +70,13 @@ int	ft_echo(char **cmds)
 	{
 		ret = ft_strjoin_utils(ret, cmds[i]);
 		if (ret == NULL)
-			return (-2);
+			ret2 = -2;
 		i++;
 		if (cmds[i])
 		{
 			ret = ft_strjoin_utils(ret, " ");
 			if (ret == NULL)
-				return (-2);
+				ret2 = -2;
 		}
 	}
 	if (n == 0 || !(cmds[1]))
@@ -83,8 +84,8 @@ int	ft_echo(char **cmds)
 	else
 		ret = ft_strjoin_utils(ret, "");
 	if (ret == NULL)
-		return (-2);
-	write(1, ret, ft_strlen(ret));
+		ret2 = -2;
+	ret2 = write(1, ret, ft_strlen(ret));
 	free(ret);
-	return (0);
+	return (ret2);
 }

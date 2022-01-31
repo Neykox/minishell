@@ -6,11 +6,27 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 14:07:11 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/27 14:30:53 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/31 18:58:08 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+t_lxr	*free_lxr(t_lxr *lxr)
+{
+	t_lxr *tmp;
+	t_lxr *node;
+
+	node = lxr;
+	while (node != NULL)
+	{
+		tmp = node;
+		node = node->next;
+		free(tmp);
+	}
+	lxr = NULL;
+	return (lxr);
+}
 
 t_redir	*free_redir(t_redir *redir)
 {

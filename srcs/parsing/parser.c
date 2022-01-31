@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/27 16:41:34 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/01/31 19:09:13 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,7 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 		exec->pipes[i].nb_redir_stdout = count_token(lxr, REDIR_STDOUT, i, 0);
 		exec->pipes[i].nb_dredir_right = count_token(lxr, DREDIR_RIGHT, i, 0);
 		exec->pipes[i].nb_dredir_left = count_token(lxr, DREDIR_LEFT, i, 0);
-		printf("nb_redir_stdin : %d | nb_redir_stdout : %d | nb_dredir_right : %d | nb_dredir_left : %d\n", exec->pipes[i].nb_redir_stdin, exec->pipes[i].nb_redir_stdout, exec->pipes[i].nb_dredir_right, exec->pipes[i].nb_dredir_left);
+		//printf("nb_redir_stdin : %d | nb_redir_stdout : %d | nb_dredir_right : %d | nb_dredir_left : %d\n", exec->pipes[i].nb_redir_stdin, exec->pipes[i].nb_redir_stdout, exec->pipes[i].nb_dredir_right, exec->pipes[i].nb_dredir_left);
 		if (exec->pipes[i].nb_redir_stdin != 0 || exec->pipes[i].nb_redir_stdout != 0 
 			|| exec->pipes[i].nb_dredir_right != 0 || exec->pipes[i].nb_dredir_left != 0)
 			exec->pipes[i].redir = parse_redir(lxr, i, exec->pipes[i].redir);
@@ -227,17 +227,18 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 int	parser(t_lxr *lxr, t_exec *exec)
 {
 	int	ret;
-	int	ret_parsing;
+	//int	ret_parsing;
 
-	ret_parsing = 0;
+	//ret_parsing = 0;
+	(void)exec;
 	ret = 0;
 	ret = syntax_checker(lxr, ret);
 	if (ret == 2 || ret == 3)
 		print_parsing_error(NULL, ret);
-	else if (ret == 0)
-		parse_values(lxr, exec);
-	if (ret_parsing == 0)
+	//else if (ret == 0)
+	//	ret_parsing = parse_values(lxr, exec);
+	//if (ret_parsing == 0)
 		return (ret);
-	else
-		return (ret_parsing);
+	//else
+	//	return (ret_parsing);
 }
