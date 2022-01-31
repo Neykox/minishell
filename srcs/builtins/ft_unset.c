@@ -212,6 +212,22 @@ void	find_line(t_env *envp, char *line)
 // 	return (ret);
 // }
 
+int write_invalid_id_unset(char *cmds)
+{
+	int	ret;
+
+	ret = write(1, "bash: unset: `", 14);
+	if (ret < 0)
+		return (-3);
+	ret = write(1, cmds, ft_strlen(cmds));
+	if (ret < 0)
+		return (-3);
+	ret = write(1, "': not a valid identifier", 25);
+	if (ret < 0)
+		return (-3);
+	return (-1);
+}
+
 int	ft_unset(char **cmds, t_env *envp)
 {
 	char	*line;
@@ -229,10 +245,12 @@ int	ft_unset(char **cmds, t_env *envp)
 			return (error);//malloc issue but arg was correct
 		if (error == -1)
 			ret = -1;
-
+		if (ft_isalpha_underscore(cmds[i][0]) == 0)
+			error = write_invalid_id_unset(cmds[i]);
+		if (error == -3)
+			return (-3);
 		if (error == 0)
 			find_line(envp, line);
-
 		i++;
 	}
 	return (ret);

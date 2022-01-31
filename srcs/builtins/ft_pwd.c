@@ -17,7 +17,7 @@ void	ft_pwd(void)
 	char	*buf;
 
 	buf = NULL;
-	buf = getcwd(buf, 0);// si le malloc de getcwd fail, check errno
+	buf = getcwd(NULL, 0);// si le malloc de getcwd fail, check errno
 	if (buf == NULL)
 		return ;
 	write(1, buf, ft_strlen(buf));

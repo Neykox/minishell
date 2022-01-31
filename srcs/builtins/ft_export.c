@@ -88,6 +88,22 @@ int	add_line(t_env *envp, char *line)
 	return (not_in_env(envp, line));
 }
 
+int write_invalid_id_export(char *cmds)
+{
+	int	ret;
+
+	ret = write(1, "bash: export: `", 15);
+	if (ret < 0)
+		return (-3);
+	ret = write(1, cmds, ft_strlen(cmds));
+	if (ret < 0)
+		return (-3);
+	ret = write(1, "': not a valid identifier", 25);
+	if (ret < 0)
+		return (-3);
+	return (-1);
+}
+
 int	ft_export(char **cmds, t_env *envp)
 {
 	char	*line;
@@ -105,15 +121,18 @@ int	ft_export(char **cmds, t_env *envp)
 			return (error);//malloc issue but arg was correct
 		if (error == -1)
 			ret = -1;
-
+		if (ft_isalpha_underscore(cmds[i][0]) == 0)
+			error = write_invalid_id_export(cmds[i]);
 		if (error == 0)
 			error = add_line(envp, line);
-		if (error == -2)
-			return (error);//malloc issue
-		if (error == -1)
-			ret = -1;
-
+		if (error == -2 ||error == -3)
+			return (error);//malloc issue || -3 == write error
 		i++;
 	}
 	return (ret);
 }
+
+// bash: export: `[hi=hi': not a valid identifier
+
+//export with no arg give alpabatically sorted env output
+//declare -x hi2="hi  hi=hello"

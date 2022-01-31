@@ -91,7 +91,7 @@ int modif_pwd(t_env *env)
 	line = NULL;
 	ret = 0;
 	pwd[0] = NULL;
-	line = getcwd(line, 0);// si le malloc de getcwd fail, check errno
+	line = getcwd(NULL, 0);// si le malloc de getcwd fail, check errno
 	if (line == NULL)
 		return (-2);
 	pwd[1] = ft_strjoin_utils("PWD=", line);

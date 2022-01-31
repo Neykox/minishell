@@ -12,5 +12,8 @@
 
 #include "../../includes/minishell.h"
 
+void	ft_exit(int status)
+{}
+
 kill(pid, SIGKILL);
 exit();
