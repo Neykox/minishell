@@ -71,7 +71,7 @@ int modif_oldpwd(t_env *env)
 		oldpwd[1] = ft_strjoin_utils("OLDPWD=", "");
 	else
 		oldpwd[1] = ft_strjoin_utils("OLDPWD=", line);
-	if (line == NULL)
+	if (oldpwd[1] == NULL)
 		return (-2);
 	oldpwd[2] = NULL;
 	ret = ft_export(oldpwd, env);
