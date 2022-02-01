@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 14:00:41 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/21 15:03:10 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/01 17:26:30 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	check_redir(t_lxr **parser)
 		&& (*parser)->token != DQUOTE)
 	{
 		print_parsing_error((*parser)->value, 1);
-		return (1);
+		return (2);
 	}
 	return (0);
 }
@@ -56,11 +56,14 @@ int	check_pipe(t_lxr **parser)
 	if ((*parser)->token == WSPACE)
 		*parser = (*parser)->next;
 	if ((*parser)->token == QUOTE_ERROR)
+	{
+		print_parsing_error(NULL, 2);
 		return (2);
+	}
 	else if ((*parser)->token == END)
 	{
 		print_parsing_error((*parser)->value, 1);
-		return (1);
+		return (2);
 	}
 	return (0);
 }
@@ -68,7 +71,10 @@ int	check_pipe(t_lxr **parser)
 int	syntax_checker_cont(t_lxr **parser, int ret)
 {
 	if ((*parser)->token == QUOTE_ERROR)
+	{
+		print_parsing_error(NULL, 2);
 		return (2);
+	}
 	if ((*parser)->token == WSPACE || (*parser)->token == WORD
 		|| (*parser)->token == END || (*parser)->token == SQUOTE
 		|| (*parser)->token == DQUOTE)
@@ -89,17 +95,21 @@ int	syntax_checker_cont(t_lxr **parser, int ret)
 	return (0);
 }
 
-int	syntax_checker(t_lxr *lxr, int ret)
+int	syntax_checker(t_lxr *lxr)
 {
 	t_lxr	*parser;
 
 	if (!lxr)
-		return (3);
+	{
+		g_error = 2;
+		return (g_error);
+	}
 	parser = lxr;
 	if (parser->token == PIPE)
 	{
 		print_parsing_error(parser->value, 1);
-		return (1);
+		g_error = 2;
+		return (g_error);
 	}
 	while (1)
 	{
@@ -107,9 +117,9 @@ int	syntax_checker(t_lxr *lxr, int ret)
 			return (0);
 		else
 		{
-			ret = syntax_checker_cont(&parser, ret);
-			if (ret)
-				return (ret);
+			g_error = syntax_checker_cont(&parser, g_error);
+			if (g_error)
+				return (g_error);
 		}
 	}
 }

@@ -6,18 +6,19 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/31 18:33:36 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/01 15:38:01 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	exec_commands(char **cmds, char **envp)
+void	exec_commands(char **cmds, char **envp, t_env *new_env)
 {
 	char	*path;
 	char	**cmd_paths;
 	int		i;
 	char	*finalcmd;
+	t_env	*tmp;
 
 	i = 0;
 	if (cmds[0][0] == '/' || cmds[0][0] == '.')
@@ -25,11 +26,34 @@ void	exec_commands(char **cmds, char **envp)
 		if (!(access(cmds[0], X_OK)))
 			execve(cmds[0], cmds, envp);
 	}
-	else
+	/*else
 	{
 		while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
 			i++;
 		path = envp[i] + 5;
+		cmd_paths = tweaked_split(path, ':');
+		i = 0;
+		while (cmd_paths[i])
+		{
+			finalcmd = ft_strjoin(cmd_paths[i], cmds[0], 0);
+			if (!(access(finalcmd, F_OK & X_OK)))
+				execve(finalcmd, cmds, envp);
+			else
+				i++;
+			free(finalcmd);
+		}
+	}*/
+	else
+	{
+		tmp =  new_env;
+		while (ft_strncmp(tmp->line, "PATH=", 5) && tmp != NULL)
+			tmp = tmp->next;
+		if (tmp == NULL)
+		{
+			perror(cmds[0]);
+			return ;
+		}
+		path = tmp->line + 5;
 		cmd_paths = tweaked_split(path, ':');
 		i = 0;
 		while (cmd_paths[i])
@@ -140,9 +164,11 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	j = 0;
 	k = 0;
 	
-	if (exec->nb_pipe == 0)
+	if (exec->nb_pipe == 0 && exec->pipes[i].nb_cmds)
 	{
-		if (!(ft_strncmp(exec->pipes[i].cmds[0], "cd", 2)) || !(ft_strncmp(exec->pipes[i].cmds[0], "unset", 6)) || !(ft_strncmp(exec->pipes[i].cmds[0], "export", 6)))
+		if (!(ft_strncmp(exec->pipes[i].cmds[0], "cd", 2)) || !(ft_strncmp(exec->pipes[i].cmds[0], "unset", 6))/* || !(ft_strncmp(exec->pipes[i].cmds[0], "export", 6))*/)
+			builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env);
+		if (!(ft_strncmp(exec->pipes[i].cmds[0], "export", 6)) && exec->pipes[i].cmds[1])
 			builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env);
 	}
 	while (i < exec->nb_pipe)
@@ -188,7 +214,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 					exit (1);
 			}
 			if (builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env) == 1)
-				exec_commands(exec->pipes[i].cmds, envp);
+				exec_commands(exec->pipes[i].cmds, envp, new_env);
 			exit (1);
 		}
 		i++;

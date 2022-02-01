@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/31 19:09:47 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/01 17:14:53 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <fcntl.h>
+
+int				g_error;
 
 typedef	struct	s_lxr	t_lxr;
 typedef	struct	s_redir	t_redir;
@@ -108,7 +110,7 @@ t_lxr	*append_end(t_lxr *lexer);
  */
 
 void	print_parsing_error(char *value, int ret);
-int		syntax_checker(t_lxr *lxr, int ret);
+int		syntax_checker(t_lxr *lxr);
 int		syntax_checker_cont(t_lxr **parser, int ret);
 int		check_pipe(t_lxr **parser);
 int		check_redir(t_lxr **parser);

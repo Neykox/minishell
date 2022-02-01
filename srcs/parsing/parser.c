@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/31 19:09:13 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/01 17:18:01 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 	exec = check_cmds(exec);
 	return (0);
 }
-
+/*
 int	parser(t_lxr *lxr, t_exec *exec)
 {
 	int	ret;
@@ -241,4 +241,4 @@ int	parser(t_lxr *lxr, t_exec *exec)
 		return (ret);
 	//else
 	//	return (ret_parsing);
-}
+}*/
