@@ -109,7 +109,7 @@ int	write_no_arg(t_env *env)
 	int ret;
 	int eg;
 
-	while (envp)
+	while (env)
 	{
 		eg = 0;
 		while (env->line[eg] && env->line[eg] != '=')
@@ -160,7 +160,7 @@ int	ft_export(char **cmds, t_env *envp)
 		i++;
 	}
 	if (i == 1)
-		return (write_no_arg(env));
+		return (write_no_arg(envp));
 	return (ret);
 }
 
