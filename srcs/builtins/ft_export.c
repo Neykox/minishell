@@ -104,6 +104,36 @@ int write_invalid_id_export(char *cmds)
 	return (-1);
 }
 
+int	write_no_arg(t_env *env)
+{
+	int ret;
+	int eg;
+
+	while (envp)
+	{
+		eg = 0;
+		while (env->line[eg] && env->line[eg] != '=')
+			eg++;
+		ret = write(1, "declare -x ", 11);
+		if (ret < 0)
+			return (-3);
+		ret = write(1, env->line, eg);
+		if (ret < 0)
+			return (-3);
+		ret = write(1, "\"", 1);
+		if (ret < 0)
+			return (-3);
+		ret = write(1, &env->line[eg], ft_strlen(&env->line[eg]));
+		if (ret < 0)
+			return (-3);
+		ret = write(1, "\"\n", 2);
+		if (ret < 0)
+			return (-3);
+		env = env->next;
+	}
+	return (0);
+}
+
 int	ft_export(char **cmds, t_env *envp)
 {
 	char	*line;
@@ -129,6 +159,8 @@ int	ft_export(char **cmds, t_env *envp)
 			return (error);//malloc issue || -3 == write error
 		i++;
 	}
+	if (i == 1)
+		return (write_no_arg(env));
 	return (ret);
 }
 

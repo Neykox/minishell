@@ -12,8 +12,16 @@
 
 #include "../../includes/minishell.h"
 
-void	ft_exit(int status)
-{}
+int	ft_exit(int status)
+{
+	int	ret;
+
+	ret = 0;
+	ret = write(1, "exit\n", 5);
+	if (ret < 0)
+		return (-3);
+	return (0);
+}
 
 kill(pid, SIGKILL);
 exit();
