@@ -30,7 +30,6 @@ int	main(int ac, char **av, char **envp)
 	t_env	*new_env;
 	struct sigaction sa;
 	t_exec	*exec;
-	//int ret;
 	
 	// (void)ac;
 	(void)av;
@@ -48,7 +47,6 @@ int	main(int ac, char **av, char **envp)
 	}
 	ft_memset(&sa, 0, sizeof(sa));
 	sa.sa_sigaction = &ft_signal;
-	//ret = 0;
 	while (1)
 	{
 		sigaction(SIGINT, &sa, NULL);
@@ -92,30 +90,6 @@ int	main(int ac, char **av, char **envp)
 			printf("%d\n", g_error);
 			free(line);
 		}
-		// if (exec && exec->pipes)
-		// {
-		/*	int ret = 0;
-			if (ft_strncmp(lxr->value, "cd", 3) == 0)
-				ret = ft_cd(exec->pipes->cmds, exec->nb_pipe, new_env);
-			else if (ft_strncmp(lxr->value, "echo", 5) == 0)
-				ret = ft_echo(exec->pipes->cmds);
-			else if (ft_strncmp(lxr->value, "pwd", 4) == 0)
-				ft_pwd();
-			else if (ft_strncmp(lxr->value, "env", 4) == 0)
-				ft_env(new_env);
-			else if (ft_strncmp(lxr->value, "export", 7) == 0)
-			{
-				ret = ft_export(exec->pipes->cmds, new_env);
-				if (ret == -2)
-					return (ret);
-			}
-			else if (ft_strncmp(lxr->value, "unset", 6) == 0)
-				ret = ft_unset(exec->pipes->cmds, new_env);
-			printf("main ret = %d\n", ret);
-			// 	if (ret == -2)
-			// 		return (ret);
-			// }
-		// }*/
 		if (line == NULL)
 			break ;
 	}

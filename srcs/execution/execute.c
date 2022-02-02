@@ -169,7 +169,7 @@ int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env, int nb_pipe)
 	}
 	else if (!(ft_strncmp(cmds[0], "exit", 4)))
 	{
-		ret = ft_exit(g_error, new_env, nb_pipe);
+		ret = ft_exit(cmds[1], new_env, nb_pipe);
 		printf("hello from builtin\n");
 	}
 	else

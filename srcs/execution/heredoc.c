@@ -19,6 +19,8 @@ int	heredoc_implementation(t_redir *redir)
 	while (1)
 	{
 		line = readline("> ");
+		if (line == NULL)
+			break ;
 		if (!(ft_strncmp(line, redir->redir, ft_strlen(redir->redir))))
 			break ;
 		write(redir->fd, line, ft_strlen(line));
