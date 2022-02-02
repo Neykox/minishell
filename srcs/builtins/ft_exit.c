@@ -20,6 +20,8 @@ int	ft_exit(int status)
 	ret = write(1, "exit\n", 5);
 	if (ret < 0)
 		return (-3);//exit(-3);
+
+	printf("g_error = %d\n" , g_error);
 	
 	exit(status);
 
