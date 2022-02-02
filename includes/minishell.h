@@ -141,6 +141,7 @@ t_lxr	*free_lxr(t_lxr *lxr);
  * UTILS
  */
 
+int	ft_atoi(const char *str);
 void	*ft_memset(void *b, int c, size_t len);;
 int		ft_notop(int c);
 char	*ft_strdup(const char *s);
@@ -164,7 +165,8 @@ void	ft_signal(int sig, siginfo_t *sa, void *data);
  * BUILTINS
  */
 
-int	ft_exit(int status, t_env *new_env, int nb_pipe);
+// int	ft_exit(int status, t_env *new_env, int nb_pipe);
+int	ft_exit(char *status, t_env *new_env, int nb_pipe);
 
 char	*find_in_env(t_env *envp, char *line, int *ret);
 int modif_oldpwd(t_env *env);

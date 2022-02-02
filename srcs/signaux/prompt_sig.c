@@ -18,9 +18,10 @@ void	ft_signal(int sig, siginfo_t *sa, void *data)
 	(void)sa;
 	if (sig == SIGINT)
 	{
-		g_error = 123;
+		g_error = 130;
 		write(0, "\n", 1);
-		rl_replace_line ("", 1);//destroy char before ^C to make next line clean
+		// rl_on_new_line ();//new version from discord
+		rl_replace_line ("\0", 1);//destroy char before ^C to make next line clean
 		rl_on_new_line ();
 		rl_redisplay ();
 		// usleep(2000);

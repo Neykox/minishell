@@ -79,6 +79,8 @@ int modif_oldpwd(t_env *env)
 	free(oldpwd[1]);
 	if (ret == -2)
 		return (-2);
+	if (ret == -3)
+		return (-3);
 	return (0);
 }
 
@@ -103,6 +105,8 @@ int modif_pwd(t_env *env)
 	free(pwd[1]);
 	if (ret == -2)
 		return (-2);
+	if (ret == -3)
+		return (-3);
 	return (0);
 }
 
@@ -115,16 +119,15 @@ int	ft_cd(char **cmds, int nb_cmds, t_env *env)
 		return (-1);
 	ret = chdir(cmds[1]);//check if cmds[1] exist
 	if (ret == -1)
-	{
-		perror("ft_cd");
 		return (-1);
-	}
 	// (void)env;
 	ret = modif_oldpwd(env);
 	if (ret == -2)
 		return (-2);
 	ret = modif_pwd(env);
 	if (ret == -2)
+		return (-2);
+	if (ret == -3)
 		return (-3);
 	return (0);
 }
