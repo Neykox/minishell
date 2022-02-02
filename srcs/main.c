@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/02 10:53:34 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/02 11:21:31 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,11 @@ int	main(int ac, char **av, char **envp)
 			line = readline("\e[1;34mminishell$ \e[0m");
 		else if (ac == 3)
 			line = readline("\e[1;31mminishell$ \e[0m");
-		add_history(line);
+		//add_history(line);
 		lxr = NULL;
 		if (line && line[0] !=  '\0')
 		{
+			add_history(line);
 			lxr = lexer(lxr, line);
 			printf("%d\n", g_error);
 			if (lxr == NULL)

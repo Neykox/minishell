@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/01 17:14:53 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/02 11:17:07 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ void	ft_signal(int sig, siginfo_t *sa, void *data);
  * BUILTINS
  */
 
-int	ft_exit(int status);
+int	ft_exit(int status, t_env *new_env, int nb_pipe);
 
 char	*find_in_env(t_env *envp, char *line, int *ret);
 int modif_oldpwd(t_env *env);

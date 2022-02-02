@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/02 10:57:00 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/02 12:05:17 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,13 @@ void	exec_commands(char **cmds, char **envp, t_env *new_env)
 	else
 	{
 		tmp =  new_env;
-		while (ft_strncmp(tmp->line, "PATH=", 5) && tmp != NULL)
+		while (tmp != NULL && ft_strncmp(tmp->line, "PATH=", 5))
 			tmp = tmp->next;
 		if (tmp == NULL)
 		{
-			perror(cmds[0]);
-			return ;
+			execve(cmds[0], cmds, envp);
+			if (errno == 2)
+				exit(127);
 		}
 		path = tmp->line + 5;
 		cmd_paths = tweaked_split(path, ':');
@@ -64,6 +65,7 @@ void	exec_commands(char **cmds, char **envp, t_env *new_env)
 			else
 				i++;
 			free(finalcmd);
+			printf("%s | errno en cas de succes: %d\n", cmd_paths[i], errno);
 		}
 	}
 	perror(cmds[0]);
@@ -106,7 +108,7 @@ int	exec_redir(t_redir *redir)
 	return (ret);
 }
 
-int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env)
+int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env, int nb_pipe)
 {
 	int ret;
 
@@ -146,7 +148,7 @@ int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env)
 	}
 	else if (!(ft_strncmp(cmds[0], "exit", 4)))
 	{
-		ret = ft_exit(g_error);
+		ret = ft_exit(g_error, new_env, nb_pipe);
 		printf("hello from builtin\n");
 	}
 	else
@@ -162,17 +164,18 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	int	j;
 	int	childpid;
 	int	k;
+	int	status;
 
 	i = 0;
 	j = 0;
 	k = 0;
-	
+	status = 0;
 	if (exec->nb_pipe == 0 && exec->pipes[i].nb_cmds)
 	{
 		if (!(ft_strncmp(exec->pipes[i].cmds[0], "cd", 2)) || !(ft_strncmp(exec->pipes[i].cmds[0], "unset", 6)) || !(ft_strncmp(exec->pipes[i].cmds[0], "exit", 4)))
-			builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env);
+			builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe);
 		if (!(ft_strncmp(exec->pipes[i].cmds[0], "export", 6)) && exec->pipes[i].cmds[1])
-			builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env);
+			builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe);
 	}
 	while (i < exec->nb_pipe)
 	{
@@ -216,9 +219,9 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 				if (k < 0)
 					exit (1);
 			}
-			if (builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env) == 1)
+			if (builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe) == 1)
 				exec_commands(exec->pipes[i].cmds, envp, new_env);
-			exit (1);
+			exit (0);
 		}
 		i++;
 		j++;
@@ -232,7 +235,12 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	i = 0;
 	while (i <= exec->nb_pipe)
 	{
-		wait(NULL);
+		waitpid(childpid, &status, 0);
+		if (WIFEXITED(status))
+		{
+			g_error = WEXITSTATUS(status);
+			printf("WEXITSTATUS: %d\n", g_error);
+		}
 		i++;
 	}
 	i = 0;
