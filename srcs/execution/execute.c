@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/01 15:38:01 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/02 10:57:00 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	
 	if (exec->nb_pipe == 0 && exec->pipes[i].nb_cmds)
 	{
-		if (!(ft_strncmp(exec->pipes[i].cmds[0], "cd", 2)) || !(ft_strncmp(exec->pipes[i].cmds[0], "unset", 6))/* || !(ft_strncmp(exec->pipes[i].cmds[0], "export", 6))*/)
+		if (!(ft_strncmp(exec->pipes[i].cmds[0], "cd", 2)) || !(ft_strncmp(exec->pipes[i].cmds[0], "unset", 6)) || !(ft_strncmp(exec->pipes[i].cmds[0], "exit", 4)))
 			builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env);
 		if (!(ft_strncmp(exec->pipes[i].cmds[0], "export", 6)) && exec->pipes[i].cmds[1])
 			builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env);
