@@ -164,6 +164,8 @@ void	ft_signal(int sig, siginfo_t *sa, void *data);
  * BUILTINS
  */
 
+int	ft_exit(int status);
+
 char	*find_in_env(t_env *envp, char *line, int *ret);
 int modif_oldpwd(t_env *env);
 int	ft_cd(char **cmds, int nb_cmds, t_env *env);

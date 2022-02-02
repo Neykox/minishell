@@ -19,9 +19,14 @@ int	ft_exit(int status)
 	ret = 0;
 	ret = write(1, "exit\n", 5);
 	if (ret < 0)
-		return (-3);
+		return (-3);//exit(-3);
+	
+	exit(status);
+
+	// rl_replace_line (NULL, 1);//destroy char before ^C to make next line clean
+	// rl_on_new_line ();
+	// rl_redisplay ();
 	return (0);
 }
 
-kill(pid, SIGKILL);
-exit();
+// void	ft_signal(s

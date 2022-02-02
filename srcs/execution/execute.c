@@ -116,8 +116,8 @@ int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env)
 
 	if (!(ft_strncmp(cmds[0], "echo", 4)))
 	{
-		printf("hello from builtin\n");
 		ret = ft_echo(cmds);
+		printf("hello from builtin\n");
 	}
 	else if (!(ft_strncmp(cmds[0], "unset", 5)))
 	{
@@ -144,8 +144,11 @@ int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env)
 		ret = ft_env(new_env);
 		printf("hello from builtin\n");
 	}
-	//else if (!(ft_strncmp(cmds[0], "exit", 4)))
-		//send to exit fct
+	else if (!(ft_strncmp(cmds[0], "exit", 4)))
+	{
+		ret = ft_exit(g_error);
+		printf("hello from builtin\n");
+	}
 	else
 		ret = 1;
 	if (ret < 0)
