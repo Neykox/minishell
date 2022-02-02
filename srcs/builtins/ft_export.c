@@ -114,6 +114,7 @@ int	write_no_arg(t_env *env)
 		eg = 0;
 		while (env->line[eg] && env->line[eg] != '=')
 			eg++;
+		eg++;
 		ret = write(1, "declare -x ", 11);
 		if (ret < 0)
 			return (-3);

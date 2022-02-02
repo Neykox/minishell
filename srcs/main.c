@@ -21,6 +21,8 @@
 	exec->nb_pipe = 0;
 }*/
 
+int				g_error;
+
 int	main(int ac, char **av, char **envp)
 {
 	char	*line;

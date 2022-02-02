@@ -38,7 +38,7 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 
-int				g_error;
+extern int				g_error;
 
 typedef	struct	s_lxr	t_lxr;
 typedef	struct	s_redir	t_redir;
