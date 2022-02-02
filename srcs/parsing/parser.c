@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/01 17:18:01 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/02 18:12:28 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,28 +168,76 @@ char	**parse_commands(int nb_cmds, t_lxr *lxr, int pos)
 	return (cmds);
 }
 
+int	check_spaces_in_cmd(char **cmds, int nb_cmds)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (i < nb_cmds)
+	{
+		while (cmds[i][j])
+		{
+			if (cmds[i][j] == ' ')
+				return (1);
+			j++;
+		}
+		i++;
+	}
+	return (0);
+}
+
+char	**clean_up_cmds(char **cmds, int *nb_cmds)
+{
+	char	*tmp;
+	char	**result;
+	int		i;
+
+	i = 0;
+	tmp = ft_strdup(cmds[i]);
+	if (tmp == NULL)
+		return (NULL);
+	i++;
+	while (i < *(nb_cmds) && cmds[i])
+	{
+		// probablement un leak ici
+		tmp = tweaked_strjoin(tmp, cmds[i], ' ');
+		if (tmp == NULL)
+			return (NULL);
+		i++;
+	}
+	i = 0;
+	while (i < *(nb_cmds))
+	{
+		free(cmds[i]);
+		i++;
+	}
+	free(cmds);
+	result = ft_split(tmp, ' ');
+	free(tmp);
+	i = 0;
+	while (result[i])
+		i++;
+	*(nb_cmds) = i;
+	return (result);
+}
+
 t_exec	*check_cmds(t_exec *exec)
 {
 	int		i;
-	char	*tmp;
-	char	*pwd;
-	char	*pwd_slash;
+	int		ret;
 
 	i = 0;
-	pwd = NULL;
 	if (!(exec->pipes[i].nb_cmds))
 		return (exec);
 	while (i <= exec->nb_pipe)
 	{
-		if (!(ft_strncmp(exec->pipes[i].cmds[0], "./", 2)))
+		ret = check_spaces_in_cmd(exec->pipes[i].cmds, exec->pipes[i].nb_cmds);
+		if (ret)
 		{
-			tmp = tweaked_strdup(exec->pipes[i].cmds[0]);
-			pwd = getcwd(pwd, 0);
-			pwd_slash = ft_add_char(pwd, '/');
-			free(exec->pipes[i].cmds[0]);
-			exec->pipes[i].cmds[0] = ft_strjoin(pwd_slash, tmp, 0);
-			free(tmp);
-			free(pwd_slash);
+			exec->pipes[i].cmds = clean_up_cmds(exec->pipes[i].cmds, &exec->pipes[i].nb_cmds);
+			break ;
 		}
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/02 12:05:17 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/02 18:21:50 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,49 +23,70 @@ void	exec_commands(char **cmds, char **envp, t_env *new_env)
 	i = 0;
 	if (cmds[0][0] == '/' || cmds[0][0] == '.')
 	{
-		if (!(access(cmds[0], X_OK)))
-			execve(cmds[0], cmds, envp);
-	}
-	/*else
-	{
-		while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
-			i++;
-		path = envp[i] + 5;
-		cmd_paths = tweaked_split(path, ':');
-		i = 0;
-		while (cmd_paths[i])
+		if (!(access(cmds[0], F_OK & X_OK)))
 		{
-			finalcmd = ft_strjoin(cmd_paths[i], cmds[0], 0);
-			if (!(access(finalcmd, F_OK & X_OK)))
-				execve(finalcmd, cmds, envp);
-			else
-				i++;
-			free(finalcmd);
+			printf("coucou\n");
+			if (execve(cmds[0], cmds, envp) < 0)
+				printf("errno = %d\n", errno);
 		}
-	}*/
+		else
+		{
+			perror(cmds[0]);
+			return ;
+			//printf("hey\nerrno = %d", errno);
+			//if (errno == EAGAIN)
+			//	exit(126);
+			//else
+			//	exit(127);
+		}
+	}
 	else
 	{
 		tmp =  new_env;
 		while (tmp != NULL && ft_strncmp(tmp->line, "PATH=", 5))
 			tmp = tmp->next;
+		/*
+		 * Si PATH unset
+		 */
 		if (tmp == NULL)
 		{
-			execve(cmds[0], cmds, envp);
-			if (errno == 2)
-				exit(127);
+			if (execve(cmds[0], cmds, envp) < 0)
+			{
+				perror(cmds[0]);
+				return ;
+				//if (errno == EAGAIN)
+				//	exit(126);
+				//else
+				//	exit(127);
+			}	
 		}
-		path = tmp->line + 5;
-		cmd_paths = tweaked_split(path, ':');
-		i = 0;
-		while (cmd_paths[i])
+		/*
+		 * Si PATH est trouve
+		 */
+		else
 		{
-			finalcmd = ft_strjoin(cmd_paths[i], cmds[0], 0);
-			if (!(access(finalcmd, F_OK & X_OK)))
-				execve(finalcmd, cmds, envp);
-			else
-				i++;
-			free(finalcmd);
-			printf("%s | errno en cas de succes: %d\n", cmd_paths[i], errno);
+			path = tmp->line + 5;
+			cmd_paths = tweaked_split(path, ':');
+			i = 0;
+			while (cmd_paths[i])
+			{
+				finalcmd = ft_strjoin(cmd_paths[i], cmds[0], 0);
+				if (!(access(finalcmd, F_OK & X_OK)))
+				{
+					printf("woohoo\n");
+					if (execve(finalcmd, cmds, envp) < 0)
+					/*{
+						if (errno == EAGAIN)
+							exit(126);
+						else
+							exit(127);
+					}*/
+						break ;
+				}
+				else
+					i++;
+				free(finalcmd);
+			}
 		}
 	}
 	perror(cmds[0]);
@@ -165,17 +186,25 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	int	childpid;
 	int	k;
 	int	status;
+	int	flag;
 
 	i = 0;
 	j = 0;
 	k = 0;
 	status = 0;
+	flag = 0;
 	if (exec->nb_pipe == 0 && exec->pipes[i].nb_cmds)
 	{
 		if (!(ft_strncmp(exec->pipes[i].cmds[0], "cd", 2)) || !(ft_strncmp(exec->pipes[i].cmds[0], "unset", 6)) || !(ft_strncmp(exec->pipes[i].cmds[0], "exit", 4)))
+		{
 			builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe);
+			flag = 1;
+		}
 		if (!(ft_strncmp(exec->pipes[i].cmds[0], "export", 6)) && exec->pipes[i].cmds[1])
+		{
 			builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe);
+			flag = 1;
+		}
 	}
 	while (i < exec->nb_pipe)
 	{
@@ -184,7 +213,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 		i++;
 	}
 	i = 0;
-	while (i <= exec->nb_pipe)
+	while (i <= exec->nb_pipe && flag == 0)
 	{
 		childpid = fork();
 		if (childpid == -1)
@@ -203,13 +232,8 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 			}
 			while (k < exec->nb_pipe)
 			{
-				//if (k != j - 1)
-				//{
-					close(pipefd[k][0]);
-					close(pipefd[k][1]);
-				//}
-				//else
-				//	close(pipefd[k][0]);
+				close(pipefd[k][0]);
+				close(pipefd[k][1]);
 				k++;
 			}
 			k = 0;
@@ -220,8 +244,14 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 					exit (1);
 			}
 			if (builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe) == 1)
+			{
 				exec_commands(exec->pipes[i].cmds, envp, new_env);
-			exit (0);
+				if (errno == EAGAIN)
+					exit(126);
+				exit (127);
+			}
+			else
+				exit(0);
 		}
 		i++;
 		j++;
@@ -233,14 +263,11 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 		k++;
 	}
 	i = 0;
-	while (i <= exec->nb_pipe)
+	while (i <= exec->nb_pipe && flag == 0)
 	{
 		waitpid(childpid, &status, 0);
 		if (WIFEXITED(status))
-		{
 			g_error = WEXITSTATUS(status);
-			printf("WEXITSTATUS: %d\n", g_error);
-		}
 		i++;
 	}
 	i = 0;
