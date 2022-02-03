@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/03 13:31:23 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/03 17:19:20 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	exec_commands(char **cmds, char **envp, t_env *new_env)
 {
-	char	*path;
 	char	**cmd_paths;
 	int		i;
 	char	*finalcmd;
@@ -25,14 +24,14 @@ void	exec_commands(char **cmds, char **envp, t_env *new_env)
 	{
 		if (!(access(cmds[0], F_OK & X_OK)))
 		{
-			printf("coucou\n");
+			//printf("coucou\n");
 			if (execve(cmds[0], cmds, envp) < 0)
 				printf("errno = %d\n", errno);
 		}
 		else
 		{
 			perror(cmds[0]);
-			printf("hey\nerrno = %d\n", errno);
+			//printf("hey\nerrno = %d\n", errno);
 			return ;
 			//if (errno == EAGAIN)
 			//	exit(126);
@@ -65,15 +64,13 @@ void	exec_commands(char **cmds, char **envp, t_env *new_env)
 		 */
 		else
 		{
-			path = tmp->line + 5;
-			cmd_paths = tweaked_split(path, ':');
-			i = 0;
+			cmd_paths = tweaked_split(tmp->line + 5, ':');
 			while (cmd_paths[i])
 			{
 				finalcmd = ft_strjoin(cmd_paths[i], cmds[0], 0);
 				if (!(access(finalcmd, F_OK & X_OK)))
 				{
-					printf("woohoo\n");
+					//printf("woohoo\n");
 					if (execve(finalcmd, cmds, envp) < 0)
 					/*{
 						if (errno == EAGAIN)
@@ -140,37 +137,37 @@ int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env, int nb_pipe)
 	if (!(ft_strncmp(cmds[0], "echo", 4)))
 	{
 		ret = ft_echo(cmds);
-		printf("hello from builtin\n");
+		//printf("hello from builtin\n");
 	}
 	else if (!(ft_strncmp(cmds[0], "unset", 5)))
 	{
 		ret = ft_unset(cmds, new_env);
-		printf("hello from builtin\n");
+		//printf("hello from builtin\n");
 	}
 	else if (!(ft_strncmp(cmds[0], "cd", 2)))
 	{
 		ret = ft_cd(cmds, nb_cmds, new_env);
-		printf("hello from builtin\n");
+		//printf("hello from builtin\n");
 	}
 	else if (!(ft_strncmp(cmds[0], "pwd", 3)))
 	{
 		ret = ft_pwd();
-		printf("hello from builtin\n");
+		//printf("hello from builtin\n");
 	}
 	else if (!(ft_strncmp(cmds[0], "export", 6)))
 	{
 		ret = ft_export(cmds, new_env);
-		printf("hello from builtin\n");
+		//printf("hello from builtin\n");
 	}
 	else if (!(ft_strncmp(cmds[0], "env", 3)))
 	{
 		ret = ft_env(new_env);
-		printf("hello from builtin\n");
+		//printf("hello from builtin\n");
 	}
 	else if (!(ft_strncmp(cmds[0], "exit", 4)))
 	{
 		ret = ft_exit(cmds[1], new_env, nb_pipe);
-		printf("hello from builtin\n");
+		//printf("hello from builtin\n");
 	}
 	else
 		ret = 1;
@@ -183,7 +180,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 {
 	int	i;
 	int	j;
-	int	childpid;
+	int	*childpid;
 	int	k;
 	int	status;
 	int	flag;
@@ -193,6 +190,9 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	k = 0;
 	status = 0;
 	flag = 0;
+	childpid = malloc(sizeof(int) * exec->nb_pipe);
+	if (!(childpid))
+		return (-1);
 	if (exec->nb_pipe == 0 && exec->pipes[i].nb_cmds)
 	{
 		if (!(ft_strncmp(exec->pipes[i].cmds[0], "cd", 2)) || !(ft_strncmp(exec->pipes[i].cmds[0], "unset", 6)) || !(ft_strncmp(exec->pipes[i].cmds[0], "exit", 4)))
@@ -215,10 +215,10 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	i = 0;
 	while (i <= exec->nb_pipe && flag == 0)
 	{
-		childpid = fork();
-		if (childpid == -1)
+		childpid[i] = fork();
+		if (childpid[i] == -1)
 			return (2);
-		else if (childpid == 0)
+		else if (childpid[i] == 0)
 		{
 			if (j < exec->nb_pipe)
 			{
@@ -245,8 +245,8 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 			}
 			if (builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe) == 1)
 			{
+				exec = check_cmds(exec);
 				exec_commands(exec->pipes[i].cmds, envp, new_env);
-				printf("dodo\n");
 				if (errno == EAGAIN)
 					exit(126);
 				exit (127);
@@ -266,7 +266,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	i = 0;
 	while (i <= exec->nb_pipe && flag == 0)
 	{
-		waitpid(-1, &status, 0);
+		waitpid(childpid[i], &status, 0);
 		if (WIFEXITED(status))
 			g_error = WEXITSTATUS(status);
 		i++;
@@ -311,7 +311,7 @@ t_redir	*open_redir_fd(t_redir *redir)
 			if (tmp->fd < 0)
 			{
 				perror(tmp->redir);
-				return (NULL);
+				//return (NULL);
 			}
 		}
 		else if (tmp->type == REDIR_STDOUT)
@@ -320,7 +320,7 @@ t_redir	*open_redir_fd(t_redir *redir)
 			if (tmp->fd < 0)
 			{
 				perror(tmp->redir);
-				return (NULL);
+				//return (NULL);
 			}
 		}
 		else if (tmp->type == DREDIR_RIGHT)
@@ -329,7 +329,7 @@ t_redir	*open_redir_fd(t_redir *redir)
 			if (tmp->fd < 0)
 			{
 				perror(tmp->redir);
-				return (NULL);
+				//return (NULL);
 			}
 		}
 		else if (tmp->type == DREDIR_LEFT)
@@ -338,7 +338,7 @@ t_redir	*open_redir_fd(t_redir *redir)
 			if (tmp->fd < 0)
 			{
 				perror(tmp->redir);
-				return (NULL);
+				//return (NULL);
 			}
 			if (heredoc_implementation(tmp) < 0)
 				return (NULL);

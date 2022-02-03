@@ -6,13 +6,14 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/02 16:51:00 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/03 17:46:41 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define TOKEN_ERROR	-2
 # define QUOTE_ERROR	-1
 # define WORD			0
 # define PIPE			1
@@ -121,6 +122,7 @@ int		check_redir(t_lxr **parser);
 
 int		parser(t_lxr *lxr, t_exec *exec);
 int		parse_values(t_lxr *lxr, t_exec *exec);
+t_exec	*check_cmds(t_exec *exec);
 
 /*
  * EXECUTION

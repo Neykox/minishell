@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/02 11:21:31 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/03 14:49:28 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	main(int ac, char **av, char **envp)
 				g_error = 2;
 				return (2);
 			}
-			//print_lxr(lxr);
+			print_lxr(lxr);
 			ft_get_expand(lxr, new_env);
 			g_error = syntax_checker(lxr);
 			//print_pipes(exec);

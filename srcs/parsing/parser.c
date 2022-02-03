@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/02 18:12:28 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/03 17:19:06 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,7 @@ int	check_spaces_in_cmd(char **cmds, int nb_cmds)
 				return (1);
 			j++;
 		}
+		j = 0;
 		i++;
 	}
 	return (0);
@@ -223,6 +224,48 @@ char	**clean_up_cmds(char **cmds, int *nb_cmds)
 	return (result);
 }
 
+int		check_empty_cmds(char **cmds, int nb_cmds)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (i < nb_cmds)
+	{
+		if (cmds[i][0] == '\0')
+			j++;
+		i++;
+	}
+	return (j);
+}
+
+char	**remove_empty_commands(char **cmds, int *nb_cmds, int nb_empty_cmds)
+{
+	char	**result;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	result = malloc(sizeof(char *) * ((*nb_cmds - nb_empty_cmds)));
+	if (!result)
+		return (NULL);
+	while (i < *nb_cmds)
+	{
+		if (cmds[i][0] != '\0')
+		{
+			result[j] = ft_strdup(cmds[i]);
+			j++;
+		}
+		i++;
+	}
+	result[j] = '\0';
+	*nb_cmds = j;
+	free(cmds);
+	return (result);
+}
+
 t_exec	*check_cmds(t_exec *exec)
 {
 	int		i;
@@ -233,12 +276,18 @@ t_exec	*check_cmds(t_exec *exec)
 		return (exec);
 	while (i <= exec->nb_pipe)
 	{
-		ret = check_spaces_in_cmd(exec->pipes[i].cmds, exec->pipes[i].nb_cmds);
-		if (ret)
+		//if (flag == 1)
+		//{
+			ret = check_spaces_in_cmd(exec->pipes[i].cmds, exec->pipes[i].nb_cmds);
+			if (ret)
+				exec->pipes[i].cmds = clean_up_cmds(exec->pipes[i].cmds, &exec->pipes[i].nb_cmds);
+		//}
+		/*if (flag == 2)
 		{
-			exec->pipes[i].cmds = clean_up_cmds(exec->pipes[i].cmds, &exec->pipes[i].nb_cmds);
-			break ;
-		}
+			ret = check_empty_cmds(exec->pipes[i].cmds, exec->pipes[i].nb_cmds);
+			if (ret && exec->pipes[i].nb_cmds != 1)
+				exec->pipes[i].cmds = remove_empty_commands(exec->pipes[i].cmds, &exec->pipes[i].nb_cmds, ret);
+		}*/
 		i++;
 	}
 	return (exec);
@@ -268,7 +317,7 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 		if (exec->pipes[i].nb_cmds)
 			exec->pipes[i].cmds = parse_commands(exec->pipes[i].nb_cmds, lxr, i);
 	}
-	exec = check_cmds(exec);
+	//exec = check_cmds(exec, 2);
 	return (0);
 }
 /*

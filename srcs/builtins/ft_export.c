@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:41:05 by user42            #+#    #+#             */
-/*   Updated: 2022/01/12 15:41:06 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/03 14:30:13 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int write_invalid_id_export(char *cmds)
 	ret = write(1, cmds, ft_strlen(cmds));
 	if (ret < 0)
 		return (-3);
-	ret = write(1, "': not a valid identifier", 25);
+	ret = write(1, "': not a valid identifier\n", 26);
 	if (ret < 0)
 		return (-3);
 	return (-1);
