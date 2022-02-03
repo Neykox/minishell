@@ -116,13 +116,8 @@ int    ft_get_expand(t_lxr *lxr, t_env *envp)
 					free(tmp);
 				return (-2);
 			}
-
-			printf("lxr = %s\n", lxr->value);
-			printf("tmp = %s\n", tmp);
-
 			if (lxr->value[0] == '$' && tmp[0] == '\0')
 				lxr->token = -2;
-
 			free(lxr->value);
 			lxr->value = ft_strdup(tmp);
 			free(tmp);
@@ -132,7 +127,7 @@ int    ft_get_expand(t_lxr *lxr, t_env *envp)
 		// NEED MESSAGE D'ERREUR
 		lxr = lxr->next;
 	}
-	return (0); 
+	return (0);
 }
 
 int	ft_strlen_target(char *str)
