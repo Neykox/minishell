@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/03 17:19:20 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/03 18:42:13 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,8 @@ int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env, int nb_pipe)
 
 	//return 1;
 
+	if (nb_cmds == 0)
+		return (1);
 	if (!(ft_strncmp(cmds[0], "echo", 4)))
 	{
 		ret = ft_echo(cmds);
@@ -243,7 +245,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 				if (k < 0)
 					exit (1);
 			}
-			if (builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe) == 1)
+			if (builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe) == 1 && exec->pipes[i].nb_cmds)
 			{
 				exec = check_cmds(exec);
 				exec_commands(exec->pipes[i].cmds, envp, new_env);

@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 14:00:41 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/01 17:26:30 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/03 18:16:48 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	syntax_checker_cont(t_lxr **parser, int ret)
 	}
 	if ((*parser)->token == WSPACE || (*parser)->token == WORD
 		|| (*parser)->token == END || (*parser)->token == SQUOTE
-		|| (*parser)->token == DQUOTE)
+		|| (*parser)->token == DQUOTE || (*parser)->token == VAR_ERROR)
 		*parser = (*parser)->next;
 	else if ((*parser)->token == REDIR_STDIN || (*parser)->token == REDIR_STDOUT
 		|| (*parser)->token == DREDIR_LEFT || (*parser)->token == DREDIR_RIGHT)
