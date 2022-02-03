@@ -12,23 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-// char	*ft_expander(char **envp, char *target)//remove $ before sending target
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (envp[i])
-// 	{
-// 		if (ft_strlen(target) - ft_strlen(envp[i]) == 0)
-// 		{
-// 			if (ft_strncmp(target, envp[i], ft_strlen(target)) == 0)
-// 				return (envp[i]);//target has been found
-// 		}
-// 		i++;
-// 	}
-// 	return (NULL);
-// }
-
 char	*ft_copy_till_exp(char *line)
 {
 	char	*tmp;
@@ -36,13 +19,13 @@ char	*ft_copy_till_exp(char *line)
 
 	i = 0;
 	tmp = NULL;
-	while (line[i] && line[i] != '$')
+	while ((line[i] && line[i] != '$') || ((line[i] == '$' && (line[i + 1] == '\0' || line[i + 1] == ' '))))
 		i++;
 	tmp = malloc(sizeof(char) * (i + 1));
 	if (tmp == NULL)
 		return (NULL);
 	i = 0;
-	while (line[i] && line[i] != '$')
+	while ((line[i] && line[i] != '$') || ((line[i] == '$' && (line[i + 1] == '\0' || line[i + 1] == ' '))))
 	{
 		tmp[i] = line[i];
 		i++;
@@ -50,57 +33,6 @@ char	*ft_copy_till_exp(char *line)
 	tmp[i] = '\0';
 	return (tmp);
 }
-
-
-// int	check_exp(t_lxr *lxr, t_env *envp, char **tmp)
-// {
-// 	int		i;
-// 	char	*exp;
-
-// 	i = 0;
-// 	exp = NULL;
-// 	while (lxr->value[i])
-// 	{
-// 		if (lxr->value[i] == '$')
-// 		{
-// 			exp = ft_expander(envp, &lxr->value[i + 1]);
-// 			if (exp == NULL)
-// 			{
-// 				if (*tmp != NULL)
-// 					free(*tmp);
-// 				return (-2);
-// 			}
-// 			*tmp = ft_strjoin_utils(*tmp, exp);
-// 			if (*tmp == NULL)
-// 				return (-2);
-// 			i++;
-// 			while (ft_isalpha_underscore(lxr->value[i]) == 1)
-// 				i++;
-// 		}
-// 		else
-// 		{
-// 			exp = ft_copy_till_exp(&lxr->value[i]);
-// 			if (exp == NULL)
-// 			{
-// 				if (*tmp != NULL)
-// 					free(*tmp);
-// 				return (-2);
-// 			}
-// 			*tmp = ft_strjoin_utils(*tmp, exp);
-// 			if (*tmp == NULL)
-// 				return (-2);
-// 			while (lxr->value[i] && lxr->value[i] != '$')
-// 				i++;
-// 		}
-// 	}
-// 	if (i == 0)
-// 	{
-// 		*tmp = ft_strdup(lxr->value);
-// 		if (*tmp == NULL)
-// 				return (-2);
-// 	}
-// 	return (0);
-// }
 
 char	*check_exp(t_lxr *lxr, t_env *envp, int *ret)
 {
@@ -112,7 +44,7 @@ char	*check_exp(t_lxr *lxr, t_env *envp, int *ret)
 	exp = NULL;
 	while (lxr->value[i])
 	{
-		if (lxr->value[i] == '$')
+		if (lxr->value[i] == '$' && (lxr->value[i + 1] != '\0' && lxr->value[i + 1] != ' '))
 		{
 			exp = ft_expander(envp, &lxr->value[i + 1]);
 			if (exp == NULL)
@@ -129,7 +61,9 @@ char	*check_exp(t_lxr *lxr, t_env *envp, int *ret)
 				return (NULL);
 			}
 			i++;
-			while (ft_isalpha_underscore(lxr->value[i]) == 1)
+			if (lxr->value[i] == '?' && (lxr->value[i + 1] == '\0' || lxr->value[i + 1] == ' ' || lxr->value[i + 1] == '$'))
+				i++;
+			while (ft_isalnum_underscore(lxr->value[i]) == 1)
 				i++;
 		}
 		else
@@ -148,7 +82,7 @@ char	*check_exp(t_lxr *lxr, t_env *envp, int *ret)
 				*ret = -2;
 				return (NULL);
 			}
-			while (lxr->value[i] && lxr->value[i] != '$')
+			while ((lxr->value[i] && lxr->value[i] != '$') || ((lxr->value[i] == '$' && (lxr->value[i + 1] == '\0' || lxr->value[i + 1] == ' '))))
 				i++;
 		}
 	}
@@ -182,6 +116,13 @@ int    ft_get_expand(t_lxr *lxr, t_env *envp)
 					free(tmp);
 				return (-2);
 			}
+
+			printf("lxr = %s\n", lxr->value);
+			printf("tmp = %s\n", tmp);
+
+			if (lxr->value[0] == '$' && tmp[0] == '\0')
+				lxr->token = -2;
+
 			free(lxr->value);
 			lxr->value = ft_strdup(tmp);
 			free(tmp);
@@ -191,46 +132,21 @@ int    ft_get_expand(t_lxr *lxr, t_env *envp)
 		// NEED MESSAGE D'ERREUR
 		lxr = lxr->next;
 	}
-	return (0);
+	return (0); 
 }
-
-// int    ft_get_expand(t_lxr *lxr, t_env *envp)
-// {
-//     char    *tmp;
-//     int		ret;
-
-//     tmp = NULL;
-//     ret = 0;
-// 	while (lxr)
-// 	{
-// 		if (lxr->token == 0 || lxr->token == 5)
-// 		{
-// 			ret = check_exp(lxr, envp, &tmp);
-// 			if (ret == -2)
-// 			{
-// 				if (tmp != NULL)
-// 					free(tmp);
-// 				return (-2);
-// 			}
-// 			free(lxr->value);
-// 			lxr->value = ft_strdup(tmp);
-// 			free(tmp);
-// 			if (lxr->value == NULL)
-// 				return (-2);
-// 		}
-// 		// NEED MESSAGE D'ERREUR
-// 		lxr = lxr->next;
-// 	}
-// 	return (0);
-// }
 
 int	ft_strlen_target(char *str)
 {
 	int	i;
 
 	i = 0;
-	while (str[i] && ft_isalpha_underscore(str[i]) == 1)
+	if (str[0] == '?' && (str[1] == '\0' || str[1] == ' ' || str[1] == '$'))
+		return (1);
+	if (str[i] && ft_isalpha_underscore(str[i]) == 1)
 		i++;
+	if (i > 0)
+		while (str[i] && ft_isalnum_underscore(str[i]) == 1)
+			i++;
 	return (i);
 }
 

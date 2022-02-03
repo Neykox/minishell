@@ -88,10 +88,11 @@ int	add_line(t_env *envp, char *line)
 	return (not_in_env(envp, line));
 }
 
-int write_invalid_id_export(char *cmds)
+int write_invalid_id_export(char *cmds, int *export_ret)
 {
 	int	ret;
 
+	*export_ret = 1;
 	ret = write(1, "bash: export: `", 15);
 	if (ret < 0)
 		return (-3);
@@ -150,10 +151,10 @@ int	ft_export(char **cmds, t_env *envp)
 		error = check_value_export(cmds[i], &line);
 		if (error == -2)
 			return (error);//malloc issue but arg was correct
-		if (error == -1)
+		if (error == -1 && ret != 1)
 			ret = -1;
 		if (ft_isalpha_underscore(cmds[i][0]) == 0)
-			error = write_invalid_id_export(cmds[i]);
+			error = write_invalid_id_export(cmds[i], &ret);
 		if (error == 0)
 			error = add_line(envp, line);
 		if (error == -2 ||error == -3)
