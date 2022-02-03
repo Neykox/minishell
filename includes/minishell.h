@@ -159,7 +159,8 @@ char	*tweaked_strjoin(char const *s1, char const *s2, char const sep);
  * SIGNAL
  */
 
-void	ft_signal(int sig, siginfo_t *sa, void *data);
+void	ft_signal(int sig);
+// void	ft_signal(int sig, siginfo_t *sa, void *data);
 // void	ft_signal(int sig);
 
 /*

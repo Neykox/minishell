@@ -34,11 +34,11 @@ int	main(int ac, char **av, char **envp)
 	// (void)ac;
 	(void)av;
 	g_error = 0;
-	if (ac != 1)
-	{
-		write(1, "Please launch program without any args.\n", 40);
-		return (1);
-	}
+	// if (ac != 1)
+	// {
+	// 	write(1, "Please launch program without any args.\n", 40);
+	// 	return (1);
+	// }
 	new_env = ft_copy_env(envp);
 	if (new_env == NULL)
 	{
@@ -46,7 +46,11 @@ int	main(int ac, char **av, char **envp)
 		return (-2);
 	}
 	ft_memset(&sa, 0, sizeof(sa));
-	sa.sa_sigaction = &ft_signal;
+	// sa.sa_sigaction = &ft_signal;
+	sa.sa_handler = &ft_signal;
+	// pid_t child = fork();
+	// if (child == 0)
+	// 	sa.sa_handler = SIG_IGN;
 	while (1)
 	{
 		sigaction(SIGINT, &sa, NULL);
@@ -69,7 +73,7 @@ int	main(int ac, char **av, char **envp)
 				g_error = 2;
 				return (2);
 			}
-			//print_lxr(lxr);
+			print_lxr(lxr);
 			ft_get_expand(lxr, new_env);
 			g_error = syntax_checker(lxr);
 			//print_pipes(exec);

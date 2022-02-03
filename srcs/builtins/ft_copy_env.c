@@ -31,33 +31,6 @@
 // 	return (-2);
 // }
 
-// char	**ft_copy_env(char **envp)
-// {
-// 	int	i;
-// 	char	**tmp;
-
-// 	i = 0;
-// 	tmp = NULL;
-// 	while (envp[i])
-// 		i++;
-// 	tmp = malloc(sizeof(char *) * (i + 1));
-// 	if (tmp == NULL)
-// 		return (NULL);
-// 	i = 0;
-// 	while (envp[i])
-// 	{
-// 		tmp[i] = ft_strdup(envp[i]);
-// 		if (tmp[i] == NULL)
-// 		{
-// 			destroy_env(tmp, i, NULL);
-// 			return (NULL);
-// 		}
-// 		i++;
-// 	}
-// 	tmp[i] = NULL;
-// 	return (tmp);
-// }
-
 void	ft_lstclear(t_env **lst)
 {
 	t_env *tmp;
@@ -128,5 +101,12 @@ t_env	*ft_copy_env(char **envp)
 		ft_lstadd_back(&new_env, tmp);
 		i++;
 	}
+	tmp = ft_lstnew("?=0");
+	if (tmp == NULL)
+	{
+		ft_lstclear(&new_env);
+		return (NULL);
+	}
+	ft_lstadd_back(&new_env, tmp);
 	return (new_env);
 }
