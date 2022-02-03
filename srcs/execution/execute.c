@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/03 12:24:45 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/03 13:31:23 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,6 @@ int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env, int nb_pipe)
 		ret = 1;
 	if (ret < 0)
 		perror(cmds[0]);
-	}
 	return (ret);
 }
 
