@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/03 18:42:13 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/03 19:15:05 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,7 +270,11 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	{
 		waitpid(childpid[i], &status, 0);
 		if (WIFEXITED(status))
+		{
 			g_error = WEXITSTATUS(status);
+			if (modif_interro(new_env, ft_itoa(g_error)) == -2)
+				return (-1);
+		}
 		i++;
 	}
 	i = 0;

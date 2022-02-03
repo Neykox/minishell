@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/03 14:49:28 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/03 19:20:09 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,12 @@ int	main(int ac, char **av, char **envp)
 	t_env	*new_env;
 	struct sigaction sa;
 	t_exec	*exec;
+	int		ret;
 	
 	// (void)ac;
 	(void)av;
 	g_error = 0;
+	ret = 0;
 	// if (ac != 1)
 	// {
 	// 	write(1, "Please launch program without any args.\n", 40);
@@ -75,9 +77,9 @@ int	main(int ac, char **av, char **envp)
 			}
 			print_lxr(lxr);
 			ft_get_expand(lxr, new_env);
-			g_error = syntax_checker(lxr);
+			ret = syntax_checker(lxr);
 			//print_pipes(exec);
-			if (g_error == 0)
+			if (ret == 0)
 			{
 				exec = malloc(sizeof(t_exec));
 				if (!(exec))
@@ -86,13 +88,13 @@ int	main(int ac, char **av, char **envp)
 					g_error = 2;
 					return (2);
 				}
-				g_error = parse_values(lxr, exec);
+				/*g_error = */parse_values(lxr, exec);
 				execute(exec, envp, new_env);
 				free_exec(exec);
 			}
 			//free_lxr(lxr);
 			printf("%d\n", g_error);
-			modif_interro(new_env, ft_itoa(g_error));
+			//modif_interro(new_env, ft_itoa(g_error));
 			free(line);
 		}
 		if (line == NULL)

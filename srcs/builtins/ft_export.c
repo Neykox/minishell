@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:41:05 by user42            #+#    #+#             */
-/*   Updated: 2022/02/03 14:30:13 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/03 19:16:21 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int modif_interro(t_env *envp, char *error)
 	free(error);
 	if (tmp == NULL)
 		return (-2);
-	printf("tmp = %s\n", tmp);
+	//printf("tmp = %s\n", tmp);
 	if (add_line(envp, tmp) == -2)
 	{
 		free(tmp);
