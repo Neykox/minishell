@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/02 18:21:50 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/03 12:24:45 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	exec_commands(char **cmds, char **envp, t_env *new_env)
 		else
 		{
 			perror(cmds[0]);
+			printf("hey\nerrno = %d\n", errno);
 			return ;
-			//printf("hey\nerrno = %d", errno);
 			//if (errno == EAGAIN)
 			//	exit(126);
 			//else
@@ -176,6 +176,7 @@ int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env, int nb_pipe)
 		ret = 1;
 	if (ret < 0)
 		perror(cmds[0]);
+	}
 	return (ret);
 }
 
@@ -246,6 +247,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 			if (builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe) == 1)
 			{
 				exec_commands(exec->pipes[i].cmds, envp, new_env);
+				printf("dodo\n");
 				if (errno == EAGAIN)
 					exit(126);
 				exit (127);
@@ -265,7 +267,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	i = 0;
 	while (i <= exec->nb_pipe && flag == 0)
 	{
-		waitpid(childpid, &status, 0);
+		waitpid(-1, &status, 0);
 		if (WIFEXITED(status))
 			g_error = WEXITSTATUS(status);
 		i++;
@@ -377,7 +379,7 @@ int	execute(t_exec *exec, char **envp, t_env *new_env)
 		}
 		i++;
 	}
-	//print_pipes(exec);
+	print_pipes(exec);
 	pipe_things_up(exec, pipefd, envp, new_env);
 	return (0);
 }

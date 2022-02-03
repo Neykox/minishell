@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:40:45 by user42            #+#    #+#             */
-/*   Updated: 2022/02/02 18:24:03 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/03 11:51:33 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,10 @@ int	ft_cd(char **cmds, int nb_cmds, t_env *env)
 
 	ret = 0;
 	if (nb_cmds > 2)
+	{
+		errno = E2BIG;
 		return (-1);
+	}
 	ret = chdir(cmds[1]);//check if cmds[1] exist
 	if (ret == -1)
 		return (-1);
