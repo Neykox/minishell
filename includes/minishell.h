@@ -143,6 +143,9 @@ t_lxr	*free_lxr(t_lxr *lxr);
  * UTILS
  */
 
+int		ft_size_itoa(int n);
+char	*ft_reverse(char *tab);
+char	*ft_itoa(int n);
 int	ft_atoi(const char *str);
 void	*ft_memset(void *b, int c, size_t len);;
 int		ft_notop(int c);
@@ -194,6 +197,7 @@ char    *copy_till_eg(char *line);
 int check_value_export(char *cmds, char **line);
 int not_in_env(t_env *envp, char *line);
 int add_line(t_env *envp, char *line);
+int modif_interro(t_env *envp, char *error);
 // int ft_export(t_lxr *lxr, t_env *envp);
 int	ft_export(char **cmds, t_env *envp);
 

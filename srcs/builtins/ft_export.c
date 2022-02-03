@@ -88,6 +88,26 @@ int	add_line(t_env *envp, char *line)
 	return (not_in_env(envp, line));
 }
 
+int modif_interro(t_env *envp, char *error)
+{
+	char	*tmp;
+
+	if (error == NULL)
+		return (-2);
+	tmp = ft_strjoin_utils("?=", error);
+	free(error);
+	if (tmp == NULL)
+		return (-2);
+	printf("tmp = %s\n", tmp);
+	if (add_line(envp, tmp) == -2)
+	{
+		free(tmp);
+		return (-2);
+	}
+	free(tmp);
+	return (0);
+}
+
 int write_invalid_id_export(char *cmds, int *export_ret)
 {
 	int	ret;
@@ -112,31 +132,34 @@ int	write_no_arg(t_env *env)
 
 	while (env)
 	{
-		eg = 0;
-		while (env->line[eg] && env->line[eg] != '=')
+		if (env->line[0] != '?')
+		{
+			eg = 0;
+			while (env->line[eg] && env->line[eg] != '=')
+				eg++;
 			eg++;
-		eg++;
-		ret = write(1, "declare -x ", 11);
-		if (ret < 0)
-			return (-3);
-		ret = write(1, env->line, eg);
-		if (ret < 0)
-			return (-3);
-		ret = write(1, "\"", 1);
-		if (ret < 0)
-			return (-3);
-		ret = write(1, &env->line[eg], ft_strlen(&env->line[eg]));
-		if (ret < 0)
-			return (-3);
-		ret = write(1, "\"\n", 2);
-		if (ret < 0)
-			return (-3);
+			ret = write(1, "declare -x ", 11);
+			if (ret < 0)
+				return (-3);
+			ret = write(1, env->line, eg);
+			if (ret < 0)
+				return (-3);
+			ret = write(1, "\"", 1);
+			if (ret < 0)
+				return (-3);
+			ret = write(1, &env->line[eg], ft_strlen(&env->line[eg]));
+			if (ret < 0)
+				return (-3);
+			ret = write(1, "\"\n", 2);
+			if (ret < 0)
+				return (-3);
+		}
 		env = env->next;
 	}
 	return (0);
 }
 
-int	ft_export(char **cmds, t_env *envp)
+int	ft_export(char **cmds, t_env *envp)//need to free(line) not sure were tho
 {
 	char	*line;
 	int	error;

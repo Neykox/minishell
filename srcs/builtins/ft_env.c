@@ -31,10 +31,13 @@ int	ft_env(t_env *envp)
 
 	while (envp)
 	{
-		ret = write(1, envp->line, ft_strlen(envp->line));
-		if (ret < 0)
-			break ;
-		write(1, "\n", 1);
+		if (envp->line[0] != '?')
+		{
+			ret = write(1, envp->line, ft_strlen(envp->line));
+			if (ret < 0)
+				break ;
+			write(1, "\n", 1);
+		}
 		envp = envp->next;
 	}
 	return (ret);

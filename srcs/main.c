@@ -92,6 +92,7 @@ int	main(int ac, char **av, char **envp)
 			}
 			//free_lxr(lxr);
 			printf("%d\n", g_error);
+			modif_interro(new_env, ft_itoa(g_error));
 			free(line);
 		}
 		if (line == NULL)
