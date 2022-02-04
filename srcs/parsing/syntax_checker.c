@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 14:00:41 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/03 18:16:48 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 12:35:58 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,17 @@ int	syntax_checker_cont(t_lxr **parser, int ret)
 	return (0);
 }
 
-int	syntax_checker(t_lxr *lxr)
+int	syntax_checker(t_lxr *lxr, t_env *new_env)
 {
 	t_lxr	*parser;
+	int		ret;
 
+	ret = 0;
 	if (!lxr)
 	{
 		g_error = 2;
+		if (modif_interro(new_env, ft_itoa(g_error)) == -2)
+			return (-1);
 		return (g_error);
 	}
 	parser = lxr;
@@ -109,6 +113,8 @@ int	syntax_checker(t_lxr *lxr)
 	{
 		print_parsing_error(parser->value, 1);
 		g_error = 2;
+		if (modif_interro(new_env, ft_itoa(g_error)) == -2)
+			return (-1);
 		return (g_error);
 	}
 	while (1)
@@ -117,9 +123,14 @@ int	syntax_checker(t_lxr *lxr)
 			return (0);
 		else
 		{
-			g_error = syntax_checker_cont(&parser, g_error);
-			if (g_error)
-				return (g_error);
+			ret = syntax_checker_cont(&parser, ret);
+			if (ret)
+			{
+				g_error = 2;
+				if (modif_interro(new_env, ft_itoa(g_error)) == -2)
+					return (-1);
+				return (ret);
+			}
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/03 19:15:05 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 12:40:15 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -315,37 +315,25 @@ t_redir	*open_redir_fd(t_redir *redir)
 		{
 			tmp->fd = open(tmp->redir, O_RDONLY);
 			if (tmp->fd < 0)
-			{
 				perror(tmp->redir);
-				//return (NULL);
-			}
 		}
 		else if (tmp->type == REDIR_STDOUT)
 		{
 			tmp->fd = open(tmp->redir, O_TRUNC | O_RDWR | O_CREAT, 0644);
 			if (tmp->fd < 0)
-			{
 				perror(tmp->redir);
-				//return (NULL);
-			}
 		}
 		else if (tmp->type == DREDIR_RIGHT)
 		{
 			tmp->fd = open(tmp->redir, O_APPEND | O_RDWR | O_CREAT, 0644);
 			if (tmp->fd < 0)
-			{
 				perror(tmp->redir);
-				//return (NULL);
-			}
 		}
 		else if (tmp->type == DREDIR_LEFT)
 		{
 			tmp->fd = open(".tmp_heredoc", O_WRONLY | O_CREAT | O_EXCL | O_TRUNC, 0600);
 			if (tmp->fd < 0)
-			{
 				perror(tmp->redir);
-				//return (NULL);
-			}
 			if (heredoc_implementation(tmp) < 0)
 				return (NULL);
 		}
@@ -384,7 +372,7 @@ int	execute(t_exec *exec, char **envp, t_env *new_env)
 		}
 		i++;
 	}
-	print_pipes(exec);
+	//print_pipes(exec);
 	pipe_things_up(exec, pipefd, envp, new_env);
 	return (0);
 }
