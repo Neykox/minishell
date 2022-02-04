@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 17:29:49 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 18:47:07 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,8 @@ void	close_redir_fd(t_redir *redir);
 
 void	free_exec(t_exec *exec);
 t_lxr	*free_lxr(t_lxr *lxr);
+void	free_stuff(t_exec *exec, int *childpid);
+t_env	*free_env(t_env *env);
 
 /*
  * UTILS

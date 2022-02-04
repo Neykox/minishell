@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 17:57:41 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 21:06:27 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	ret = 0;
 	status = 0;
 	flag = 0;
-	childpid = malloc(sizeof(int) * exec->nb_pipe);
+	childpid = malloc(sizeof(int) * (exec->nb_pipe + 1));
 	if (!(childpid))
 		return (-1);
 	if (exec->nb_pipe == 0 && exec->pipes[i].nb_cmds)
@@ -264,7 +264,12 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 				exit (127);
 			}
 			else
+			{
+				free_stuff(exec, childpid);
+				free_exec(exec);
+				free_env(new_env);
 				exit(g_error);
+			}
 		}
 		i++;
 		j++;
@@ -294,6 +299,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 			close_redir_fd(exec->pipes[i].redir);
 		i++;
 	}
+	free_stuff(exec, childpid);
 	return (0);
 }
 
