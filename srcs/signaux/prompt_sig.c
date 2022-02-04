@@ -44,6 +44,15 @@ void	ft_signal(int sig)
 	}
 }
 
+void	ft_signal_heredoc(int sig)
+{
+	if (sig == SIGINT)
+	{
+		g_error = 130;
+		close(STDIN_FILENO);
+	}
+}
+
 // void	ft_signal(int sig)
 // {
 // 	if (sig == SIGINT)
