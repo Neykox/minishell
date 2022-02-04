@@ -17,6 +17,7 @@ int	heredoc_implementation(t_redir *redir, struct sigaction sa, t_env *new_env)
 	char	*line;
 	int		save;
 	char	*tmp;
+	int ret;
 
 	save = dup(STDIN_FILENO);
 	while (1)
@@ -42,12 +43,10 @@ int	heredoc_implementation(t_redir *redir, struct sigaction sa, t_env *new_env)
 			break ;
 		if (!(ft_strncmp(line, redir->redir, ft_strlen(redir->redir))))
 			break ;
-		while (line[i] && line[i] != '$')
-			i++;
-		if (line[i] == '$' && (ft_isalpha_underscore(line[i + 1]) == 0))
+		if (line)
 		{
-			printf("line + 1 : %s\n", &line[i + 1]);
-			tmp = ft_expander(new_env, &line[i + 1]);
+			// printf("line + 1 : %s\n", &line[i + 1]);
+			tmp = check_exp(line, new_env, &ret);
 			free(line);
 			line = ft_strdup(tmp);
 			printf("new_line : %s\n", line);

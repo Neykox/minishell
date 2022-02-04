@@ -34,7 +34,7 @@ char	*ft_copy_till_exp(char *line)
 	return (tmp);
 }
 
-char	*check_exp(t_lxr *lxr, t_env *envp, int *ret)
+char	*check_exp(char *value, t_env *envp, int *ret)
 {
 	int		i;
 	char *tmp = NULL;
@@ -42,11 +42,11 @@ char	*check_exp(t_lxr *lxr, t_env *envp, int *ret)
 
 	i = 0;
 	exp = NULL;
-	while (lxr->value[i])
+	while (value[i])
 	{
-		if (lxr->value[i] == '$' && (lxr->value[i + 1] != '\0' && lxr->value[i + 1] != ' '))
+		if (value[i] == '$' && (value[i + 1] != '\0' && value[i + 1] != ' '))
 		{
-			exp = ft_expander(envp, &lxr->value[i + 1]);
+			exp = ft_expander(envp, &value[i + 1]);
 			if (exp == NULL)
 			{
 				if (tmp != NULL)
@@ -61,14 +61,14 @@ char	*check_exp(t_lxr *lxr, t_env *envp, int *ret)
 				return (NULL);
 			}
 			i++;
-			if (lxr->value[i] == '?' && (lxr->value[i + 1] == '\0' || lxr->value[i + 1] == ' ' || lxr->value[i + 1] == '$'))
+			if (value[i] == '?' && (value[i + 1] == '\0' || value[i + 1] == ' ' || value[i + 1] == '$'))
 				i++;
-			while (ft_isalnum_underscore(lxr->value[i]) == 1)
+			while (ft_isalnum_underscore(value[i]) == 1)
 				i++;
 		}
 		else
 		{
-			exp = ft_copy_till_exp(&lxr->value[i]);
+			exp = ft_copy_till_exp(&value[i]);
 			if (exp == NULL)
 			{
 				if (tmp != NULL)
@@ -82,13 +82,13 @@ char	*check_exp(t_lxr *lxr, t_env *envp, int *ret)
 				*ret = -2;
 				return (NULL);
 			}
-			while ((lxr->value[i] && lxr->value[i] != '$') || ((lxr->value[i] == '$' && (lxr->value[i + 1] == '\0' || lxr->value[i + 1] == ' '))))
+			while ((value[i] && value[i] != '$') || ((value[i] == '$' && (value[i + 1] == '\0' || value[i + 1] == ' '))))
 				i++;
 		}
 	}
 	if (i == 0)
 	{
-		tmp = ft_strdup(lxr->value);
+		tmp = ft_strdup(value);
 		if (tmp == NULL)
 		{
 			*ret = -2;
@@ -109,7 +109,7 @@ int    ft_get_expand(t_lxr *lxr, t_env *envp)
 	{
 		if (lxr->token == 0 || lxr->token == 5)
 		{
-			tmp = check_exp(lxr, envp, &ret);
+			tmp = check_exp(lxr->value, envp, &ret);
 			if (ret == -2)
 			{
 				if (tmp != NULL)

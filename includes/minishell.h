@@ -189,7 +189,8 @@ int	ft_pwd(void);
 int	ft_env(t_env *envp);
 
 char    *ft_copy_till_exp(char *line);
-char	*check_exp(t_lxr *lxr, t_env *envp, int *ret);
+// char	*check_exp(t_lxr *lxr, t_env *envp, int *ret);
+char	*check_exp(char *value, t_env *envp, int *ret);
 int	ft_get_expand(t_lxr *lxr, t_env *envp);
 char    *ft_expander(t_env *envp, char *target);
 
