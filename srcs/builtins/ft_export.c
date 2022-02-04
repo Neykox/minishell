@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:41:05 by user42            #+#    #+#             */
-/*   Updated: 2022/02/04 20:47:57 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 21:08:00 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,21 +173,26 @@ int	ft_export(char **cmds, t_env *envp)//need to free(line) not sure were tho
 	{
 		error = check_value_export(cmds[i], &line);
 		if (error == -2)
-			return (error);//malloc issue but arg was correct
-		if (error == -1 && ret != 1)
-			ret = -1;
+		{
+			g_error = 1;
+			return (error);
+		}
 		if (ft_isalpha_underscore(cmds[i][0]) == 0)
 			error = write_invalid_id_export(cmds[i], &ret);
 		if (error == 0)
 			error = add_line(envp, line);
 		if (error == -2 ||error == -3)
+		{
+			g_error = 1;
 			return (error);//malloc issue || -3 == write error
+		}
 		i++;
 	}
 	if (i == 1)
-		return (write_no_arg(envp));
+		return (g_error = write_no_arg(envp));
+	g_error = ret;
 	free(line);
-	return (ret);
+	return (0);
 }
 
 // bash: export: `[hi=hi': not a valid identifier
