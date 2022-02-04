@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/03 18:16:43 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 12:36:12 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ t_lxr	*append_end(t_lxr *lexer);
  */
 
 void	print_parsing_error(char *value, int ret);
-int		syntax_checker(t_lxr *lxr);
+int		syntax_checker(t_lxr *lxr, t_env *new_env);
 int		syntax_checker_cont(t_lxr **parser, int ret);
 int		check_pipe(t_lxr **parser);
 int		check_redir(t_lxr **parser);
