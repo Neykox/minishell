@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 12:40:56 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 15:15:12 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,12 @@ int	main(int ac, char **av, char **envp)
 	// 	sa.sa_handler = SIG_IGN;
 	while (1)
 	{
-		sigaction(SIGINT, &sa, NULL);
+		//sigaction(SIGINT, &sa, NULL);
+		if (sigaction(SIGINT, &sa, NULL) == 0)
+		{
+			if (modif_interro(new_env, ft_itoa(g_error)) == -2)
+				return (-2);
+		}		
 		signal(SIGQUIT, SIG_IGN);
 		if (ac == 1)
 			line = readline("\e[1;33mminishell$ \e[0m");

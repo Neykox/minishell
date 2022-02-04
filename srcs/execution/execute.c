@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 12:40:15 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 15:36:46 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,7 +333,10 @@ t_redir	*open_redir_fd(t_redir *redir)
 		{
 			tmp->fd = open(".tmp_heredoc", O_WRONLY | O_CREAT | O_EXCL | O_TRUNC, 0600);
 			if (tmp->fd < 0)
+			{
+				printf("hello\n");
 				perror(tmp->redir);
+			}
 			if (heredoc_implementation(tmp) < 0)
 				return (NULL);
 		}
