@@ -55,7 +55,9 @@ int	main(int ac, char **av, char **envp)
 	// 	sa.sa_handler = SIG_IGN;
 	while (1)
 	{
-		sigaction(SIGINT, &sa, NULL);
+		if (sigaction(SIGINT, &sa, NULL) == 0)
+			if (modif_interro(new_env, ft_itoa(g_error)) == -2)
+				return (-2);
 		signal(SIGQUIT, SIG_IGN);
 		if (ac == 1)
 			line = readline("\e[1;33mminishell$ \e[0m");
