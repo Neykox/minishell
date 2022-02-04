@@ -35,10 +35,15 @@ int	ft_env(t_env *envp)
 		{
 			ret = write(1, envp->line, ft_strlen(envp->line));
 			if (ret < 0)
-				break ;
+			{
+				g_error = 125;
+				if (modif_interro(envp, ft_itoa(g_error)) == -2)
+					return (-2);
+				return (-3);
+			}
 			write(1, "\n", 1);
 		}
 		envp = envp->next;
 	}
-	return (ret);
+	return (g_error = 0);
 }

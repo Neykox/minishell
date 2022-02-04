@@ -175,12 +175,13 @@ int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env, int nb_pipe)
 		//printf("hello from builtin\n");
 	}
 	else
-		ret = 1;
-	if (ret < 0)
+		ret = -10;
+	if (ret == -3 || ret == -2 || ret == 1)
 		perror(cmds[0]);
-	g_error = ret;
+	// if (g_error != 125 || ret != 0)
+	// 	g_error = ret;
 	if (modif_interro(new_env, ft_itoa(g_error)) == -2)
-		return (-1);
+		return (-2);
 	return (ret);
 }
 
@@ -192,10 +193,12 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	int	k;
 	int	status;
 	int	flag;
+	int ret;
 
 	i = 0;
 	j = 0;
 	k = 0;
+	ret = 0;
 	status = 0;
 	flag = 0;
 	childpid = malloc(sizeof(int) * exec->nb_pipe);
@@ -251,7 +254,8 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 				if (k < 0)
 					exit (1);
 			}
-			if (builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe) == 1 && exec->pipes[i].nb_cmds)
+			ret = builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe);
+			if (ret == -10 && exec->pipes[i].nb_cmds)
 			{
 				exec = check_cmds(exec);
 				exec_commands(exec->pipes[i].cmds, envp, new_env);
@@ -260,7 +264,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 				exit (127);
 			}
 			else
-				exit(0);
+				exit(g_error);
 		}
 		i++;
 		j++;

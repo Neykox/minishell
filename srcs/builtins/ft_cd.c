@@ -118,19 +118,28 @@ int	ft_cd(char **cmds, int nb_cmds, t_env *env)
 	if (nb_cmds > 2)
 	{
 		errno = E2BIG;
-		return (-1);
+		return (g_error = 1);
 	}
-	ret = chdir(cmds[1]);//check if cmds[1] exist
+	if (cmds[1])
+		ret = chdir(cmds[1]);
+	else
+	{
+		g_error = 1;
+		return (0);
+	}
 	if (ret == -1)
-		return (-1);
-	// (void)env;
+		return (g_error = 1);
 	ret = modif_oldpwd(env);
 	if (ret == -2)
+	{
+		g_error = 1;
 		return (-2);
+	}
 	ret = modif_pwd(env);
-	if (ret == -2)
-		return (-2);
-	if (ret == -3)
-		return (-3);
-	return (0);
+	if (ret == -2 || ret == -3)
+	{
+		g_error = 1;
+		return (ret);
+	}
+	return (g_error = 0);
 }
