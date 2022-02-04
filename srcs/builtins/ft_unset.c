@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:41:19 by user42            #+#    #+#             */
-/*   Updated: 2022/01/12 15:41:21 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/04 20:49:04 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,5 +254,6 @@ int	ft_unset(char **cmds, t_env *envp)
 			find_line(envp, line);
 		i++;
 	}
+	free(line);
 	return (ret);
 }

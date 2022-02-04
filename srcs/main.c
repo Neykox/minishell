@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 17:21:23 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 20:27:36 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,12 @@ int	main(int ac, char **av, char **envp)
 					return (2);
 				}
 				parse_values(lxr, exec);
+				free_lxr(lxr);
 				execute(exec, envp, new_env, sa);
 				free_exec(exec);
 			}
 			//free_lxr(lxr);
+			//print_lxr(lxr);
 			//printf("%d\n", g_error);
 			//modif_interro(new_env, ft_itoa(g_error));
 			free(line);
@@ -106,6 +108,7 @@ int	main(int ac, char **av, char **envp)
 			break ;
 	}
 	//write(1, "\n", 1);
+	free_env(new_env);
 	write(1, "exit\n", 5);
 	return (0);//return (g_error);
 }

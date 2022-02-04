@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/03 18:21:21 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 21:01:51 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,48 +221,6 @@ char	**clean_up_cmds(char **cmds, int *nb_cmds)
 	while (result[i])
 		i++;
 	*(nb_cmds) = i;
-	return (result);
-}
-
-int		check_empty_cmds(char **cmds, int nb_cmds)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (i < nb_cmds)
-	{
-		if (cmds[i][0] == '\0')
-			j++;
-		i++;
-	}
-	return (j);
-}
-
-char	**remove_empty_commands(char **cmds, int *nb_cmds, int nb_empty_cmds)
-{
-	char	**result;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	result = malloc(sizeof(char *) * ((*nb_cmds - nb_empty_cmds)));
-	if (!result)
-		return (NULL);
-	while (i < *nb_cmds)
-	{
-		if (cmds[i][0] != '\0')
-		{
-			result[j] = ft_strdup(cmds[i]);
-			j++;
-		}
-		i++;
-	}
-	result[j] = '\0';
-	*nb_cmds = j;
-	free(cmds);
 	return (result);
 }
 
