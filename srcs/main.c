@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 15:15:12 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 17:21:23 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,27 +48,27 @@ int	main(int ac, char **av, char **envp)
 		return (-2);
 	}
 	ft_memset(&sa, 0, sizeof(sa));
-	// sa.sa_sigaction = &ft_signal;
-	sa.sa_handler = &ft_signal;
-	// pid_t child = fork();
-	// if (child == 0)
-	// 	sa.sa_handler = SIG_IGN;
 	while (1)
 	{
-		//sigaction(SIGINT, &sa, NULL);
-		if (sigaction(SIGINT, &sa, NULL) == 0)
-		{
-			if (modif_interro(new_env, ft_itoa(g_error)) == -2)
-				return (-2);
-		}		
+		sa.sa_handler = &ft_signal;
+		sigaction(SIGINT, &sa, NULL);
 		signal(SIGQUIT, SIG_IGN);
+
+		//je gère le controle c (mod interactif)
+		// sa.sa_handler = &handler
+		//sigaction()
 		if (ac == 1)
 			line = readline("\e[1;33mminishell$ \e[0m");
 		else if (ac == 2)
 			line = readline("\e[1;34mminishell$ \e[0m");
 		else if (ac == 3)
 			line = readline("\e[1;31mminishell$ \e[0m");
-		//add_history(line);
+		// je ne gère plus aucun signal
+		if (g_error == 130)
+			if (modif_interro(new_env, ft_itoa(g_error)) == -2)
+				return (-2);
+		sa.sa_handler = SIG_IGN;
+		sigaction(SIGINT, &sa, NULL);
 		lxr = NULL;
 		if (line && line[0] !=  '\0')
 		{
@@ -94,7 +94,7 @@ int	main(int ac, char **av, char **envp)
 					return (2);
 				}
 				parse_values(lxr, exec);
-				execute(exec, envp, new_env);
+				execute(exec, envp, new_env, sa);
 				free_exec(exec);
 			}
 			//free_lxr(lxr);

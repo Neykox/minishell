@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 15:36:46 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 17:21:50 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,10 @@ int	exec_redir(t_redir *redir)
 		{
 			ret = dup2(tmp->fd, 0);
 			if (ret < 0)
+			{
+				printf("hgg\n");
 				return (ret);
+			}
 			close(tmp->fd);
 		}
 		tmp = tmp->next;
@@ -302,7 +305,7 @@ void	close_redir_fd(t_redir *redir)
 	}
 }
 
-t_redir	*open_redir_fd(t_redir *redir)
+t_redir	*open_redir_fd(t_redir *redir, struct sigaction sa)
 {
 	t_redir *tmp;
 
@@ -337,7 +340,7 @@ t_redir	*open_redir_fd(t_redir *redir)
 				printf("hello\n");
 				perror(tmp->redir);
 			}
-			if (heredoc_implementation(tmp) < 0)
+			if (heredoc_implementation(tmp, sa) < 0)
 				return (NULL);
 		}
 		tmp = tmp->next;
@@ -345,7 +348,7 @@ t_redir	*open_redir_fd(t_redir *redir)
 	return (redir);
 }
 
-int	execute(t_exec *exec, char **envp, t_env *new_env)
+int	execute(t_exec *exec, char **envp, t_env *new_env, struct sigaction sa)
 {
 	int		**pipefd;
 	int		i;
@@ -369,7 +372,7 @@ int	execute(t_exec *exec, char **envp, t_env *new_env)
 	{
 		if (exec->pipes[i].redir != NULL)
 		{
-			exec->pipes[i].redir = open_redir_fd(exec->pipes[i].redir);
+			exec->pipes[i].redir = open_redir_fd(exec->pipes[i].redir, sa);
 			if (exec->pipes[i].redir == NULL)
 				return (2);
 		}

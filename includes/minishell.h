@@ -128,8 +128,9 @@ t_exec	*check_cmds(t_exec *exec);
  * EXECUTION
  */
 
-int		execute(t_exec *exec, char **envp, t_env *new_env);
-int		heredoc_implementation(t_redir *redir);
+int		execute(t_exec *exec, char **envp, t_env *new_env, struct sigaction sa);
+int		heredoc_implementation(t_redir *redir, struct sigaction sa);
+t_redir	*open_redir_fd(t_redir *redir, struct sigaction sa);
 void	close_redir_fd(t_redir *redir);
 
 /*
@@ -164,6 +165,7 @@ char	*tweaked_strjoin(char const *s1, char const *s2, char const sep);
  * SIGNAL
  */
 
+void	ft_signal_heredoc(int sig);
 void	ft_signal(int sig);
 // void	ft_signal(int sig, siginfo_t *sa, void *data);
 // void	ft_signal(int sig);
@@ -179,7 +181,8 @@ char	*find_in_env(t_env *envp, char *line, int *ret);
 int modif_oldpwd(t_env *env);
 int	ft_cd(char **cmds, int nb_cmds, t_env *env);
 
-int check_echo_flag(char *ag, int *n);
+// int check_echo_flag(char *ag, int *n);
+int check_echo_flag(char **cmds, int *n);
 int	ft_echo(char **cmds);
 
 int	ft_pwd(void);

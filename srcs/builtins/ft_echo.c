@@ -12,12 +12,24 @@
 
 #include "../../includes/minishell.h"
 
-int check_echo_flag(char *ag, int *n)
+int check_echo_flag(char **cmds, int *n)
 {
-	if (ag[0] == '-' && ag[1] == 'n' && ag[2] == '\0')
+	int i;
+	int	j;
+
+	j = 1;
+	while (cmds[j] && cmds[j][0] == '-' && cmds[j][1] == 'n')
 	{
-		*n = 1;
-		return (2);
+		i = 2;
+		while (cmds[j][i] && cmds[j][i] == 'n')
+			i++;
+		if (cmds[j][i] != '\0')
+		{
+			if (j > 1)
+				*n = 1;
+			return (j);
+		}
+		j++;
 	}
 	*n = 0;
 	return (1);
@@ -56,7 +68,7 @@ int check_echo_flag(char *ag, int *n)
 // 	return (0);
 // }
 
-int	ft_echo(char **cmds)
+int	ft_echo(char **cmds)//should return -2 not set ret2 to -2, ret2 is reset before exit too
 {
 	int	n;
 	int	i;
@@ -65,7 +77,7 @@ int	ft_echo(char **cmds)
 
 	ret = NULL;
 	if (cmds[1])
-		i = check_echo_flag(cmds[1], &n);
+		i = check_echo_flag(cmds, &n);
 	while (cmds[1] && cmds[i])
 	{
 		ret = ft_strjoin_utils(ret, cmds[i]);
