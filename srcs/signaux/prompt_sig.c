@@ -6,7 +6,7 @@
 /*   By: aleroy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 14:35:17 by aleroy            #+#    #+#             */
-/*   Updated: 2022/02/03 19:23:33 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 17:24:46 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	ft_signal_heredoc(int sig)
 	if (sig == SIGINT)
 	{
 		g_error = 130;
+		write(1, "\n", 1);
 		close(STDIN_FILENO);
 	}
 }

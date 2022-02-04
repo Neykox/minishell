@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 12:36:12 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/04 17:29:49 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,8 @@ t_exec	*check_cmds(t_exec *exec);
  */
 
 int		execute(t_exec *exec, char **envp, t_env *new_env, struct sigaction sa);
-int		heredoc_implementation(t_redir *redir, struct sigaction sa);
-t_redir	*open_redir_fd(t_redir *redir, struct sigaction sa);
+int		heredoc_implementation(t_redir *redir, struct sigaction sa, t_env *new_env);
+t_redir	*open_redir_fd(t_redir *redir, struct sigaction sa, t_env *new_env);
 void	close_redir_fd(t_redir *redir);
 
 /*
