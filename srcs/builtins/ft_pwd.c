@@ -20,11 +20,17 @@ int	ft_pwd(void)
 	buf = NULL;
 	buf = getcwd(NULL, 0);// si le malloc de getcwd fail, check errno
 	if (buf == NULL)
+	{
+		g_error = 1;
 		return (-2);
+	}
 	ret = write(1, buf, ft_strlen(buf));
 	if (ret < 0)
-		return (ret);
+	{
+		g_error = 1;
+		return (1);
+	}
 	write(1, "\n", 1);
 	free(buf);
-	return (ret);
+	return (g_error = 0);
 }

@@ -46,8 +46,10 @@ int	ft_exit(char *status, t_env *new_env, int nb_pipe)
 	if (nb_pipe == 0)
 		ret = write(1, "exit\n", 5);
 	if (ret < 0)
-		return (-3);//exit(-3);
-	// printf("g_error = %d\n" , g_error);
+	{
+		g_error = 1;
+		return (-3);
+	}
 	
 	while (status && status[i])
 	{
@@ -61,3 +63,4 @@ int	ft_exit(char *status, t_env *new_env, int nb_pipe)
 	exit(g_error);
 	return (0);
 }
+ 
