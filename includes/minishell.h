@@ -170,9 +170,11 @@ char	*tweaked_strjoin(char const *s1, char const *s2, char const sep);
  */
 
 void	ft_signal_heredoc(int sig);
+// void	ft_signal_heredoc(int sig, siginfo_t *sa, void *data);
 void	ft_signal(int sig);
 // void	ft_signal(int sig, siginfo_t *sa, void *data);
-// void	ft_signal(int sig);
+void	ft_signal2(int sig);
+// void	ft_signal2(int sig, siginfo_t *sa, void *data);
 
 /*
  * BUILTINS
@@ -185,6 +187,9 @@ char	*find_in_env(t_env *envp, char *line, int *ret);
 int modif_oldpwd(t_env *env);
 int	ft_cd(char **cmds, int nb_cmds, t_env *env);
 
+
+char	*ft_strjoin_utils_echo(char *line, char *buf);
+char	*ft_strjoin_echo(char *s1, char *s2, int i);
 // int check_echo_flag(char *ag, int *n);
 int check_echo_flag(char **cmds, int *n);
 int	ft_echo(char **cmds);
