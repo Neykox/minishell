@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 17:41:39 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 18:38:02 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ char	**clean_up_cmds(char **cmds, int *nb_cmds)
 		i++;
 	}
 	i = 0;
-	cmds = t_free_that_string(cmds);
+	t_free_that_string(cmds);
 	result = ft_split(tmp, ' ');
 	free(tmp);
 	i = 0;

@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 17:07:12 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 18:01:20 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ char    *ft_strjoin_utils(char *line, char *buf);
 char    *ft_strjoin(char const *s1, char const *s2, int i);
 char	**ft_split(char const *s, char c);
 char	**tweaked_split(char const *s, char c);
-char	**t_free_that_string(char **tab);
+void	t_free_that_string(char **tab);
 char	*ft_add_char(char *s, char c);
 char	*tweaked_strdup(const char *s);
 char	*tweaked_strjoin(char const *s1, char const *s2, char const sep);
