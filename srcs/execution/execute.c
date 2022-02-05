@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 19:52:03 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 20:09:38 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,13 +248,8 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 			ret = builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe);
 			if (ret == -10 && exec->pipes[i].nb_cmds)
 			{
-				print_pipes(exec);
-				printf("avant check : %d\n", exec->pipes[i].nb_cmds);
 				exec = check_cmds(exec);
-				printf("apres check : %d\n", exec->pipes[i].nb_cmds);
-				print_pipes(exec);
 				exec_commands(exec->pipes[i].cmds, envp, new_env, exec);
-				printf("on remtre dans frre everytihng dans le chid;\n");
 				free_everything(exec, childpid, new_env);
 				if (errno == EAGAIN)
 					exit(126);
@@ -360,10 +355,7 @@ t_redir	*open_redir_fd(t_redir *redir, struct sigaction sa, t_env *new_env)
 		{
 			tmp->fd = open(".tmp_heredoc", O_WRONLY | O_CREAT | O_EXCL | O_TRUNC, 0600);
 			if (tmp->fd < 0)
-			{
-				printf("hello\n");
 				perror(tmp->redir);
-			}
 			if (heredoc_implementation(tmp, sa, new_env) < 0)
 			{
 				free_redir(redir);

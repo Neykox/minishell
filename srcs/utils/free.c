@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 14:07:11 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 15:56:19 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 20:08:42 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ t_env	*free_env(t_env *env)
 	t_env *tmp;
 	t_env *node;
 
-	printf("on rentre dans free_env\n");
 	node = env;
 	while (node != NULL)
 	{
@@ -42,7 +41,6 @@ t_env	*free_env(t_env *env)
 		free(tmp);
 	}
 	env = NULL;
-	printf("on a fini de free env\n");
 	return (env);
 }
 
@@ -51,7 +49,6 @@ t_lxr	*free_lxr(t_lxr *lxr)
 	t_lxr *tmp;
 	t_lxr *node;
 
-	printf("on rentre dans free_lxr\n");
 	node = lxr;
 	while (node != NULL)
 	{
@@ -62,7 +59,6 @@ t_lxr	*free_lxr(t_lxr *lxr)
 		free(tmp);
 	}
 	lxr = NULL;
-	printf("on a fini de free lxr\n");
 	return (lxr);
 }
 
@@ -71,11 +67,9 @@ t_redir	*free_redir(t_redir *redir)
 	t_redir	*tmp;
 	t_redir *node;
 
-	printf("on rentre dans free_redir\n");
 	node = redir;
 	while (node != NULL)
 	{
-		printf("on est en train de free redir oue oue\n");
 		tmp = node;
 		node = node->next;
 		if (redir->redir)
@@ -83,7 +77,6 @@ t_redir	*free_redir(t_redir *redir)
 		free(tmp);
 	}
 	redir = NULL;
-	printf("on a fini de free redir\n");
 	return (redir);
 }
 
@@ -93,7 +86,6 @@ void	free_exec(t_exec *exec)
 	int	j;
 	int	nb_redir;
 
-	printf("on rentre dans free_exec\n");
 	i = 0;
 	j = 0;
 	while (i <= exec->nb_pipe)
@@ -102,9 +94,6 @@ void	free_exec(t_exec *exec)
 		{
 			while (j < exec->pipes[i].nb_cmds)
 			{
-				printf("nombre de commandes dans free exec %d\n", exec->pipes[i].nb_cmds);
-				printf("exec->pipes[%d].cmds[%d] : %s\n", i, j, exec->pipes[i].cmds[j]);
-				printf("on est en train de free les commandes oueoue\n");
 				free(exec->pipes[i].cmds[j]);
 				j++;
 			}
@@ -119,16 +108,13 @@ void	free_exec(t_exec *exec)
 	}
 	free(exec->pipes);
 	free(exec);
-	printf("on a fini de free exec\n");
 }
 
 void	free_stuff(t_exec *exec, int *childpid)
 {
 	(void)exec;
-	printf("on rentre dans free_childpid\n");
 	if (childpid)
 		free(childpid);
-	printf("on a fini de free childpid\n");
 }
 
 void	free_everything(t_exec *exec, int *childpid, t_env *new_env)
