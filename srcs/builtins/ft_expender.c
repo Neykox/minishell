@@ -54,7 +54,8 @@ char	*check_exp(char *value, t_env *envp, int *ret)
 				*ret = -2;
 				return (NULL);
 			}
-			tmp = ft_strjoin_utils(tmp, exp);
+			tmp = ft_strjoin_utils_echo(tmp, exp);
+			free(exp);
 			if (tmp == NULL)
 			{
 				*ret =-2;
@@ -76,7 +77,8 @@ char	*check_exp(char *value, t_env *envp, int *ret)
 				*ret = -2;
 				return (NULL);
 			}
-			tmp = ft_strjoin_utils(tmp, exp);
+			tmp = ft_strjoin_utils_echo(tmp, exp);
+			free(exp);
 			if (tmp == NULL)
 			{
 				*ret = -2;

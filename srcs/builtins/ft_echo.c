@@ -44,6 +44,7 @@ int check_echo_flag(char **cmds, int *n)
 	int	j;
 
 	j = 1;
+	i = 0;
 	while (cmds[1] && cmds[j])
 	{
 		if (cmds[j][0] == '-' && cmds[j][1] == 'n')
