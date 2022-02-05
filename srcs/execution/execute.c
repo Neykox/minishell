@@ -6,13 +6,13 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 12:25:04 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 16:46:07 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	exec_commands(char **cmds, char **envp, t_env *new_env)
+void	exec_commands(char **cmds, char **envp, t_env *new_env, t_exec *exec)
 {
 	char	**cmd_paths;
 	int		i;
@@ -27,6 +27,8 @@ void	exec_commands(char **cmds, char **envp, t_env *new_env)
 			//printf("coucou\n");
 			if (execve(cmds[0], cmds, envp) < 0)
 				printf("errno = %d\n", errno);
+			free_everything(exec, 0, new_env);
+			exit (126);
 		}
 		else
 		{
@@ -84,6 +86,7 @@ void	exec_commands(char **cmds, char **envp, t_env *new_env)
 					i++;
 				free(finalcmd);
 			}
+			t_free_that_string(cmd_paths);
 		}
 	}
 	perror(cmds[0]);
@@ -103,26 +106,23 @@ int	exec_redir(t_redir *redir)
 		else if (tmp->type == REDIR_STDIN)
 		{
 			ret = dup2(tmp->fd, 0);
+			close(tmp->fd);
 			if (ret < 0)
 				return (ret);
-			close(tmp->fd);
 		}
 		else if (tmp->type == REDIR_STDOUT || tmp->type == DREDIR_RIGHT)
 		{
 			ret = dup2(tmp->fd, 1);
+			close(tmp->fd);
 			if (ret < 0)
 				return (ret);
-			close(tmp->fd);
 		}
 		else if (tmp->type == DREDIR_LEFT)
 		{
 			ret = dup2(tmp->fd, 0);
-			if (ret < 0)
-			{
-				printf("hgg\n");
-				return (ret);
-			}
 			close(tmp->fd);
+			if (ret < 0)
+				return (ret);
 		}
 		tmp = tmp->next;
 	}
@@ -134,52 +134,26 @@ int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env, int nb_pipe)
 	int ret;
 
 	ret = 0;
-
-	//return 1;
-
 	if (nb_cmds == 0)
 		return (1);
 	if (!(ft_strncmp(cmds[0], "echo", 4)))
-	{
 		ret = ft_echo(cmds);
-		//printf("hello from builtin\n");
-	}
 	else if (!(ft_strncmp(cmds[0], "unset", 5)))
-	{
 		ret = ft_unset(cmds, new_env);
-		//printf("hello from builtin\n");
-	}
 	else if (!(ft_strncmp(cmds[0], "cd", 2)))
-	{
 		ret = ft_cd(cmds, nb_cmds, new_env);
-		//printf("hello from builtin\n");
-	}
 	else if (!(ft_strncmp(cmds[0], "pwd", 3)))
-	{
 		ret = ft_pwd();
-		//printf("hello from builtin\n");
-	}
 	else if (!(ft_strncmp(cmds[0], "export", 6)))
-	{
 		ret = ft_export(cmds, new_env);
-		//printf("hello from builtin\n");
-	}
 	else if (!(ft_strncmp(cmds[0], "env", 3)))
-	{
 		ret = ft_env(new_env);
-		//printf("hello from builtin\n");
-	}
 	else if (!(ft_strncmp(cmds[0], "exit", 4)))
-	{
 		ret = ft_exit(cmds[1], new_env, nb_pipe);
-		//printf("hello from builtin\n");
-	}
 	else
 		ret = -10;
 	if (ret == -3 || ret == -2 || ret == 1)
 		perror(cmds[0]);
-	// if (g_error != 125 || ret != 0)
-	// 	g_error = ret;
 	if (modif_interro(new_env, ft_itoa(g_error)) == -2)
 		return (-2);
 	return (ret);
@@ -192,7 +166,6 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	int	*childpid;
 	int	k;
 	int	status;
-	int	flag;
 	int ret;
 
 	i = 0;
@@ -200,7 +173,6 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 	k = 0;
 	ret = 0;
 	status = 0;
-	flag = 0;
 	childpid = malloc(sizeof(int) * (exec->nb_pipe + 1));
 	if (!(childpid))
 		return (-1);
@@ -209,37 +181,50 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 		if (!(ft_strncmp(exec->pipes[i].cmds[0], "cd", 2)) || !(ft_strncmp(exec->pipes[i].cmds[0], "unset", 6)) || !(ft_strncmp(exec->pipes[i].cmds[0], "exit", 4)))
 		{
 			builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe);
-			flag = 1;
+			exec->flag = 1;
 		}
 		if (!(ft_strncmp(exec->pipes[i].cmds[0], "export", 6)) && exec->pipes[i].cmds[1])
 		{
 			builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe);
-			flag = 1;
+			exec->flag = 1;
 		}
 	}
 	while (i < exec->nb_pipe)
 	{
 		if (pipe(pipefd[i]) == -1)
-			return (1);
+		{
+			printf("pipe a foire: %d\n", errno);
+			exec->save = i;
+			break ;
+		}
 		i++;
 	}
 	i = 0;
-	while (i <= exec->nb_pipe && flag == 0)
+	while (i <= exec->nb_pipe && exec->flag == 0 && exec->save == 0)
 	{
 		childpid[i] = fork();
 		if (childpid[i] == -1)
+		{
+			printf("fork a foire: %d\n", errno);
 			return (2);
+		}
 		else if (childpid[i] == 0)
 		{
 			if (j < exec->nb_pipe)
 			{
 				if (dup2(pipefd[j][1], 1) < 0)
+				{
+					free_everything(exec, childpid, new_env);
 					exit (1);
+				}
 			}
 			if (j != 0)
 			{
 				if (dup2(pipefd[j - 1][0], 0) < 0)
+				{
+					free_everything(exec, childpid, new_env);
 					exit (1);
+				}
 			}
 			while (k < exec->nb_pipe)
 			{
@@ -252,13 +237,16 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 			{
 				k = exec_redir(exec->pipes[i].redir);
 				if (k < 0)
+				{	
+					free_everything(exec, childpid, new_env);
 					exit (1);
+				}
 			}
 			ret = builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe);
 			if (ret == -10 && exec->pipes[i].nb_cmds)
 			{
 				exec = check_cmds(exec);
-				exec_commands(exec->pipes[i].cmds, envp, new_env);
+				exec_commands(exec->pipes[i].cmds, envp, new_env, exec);
 				free_everything(exec, childpid, new_env);
 				if (errno == EAGAIN)
 					exit(126);
@@ -276,14 +264,27 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 		i++;
 		j++;
 	}
-	while (k < exec->nb_pipe)
+	k = 0;
+	if (!exec->save)
 	{
-		close(pipefd[k][0]);
-		close(pipefd[k][1]);
-		k++;
+		while (k < exec->nb_pipe)
+		{
+			close(pipefd[k][0]);
+			close(pipefd[k][1]);
+			k++;
+		}
+	}
+	else
+	{
+		while (k < exec->save)
+		{
+			close(pipefd[k][0]);
+			close(pipefd[k][1]);
+			k++;
+		}
 	}
 	i = 0;
-	while (i <= exec->nb_pipe && flag == 0)
+	while (i <= exec->nb_pipe && exec->flag == 0 && exec->save == 0)
 	{
 		waitpid(childpid[i], &status, 0);
 		if (WIFEXITED(status))
@@ -301,7 +302,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 			close_redir_fd(exec->pipes[i].redir);
 		i++;
 	}
-	//free_stuff(exec, childpid);
+	free_stuff(exec, childpid);
 	return (0);
 }
 
@@ -398,5 +399,6 @@ int	execute(t_exec *exec, char **envp, t_env *new_env, struct sigaction sa)
 	}
 	//print_pipes(exec);
 	pipe_things_up(exec, pipefd, envp, new_env);
+	free_pipefd(pipefd, exec->nb_pipe);
 	return (0);
 }

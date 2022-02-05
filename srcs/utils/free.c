@@ -6,11 +6,25 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 14:07:11 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 12:22:41 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 15:56:19 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	free_pipefd(int **pipefd, int nb_pipe)
+{
+	int	i;
+
+	i = 0;
+	while (i < nb_pipe)
+	{
+		free(pipefd[i]);
+		i++;
+	}
+	if (nb_pipe)
+		free(pipefd);
+}
 
 t_env	*free_env(t_env *env)
 {
@@ -88,9 +102,11 @@ void	free_exec(t_exec *exec)
 		{
 			while (j < exec->pipes[i].nb_cmds)
 			{
+				printf("on est en train de free les commandes oueoue\n");
 				free(exec->pipes[i].cmds[j]);
 				j++;
 			}
+			j = 0;
 			free(exec->pipes[i].cmds);
 		}
 		nb_redir = exec->pipes[i].nb_redir_stdin + exec->pipes[i].nb_redir_stdout +

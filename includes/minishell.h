@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 12:26:59 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 16:26:14 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ typedef	struct	s_exec
 {
 	t_pipes	*pipes;
 	int		nb_pipe;
+	int		save;
+	int		flag;
 }					t_exec;
 
 int	main(int ac, char **av, char **envp);
@@ -143,6 +145,7 @@ t_lxr	*free_lxr(t_lxr *lxr);
 void	free_stuff(t_exec *exec, int *childpid);
 t_env	*free_env(t_env *env);
 t_redir	*free_redir(t_redir *redir);
+void	free_pipefd(int **pipefd, int nb_pipe);
 
 /*
  * UTILS
@@ -161,6 +164,7 @@ char    *ft_strjoin_utils(char *line, char *buf);
 char    *ft_strjoin(char const *s1, char const *s2, int i);
 char	**ft_split(char const *s, char c);
 char	**tweaked_split(char const *s, char c);
+char	**t_free_that_string(char **tab);
 char	*ft_add_char(char *s, char c);
 char	*tweaked_strdup(const char *s);
 char	*tweaked_strjoin(char const *s1, char const *s2, char const sep);

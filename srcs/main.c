@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 12:07:47 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 16:52:54 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,14 +202,19 @@ int	main(int ac, char **av, char **envp)
 				execute(exec, envp, new_env, sa);
 				free_exec(exec);
 			}
+			else
+				free_lxr(lxr);
 			//free_lxr(lxr);
 			//print_lxr(lxr);
 			//printf("%d\n", g_error);
 			//modif_interro(new_env, ft_itoa(g_error));
 			free(line);
 		}
-		if (line == NULL)
+		else if (line == NULL)
+		{
+			printf("wow\n");
 			break ;
+		}
 	}
 	//write(1, "\n", 1);
 	free_env(new_env);
