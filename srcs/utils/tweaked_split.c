@@ -6,7 +6,7 @@
 /*   By: nel-masr <nel-masr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/19 15:40:03 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 18:01:27 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 20:14:58 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,10 @@ void	t_free_that_string(char **tab)
 	i = 0;
 	while (tab[i])
 	{
-		printf("on free ce string : %s\n", tab[i]);
 		free(tab[i]);
 		i++;
 	}
 	free(tab);
-	//return (NULL);
 }
 
 static	int	t_count_words(char const *s, char c)
