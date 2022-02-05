@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:22:45 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 17:52:33 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 11:53:39 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	heredoc_implementation(t_redir *redir, struct sigaction sa, t_env *new_env)
 			unlink(".tmp_heredoc");
 			close(save);
 			close(redir->fd);
-			return -1;
+			return (-1);
 		}
 
 		if (line == NULL)
@@ -45,11 +45,9 @@ int	heredoc_implementation(t_redir *redir, struct sigaction sa, t_env *new_env)
 			break ;
 		if (line)
 		{
-			// printf("line + 1 : %s\n", &line[i + 1]);
 			tmp = check_exp(line, new_env, &ret);
 			free(line);
 			line = ft_strdup(tmp);
-			//printf("new_line : %s\n", line);
 			free(tmp);
 		}
 		write(redir->fd, line, ft_strlen(line));

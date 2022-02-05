@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 21:06:27 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 12:25:04 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,15 +259,17 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 			{
 				exec = check_cmds(exec);
 				exec_commands(exec->pipes[i].cmds, envp, new_env);
+				free_everything(exec, childpid, new_env);
 				if (errno == EAGAIN)
 					exit(126);
 				exit (127);
 			}
 			else
 			{
-				free_stuff(exec, childpid);
-				free_exec(exec);
-				free_env(new_env);
+				//free_stuff(exec, childpid);
+				//free_exec(exec);
+				//free_env(new_env);
+				free_everything(exec, childpid, new_env);
 				exit(g_error);
 			}
 		}
@@ -299,7 +301,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 			close_redir_fd(exec->pipes[i].redir);
 		i++;
 	}
-	free_stuff(exec, childpid);
+	//free_stuff(exec, childpid);
 	return (0);
 }
 
@@ -354,7 +356,10 @@ t_redir	*open_redir_fd(t_redir *redir, struct sigaction sa, t_env *new_env)
 				perror(tmp->redir);
 			}
 			if (heredoc_implementation(tmp, sa, new_env) < 0)
+			{
+				free_redir(redir);
 				return (NULL);
+			}
 		}
 		tmp = tmp->next;
 	}

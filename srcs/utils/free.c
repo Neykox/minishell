@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 14:07:11 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 20:18:12 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 12:22:41 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ t_redir	*free_redir(t_redir *redir)
 	node = redir;
 	while (node != NULL)
 	{
+		printf("on est en train de free redir oue oue\n");
 		tmp = node;
 		node = node->next;
 		if (redir->redir)
@@ -68,7 +69,7 @@ t_redir	*free_redir(t_redir *redir)
 		free(tmp);
 	}
 	redir = NULL;
-	printf("on a fini de free redir");
+	printf("on a fini de free redir\n");
 	return (redir);
 }
 
@@ -105,12 +106,17 @@ void	free_exec(t_exec *exec)
 
 void	free_stuff(t_exec *exec, int *childpid)
 {
-	//int	i;
-	
-	//i = 0;
 	(void)exec;
 	printf("on rentre dans free_childpid\n");
 	if (childpid)
 		free(childpid);
 	printf("on a fini de free childpid\n");
 }
+
+void	free_everything(t_exec *exec, int *childpid, t_env *new_env)
+{
+	free_stuff(exec, childpid);
+	free_exec(exec);
+	free_env(new_env);
+}
+
