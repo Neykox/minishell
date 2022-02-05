@@ -169,7 +169,7 @@ int	ft_export(char **cmds, t_env *envp)//need to free(line) not sure were tho
 	line = NULL;
 	ret = 0;
 	i = 1;
-	while (cmds[i])
+	while (cmds[1] && cmds[i])
 	{
 		error = check_value_export(cmds[i], &line);
 		if (error == -2)
@@ -187,11 +187,17 @@ int	ft_export(char **cmds, t_env *envp)//need to free(line) not sure were tho
 			return (error);//malloc issue || -3 == write error
 		}
 		i++;
+		if (line)
+		{
+			free(line);
+			line = NULL;
+		}
 	}
 	if (i == 1)
 		return (g_error = write_no_arg(envp));
 	g_error = ret;
-	free(line);
+	if (line)
+		free(line);
 	return (0);
 }
 

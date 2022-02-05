@@ -254,6 +254,7 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 				printf("apres check : %d\n", exec->pipes[i].nb_cmds);
 				print_pipes(exec);
 				exec_commands(exec->pipes[i].cmds, envp, new_env, exec);
+				printf("on remtre dans frre everytihng dans le chid;\n");
 				free_everything(exec, childpid, new_env);
 				if (errno == EAGAIN)
 					exit(126);

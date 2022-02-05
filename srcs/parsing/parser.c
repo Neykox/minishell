@@ -129,7 +129,7 @@ char	**find_commands(t_lxr *tmp, char **cmds, int *i)
 			while (tmp->next->token == WORD || tmp->next->token == SQUOTE || tmp->next->token == DQUOTE)
 			{
 				tmp = tmp->next;
-				cmds[*i] = ft_strjoin(cmds[*i], tmp->value, 0);
+				cmds[*i] = ft_strjoin_utils_echo(cmds[*i], tmp->value);
 			}
 			*i += 1;
 		}
