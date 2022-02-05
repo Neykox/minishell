@@ -105,7 +105,7 @@ int	ft_unset(char **cmds, t_env *envp)
 	line = NULL;
 	ret = 0;
 	i = 1;
-	while (cmds[i])
+	while (cmds[1] && cmds[i])
 	{
 		error = check_value_unset(cmds[i], &line);
 		if (error == -2)

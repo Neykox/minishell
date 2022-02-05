@@ -102,6 +102,8 @@ void	free_exec(t_exec *exec)
 		{
 			while (j < exec->pipes[i].nb_cmds)
 			{
+				printf("nombre de commandes dans free exec %d\n", exec->pipes[i].nb_cmds);
+				printf("exec->pipes[%d].cmds[%d] : %s\n", i, j, exec->pipes[i].cmds[j]);
 				printf("on est en train de free les commandes oueoue\n");
 				free(exec->pipes[i].cmds[j]);
 				j++;
