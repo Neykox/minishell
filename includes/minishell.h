@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 16:26:14 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 17:07:12 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ int		check_redir(t_lxr **parser);
 int		parser(t_lxr *lxr, t_exec *exec);
 int		parse_values(t_lxr *lxr, t_exec *exec);
 t_exec	*check_cmds(t_exec *exec);
+t_lxr	*move_tmp(t_lxr *tmp, int pos);
 
 /*
  * EXECUTION

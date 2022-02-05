@@ -6,7 +6,7 @@
 /*   By: nel-masr <nel-masr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/19 15:40:03 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/24 16:35:22 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 17:42:12 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ char	**t_free_that_string(char **tab)
 	i = 0;
 	while (tab[i])
 	{
+		printf("on free ce string : %s\n", tab[i]);
 		free(tab[i]);
 		i++;
 	}

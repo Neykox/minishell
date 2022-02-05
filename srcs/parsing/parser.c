@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 17:00:24 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 17:41:39 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,18 +111,8 @@ int		count_commands(t_lxr *lxr, int pos)
 	return (ret);
 }
 
-char	**parse_commands(int nb_cmds, t_lxr *lxr, int pos)
+char	**find_commands(t_lxr *tmp, char **cmds, int *i)
 {
-	int		i;
-	char	**cmds;
-	t_lxr	*tmp;
-
-	i = 0;
-	tmp = lxr;
-	cmds = malloc(sizeof(char *) * (nb_cmds + 1));
-	if (!cmds)
-		return (NULL);
-	tmp = move_tmp(tmp, pos);
 	while (1)
 	{
 		if (!tmp || tmp->token == PIPE)
@@ -135,16 +125,32 @@ char	**parse_commands(int nb_cmds, t_lxr *lxr, int pos)
 		}
 		else if ((tmp->token == WORD || tmp->token == SQUOTE || tmp->token == DQUOTE) && tmp->value)
 		{
-			cmds[i] = ft_strdup(tmp->value);
+			cmds[*i] = ft_strdup(tmp->value);
 			while (tmp->next->token == WORD || tmp->next->token == SQUOTE || tmp->next->token == DQUOTE)
 			{
 				tmp = tmp->next;
-				cmds[i] = ft_strjoin(cmds[i], tmp->value, 0);
+				cmds[*i] = ft_strjoin(cmds[*i], tmp->value, 0);
 			}
-			i++;
+			*i += 1;
 		}
 		tmp = tmp->next;
 	}
+	return (cmds);
+}
+
+char	**parse_commands(int nb_cmds, t_lxr *lxr, int pos)
+{
+	int		i;
+	char	**cmds;
+	t_lxr	*tmp;
+
+	i = 0;
+	tmp = lxr;
+	cmds = malloc(sizeof(char *) * (nb_cmds + 1));
+	if (!cmds)
+		return (NULL);
+	tmp = move_tmp(tmp, pos);
+	find_commands(tmp, cmds, &i);
 	cmds[i] = '\0';
 	return (cmds);
 }
@@ -189,12 +195,7 @@ char	**clean_up_cmds(char **cmds, int *nb_cmds)
 		i++;
 	}
 	i = 0;
-	while (i < *(nb_cmds))
-	{
-		free(cmds[i]);
-		i++;
-	}
-	free(cmds);
+	cmds = t_free_that_string(cmds);
 	result = ft_split(tmp, ' ');
 	free(tmp);
 	i = 0;

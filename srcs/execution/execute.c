@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 16:46:07 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 17:34:47 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,9 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 		if (pipe(pipefd[i]) == -1)
 		{
 			printf("pipe a foire: %d\n", errno);
+			g_error = 1;
+			if (modif_interro(new_env, ft_itoa(g_error)) == -2)
+				return (-1);
 			exec->save = i;
 			break ;
 		}
@@ -245,7 +248,11 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 			ret = builtin_checker(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env, exec->nb_pipe);
 			if (ret == -10 && exec->pipes[i].nb_cmds)
 			{
+				print_pipes(exec);
+				printf("avant check : %d\n", exec->pipes[i].nb_cmds);
 				exec = check_cmds(exec);
+				printf("apres check : %d\n", exec->pipes[i].nb_cmds);
+				print_pipes(exec);
 				exec_commands(exec->pipes[i].cmds, envp, new_env, exec);
 				free_everything(exec, childpid, new_env);
 				if (errno == EAGAIN)
