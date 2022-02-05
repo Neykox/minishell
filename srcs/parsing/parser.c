@@ -6,30 +6,11 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 21:01:51 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/05 17:00:24 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-t_lxr	*move_tmp(t_lxr *tmp, int pos)
-{
-	int	j;
-
-	j = 0;
-	while (1)
-	{
-		if (j == pos)
-			return (tmp) ;
-		if (tmp->token != PIPE)
-			tmp = tmp->next;
-		else if (tmp->token == PIPE)
-		{
-			j++;
-			tmp = tmp->next;
-		}
-	}
-}
 
 int		count_token(t_lxr *lxr, int token, int pos, int i)
 {
@@ -202,7 +183,6 @@ char	**clean_up_cmds(char **cmds, int *nb_cmds)
 	i++;
 	while (i < *(nb_cmds) && cmds[i])
 	{
-		// probablement un leak ici
 		tmp = tweaked_strjoin(tmp, cmds[i], ' ');
 		if (tmp == NULL)
 			return (NULL);
@@ -234,18 +214,9 @@ t_exec	*check_cmds(t_exec *exec)
 		return (exec);
 	while (i <= exec->nb_pipe)
 	{
-		//if (flag == 1)
-		//{
 			ret = check_spaces_in_cmd(exec->pipes[i].cmds, exec->pipes[i].nb_cmds);
 			if (ret)
 				exec->pipes[i].cmds = clean_up_cmds(exec->pipes[i].cmds, &exec->pipes[i].nb_cmds);
-		//}
-		/*if (flag == 2)
-		{
-			ret = check_empty_cmds(exec->pipes[i].cmds, exec->pipes[i].nb_cmds);
-			if (ret && exec->pipes[i].nb_cmds != 1)
-				exec->pipes[i].cmds = remove_empty_commands(exec->pipes[i].cmds, &exec->pipes[i].nb_cmds, ret);
-		}*/
 		i++;
 	}
 	return (exec);
@@ -256,6 +227,8 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 	int	i;
 
 	i = -1;
+	exec->save = 0;
+	exec->flag = 0;
 	exec->nb_pipe = count_token(lxr, PIPE, 0, 0);
 	exec->pipes = malloc(sizeof(t_pipes) * (exec->nb_pipe + 1));
 	if (!(exec->pipes))
@@ -267,7 +240,6 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 		exec->pipes[i].nb_redir_stdout = count_token(lxr, REDIR_STDOUT, i, 0);
 		exec->pipes[i].nb_dredir_right = count_token(lxr, DREDIR_RIGHT, i, 0);
 		exec->pipes[i].nb_dredir_left = count_token(lxr, DREDIR_LEFT, i, 0);
-		//printf("nb_redir_stdin : %d | nb_redir_stdout : %d | nb_dredir_right : %d | nb_dredir_left : %d\n", exec->pipes[i].nb_redir_stdin, exec->pipes[i].nb_redir_stdout, exec->pipes[i].nb_dredir_right, exec->pipes[i].nb_dredir_left);
 		if (exec->pipes[i].nb_redir_stdin != 0 || exec->pipes[i].nb_redir_stdout != 0 
 			|| exec->pipes[i].nb_dredir_right != 0 || exec->pipes[i].nb_dredir_left != 0)
 			exec->pipes[i].redir = parse_redir(lxr, i, exec->pipes[i].redir);
@@ -275,25 +247,5 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 		if (exec->pipes[i].nb_cmds)
 			exec->pipes[i].cmds = parse_commands(exec->pipes[i].nb_cmds, lxr, i);
 	}
-	//exec = check_cmds(exec, 2);
 	return (0);
 }
-/*
-int	parser(t_lxr *lxr, t_exec *exec)
-{
-	int	ret;
-	//int	ret_parsing;
-
-	//ret_parsing = 0;
-	(void)exec;
-	ret = 0;
-	ret = syntax_checker(lxr, ret);
-	if (ret == 2 || ret == 3)
-		print_parsing_error(NULL, ret);
-	//else if (ret == 0)
-	//	ret_parsing = parse_values(lxr, exec);
-	//if (ret_parsing == 0)
-		return (ret);
-	//else
-	//	return (ret_parsing);
-}*/
