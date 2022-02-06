@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 20:11:12 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 12:57:01 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,10 +180,7 @@ int	main(int ac, char **av, char **envp)
 			lxr = lexer(lxr, line);
 			//printf("%d\n", g_error);
 			if (lxr == NULL)
-			{
-				g_error = 2;
 				return (2);
-			}
 			//print_lxr(lxr);
 			ft_get_expand(lxr, new_env);
 			ret = syntax_checker(lxr, new_env);

@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 18:01:20 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 13:20:49 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,15 @@ int		parser(t_lxr *lxr, t_exec *exec);
 int		parse_values(t_lxr *lxr, t_exec *exec);
 t_exec	*check_cmds(t_exec *exec);
 t_lxr	*move_tmp(t_lxr *tmp, int pos);
+
+int		check_spaces_in_cmd(char **cmds, int nb_cmds);
+char	**clc(char **cmds, int *nb_cmds);
+t_exec	*check_cmds(t_exec *exec);
+
+int		count_commands(t_lxr *lxr, int pos, int ret);
+char	**find_cmds_cont(t_lxr **tmp, char **cmds, int *i);
+char	**find_commands(t_lxr *tmp, char **cmds, int *i);
+char	**parse_commands(int nb_cmds, t_lxr *lxr, int pos);
 
 /*
  * EXECUTION

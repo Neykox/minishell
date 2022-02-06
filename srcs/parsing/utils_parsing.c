@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 17:49:44 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 16:58:59 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 13:12:51 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,15 @@ void	build_redir_ll(t_redir **redir, t_redir *tmp)
 	last->next = tmp;
 }
 
-t_lxr   *move_tmp(t_lxr *tmp, int pos)
+t_lxr	*move_tmp(t_lxr *tmp, int pos)
 {
-	int j;
-	
+	int	j;
+
 	j = 0;
-	while (1) 
-	{   
+	while (1)
+	{
 		if (j == pos)
-			return (tmp) ;
+			return (tmp);
 		if (tmp->token != PIPE)
 			tmp = tmp->next;
 		else if (tmp->token == PIPE)
