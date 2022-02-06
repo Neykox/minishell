@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/06 13:20:49 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 18:53:24 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,9 @@ typedef	struct	s_exec
 	int		nb_pipe;
 	int		save;
 	int		flag;
+	int		status;
+	int		*childpid;
+	int		**pipefd;
 }					t_exec;
 
 int	main(int ac, char **av, char **envp);
@@ -142,8 +145,25 @@ char	**parse_commands(int nb_cmds, t_lxr *lxr, int pos);
 
 int		execute(t_exec *exec, char **envp, t_env *new_env, struct sigaction sa);
 int		heredoc_implementation(t_redir *redir, struct sigaction sa, t_env *new_env);
-t_redir	*open_redir_fd(t_redir *redir, struct sigaction sa, t_env *new_env);
+
 void	close_redir_fd(t_redir *redir);
+t_redir	*open_redir_fd(t_redir *redir, struct sigaction sa, t_env *new_env);
+int		**init_pipefd(int **pipefd, int nb_pipe);
+
+void	check_builtin(t_exec *exec, char *cmd, t_env *new_env);
+int		builtin_checker(t_exec *exec, t_env *new_env, int ret, int i);
+void	exec_commands(char **cmds, char **envp, t_env *new_env, t_exec *exec);
+void	search_and_execute(t_env *tmp, char **envp, char **cmds);
+int		handle_dot_slash(t_exec *exec, char **envp, char **cmds, t_env *new_env);
+
+int		exec_redir(t_redir *redir);
+int		open_pipe(t_exec *exec, t_env *new_env);
+void	handle_pipe(t_exec *exec, t_env *new_env, int j);
+void	handle_redir(t_exec *exec, t_env *new_env, int i);
+void	child_work(t_exec *exec, t_env *new_env, char **envp, int i);
+
+void	close_pipes(t_exec *exec);
+void	close_fds(t_exec *exec);
 
 /*
  * FREE

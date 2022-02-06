@@ -6,15 +6,15 @@
 /*   By: aleroy <aleroy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/24 14:23:04 by aleroy            #+#    #+#             */
-/*   Updated: 2020/11/24 14:23:06 by aleroy           ###   ########.fr       */
+/*   Updated: 2022/02/06 19:58:17 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-int		ft_size_itoa(int n)
+int	ft_size_itoa(int n)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	if (n == -2147483648)
@@ -68,7 +68,8 @@ char	*ft_itoa(int n)
 
 	i = 0;
 	m = n;
-	if (!(tab = malloc(sizeof(char) * (ft_size_itoa(n) + 1))))
+	tab = malloc(sizeof(char) * (ft_size_itoa(n) + 1));
+	if (!tab)
 		return (NULL);
 	if (m < 0)
 	{
