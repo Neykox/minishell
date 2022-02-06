@@ -20,7 +20,6 @@ int	main(int ac, char **av, char **envp)
 	t_lxr	*lxr;
 	t_env	*new_env;
 	struct sigaction sa;
-	// struct sigaction sb;
 	t_exec	*exec;
 	int		ret;
 	
@@ -40,22 +39,14 @@ int	main(int ac, char **av, char **envp)
 		return (-2);
 	}
 	ft_memset(&sa, 0, sizeof(sa));
-	// ft_memset(&sb, 0, sizeof(sb));
 	while (1)
 	{
 		sa.sa_handler = &ft_signal;
 		sigaction(SIGINT, &sa, NULL);
-
-		// sa.sa_handler = SIG_IGN;
-		// sigaction(SIGQUIT, &sa, NULL);
 		sa.sa_handler = SIG_IGN;
 		sigaction(SIGQUIT, &sa, NULL);
 
-		//je gère le controle c (mod interactif)
-		// sa.sa_handler = &handler
-		//sigaction()
 		line = readline("\e[1;33mminishell$ \e[0m");
-		// je ne gère plus aucun signal
 		if (g_error == 130 || g_error == 131)
 			if (modif_interro(new_env, ft_itoa(g_error)) == -2)
 				return (-2);
