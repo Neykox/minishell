@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 20:28:25 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 11:47:16 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ int	check_spaces_in_cmd(char **cmds, int nb_cmds)
 	return (0);
 }
 
-char	**clean_up_cmds(char **cmds, int *nb_cmds)
+char	**clc(char **cmds, int *nb_cmds)
 {
 	char	*tmp;
 	char	**result;
