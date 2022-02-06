@@ -38,6 +38,8 @@ int	check_value_export(char *cmds, char **line)
 		while (cmds[i] && cmds[i] != '='
 			&& ft_isalnum_underscore(cmds[i]) == 1)
 			i++;
+	if (cmds[i] && cmds[i] != '=' && ft_isalnum_underscore(cmds[i]) == 0)
+		return (-4);
 	if (i == 0 || cmds[i] != '=')
 		return (-1);
 	*line = ft_strdup(cmds);
