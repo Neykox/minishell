@@ -6,36 +6,11 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 12:30:13 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/06 18:55:14 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 20:36:13 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-/*void	close_pipes(t_exec *exec)
-{
-	int	k;
-
-	k = 0;
-	if (!exec->save)
-	{
-		while (k < exec->nb_pipe)
-		{
-			close(exec->pipefd[k][0]);
-			close(exec->pipefd[k][1]);
-			k++;
-		}
-	}
-	else
-	{
-		while (k < exec->save)
-		{
-			close(exec->pipefd[k][0]);
-			close(exec->pipefd[k][1]);
-			k++;
-		}
-	}
-}*/
 
 int	wait_for_child(t_exec *exec, t_env *new_env)
 {

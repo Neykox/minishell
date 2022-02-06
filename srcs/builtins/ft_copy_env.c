@@ -12,29 +12,10 @@
 
 #include "../../includes/minishell.h"
 
-
-#include "../../includes/minishell.h"
-
-// int	destroy_env(char **envp, int size_env, char *line)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < size_env)
-// 	{
-// 		free(envp[i]);
-// 		i++;
-// 	}
-// 	free(envp);
-// 	if (line != NULL)
-// 		free(line);
-// 	return (-2);
-// }
-
 void	ft_lstclear(t_env **lst)
 {
-	t_env *tmp;
-	t_env *curr;
+	t_env	*tmp;
+	t_env	*curr;
 
 	curr = *lst;
 	while (curr)
@@ -49,7 +30,7 @@ void	ft_lstclear(t_env **lst)
 
 void	ft_lstadd_back(t_env **alst, t_env *new)
 {
-	t_env *tmp;
+	t_env	*tmp;
 
 	tmp = *alst;
 	if (*alst && alst)
@@ -70,7 +51,7 @@ t_env	*ft_lstnew(char *line)
 	if (tmp == NULL)
 		return (NULL);
 	tmp->line = ft_strdup(line);
-	if (tmp->line == NULL)//changed was : if (line == NULL)
+	if (tmp->line == NULL)
 	{
 		free(tmp);
 		return (NULL);
@@ -79,13 +60,10 @@ t_env	*ft_lstnew(char *line)
 	return (tmp);
 }
 
-t_env	*ft_copy_env(char **envp)
+t_env	*ft_copy_env(char **envp, int i, t_env *tmp)
 {
-	int	i;
-	t_env *new_env;
-	t_env *tmp;
+	t_env	*new_env;
 
-	i = 0;
 	new_env = ft_lstnew(envp[i]);
 	if (new_env == NULL)
 		return (NULL);
