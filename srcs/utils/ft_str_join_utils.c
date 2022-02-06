@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:22:23 by user42            #+#    #+#             */
-/*   Updated: 2022/01/14 14:22:26 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/06 20:16:51 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ char	*ft_strjoin_utils(char *line, char *buf)
 {
 	char	*line2;
 
-	// if (buf == NULL)//new if
-	// 	return (NULL);
 	line2 = ft_strdup(buf);
 	if (line2 == NULL)
 		return (NULL);
@@ -29,36 +27,6 @@ char	*ft_strjoin_utils(char *line, char *buf)
 		return (NULL);
 	return (line);
 }
-
-// size_t	ft_strlen(const char *s)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (s[i])
-// 		i++;
-// 	return (i);
-// }
-
-// char	*ft_strdup(const char *s1)
-// {
-// 	char	*copie;
-// 	char	*str;
-// 	int		i;
-
-// 	i = 0;
-// 	str = (char *) s1;
-// 	copie = (char *)malloc((ft_strlen(str) + 1) * sizeof(char));
-// 	if (copie == NULL)
-// 		return (NULL);
-// 	while (str[i])
-// 	{
-// 		copie[i] = str[i];
-// 		i++;
-// 	}
-// 	copie[i] = '\0';
-// 	return (copie);
-// }
 
 char	*ft_strjoin(char const *s1, char const *s2, int i)
 {

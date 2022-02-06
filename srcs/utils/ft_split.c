@@ -6,7 +6,7 @@
 /*   By: nel-masr <nel-masr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/19 15:40:03 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/20 12:41:20 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 20:01:22 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static	char	**free_that_string(char **tab)
 	return (NULL);
 }
 
-static	int		count_words(char const *s, char c)
+static	int	count_words(char const *s, char c)
 {
 	int	i;
 	int	wdcounter;
@@ -49,7 +49,7 @@ static	int		count_words(char const *s, char c)
 	return (wdcounter);
 }
 
-static	int		count_size(char const *s, char c, int pos)
+static	int	count_size(char const *s, char c, int pos)
 {
 	int	wdsize;
 
@@ -69,13 +69,14 @@ static	void	split_that_string(char const *s, char c, char **tab, int count)
 	int	k;
 
 	i = 0;
-	j = 0;
-	while (s[i] && j < count)
+	j = -1;
+	while (s[i] && ++j < count)
 	{
 		k = 0;
 		while (s[i] == c)
 			i++;
-		if (!(tab[j] = malloc(sizeof(char) * (count_size(s, c, i) + 1))))
+		tab[j] = malloc(sizeof(char) * (count_size(s, c, i) + 1));
+		if (!tab[j])
 		{
 			free_that_string(tab);
 			return ;
@@ -87,11 +88,10 @@ static	void	split_that_string(char const *s, char c, char **tab, int count)
 			i++;
 		}
 		tab[j][k] = '\0';
-		j++;
 	}
 }
 
-char			**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	char	**tab;
 	int		wdcounter;
@@ -99,7 +99,8 @@ char			**ft_split(char const *s, char c)
 	if (!s)
 		return (NULL);
 	wdcounter = count_words(s, c);
-	if (!(tab = malloc(sizeof(char *) * (wdcounter + 1))))
+	tab = malloc(sizeof(char *) * (wdcounter + 1));
+	if (!tab)
 		return (NULL);
 	split_that_string(s, c, tab, wdcounter);
 	tab[wdcounter] = 0;

@@ -1,35 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   free1.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 14:07:11 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/05 20:08:42 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 19:55:38 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	free_pipefd(int **pipefd, int nb_pipe)
-{
-	int	i;
-
-	i = 0;
-	while (i < nb_pipe)
-	{
-		free(pipefd[i]);
-		i++;
-	}
-	if (nb_pipe)
-		free(pipefd);
-}
-
 t_env	*free_env(t_env *env)
 {
-	t_env *tmp;
-	t_env *node;
+	t_env	*tmp;
+	t_env	*node;
 
 	node = env;
 	while (node != NULL)
@@ -44,64 +30,33 @@ t_env	*free_env(t_env *env)
 	return (env);
 }
 
-t_lxr	*free_lxr(t_lxr *lxr)
+void	free_cmds(char **cmds, int nb_cmds)
 {
-	t_lxr *tmp;
-	t_lxr *node;
+	int	j;
 
-	node = lxr;
-	while (node != NULL)
+	j = 0;
+	while (j < nb_cmds)
 	{
-		tmp = node;
-		node = node->next;
-		if (tmp->value)
-			free(tmp->value);
-		free(tmp);
+		free(cmds[j]);
+		j++;
 	}
-	lxr = NULL;
-	return (lxr);
-}
-
-t_redir	*free_redir(t_redir *redir)
-{
-	t_redir	*tmp;
-	t_redir *node;
-
-	node = redir;
-	while (node != NULL)
-	{
-		tmp = node;
-		node = node->next;
-		if (redir->redir)
-			free(redir->redir);
-		free(tmp);
-	}
-	redir = NULL;
-	return (redir);
+	free(cmds);
 }
 
 void	free_exec(t_exec *exec)
 {
 	int	i;
-	int	j;
 	int	nb_redir;
 
 	i = 0;
-	j = 0;
 	while (i <= exec->nb_pipe)
 	{
 		if (exec->pipes[i].nb_cmds)
-		{
-			while (j < exec->pipes[i].nb_cmds)
-			{
-				free(exec->pipes[i].cmds[j]);
-				j++;
-			}
-			j = 0;
-			free(exec->pipes[i].cmds);
-		}
-		nb_redir = exec->pipes[i].nb_redir_stdin + exec->pipes[i].nb_redir_stdout +
-			exec->pipes[i].nb_dredir_right + exec->pipes[i].nb_dredir_left;
+			free_cmds(exec->pipes[i].cmds, exec->pipes[i].nb_cmds);
+		nb_redir = exec->pipes[i].nb_redir_stdin
+			+ exec->pipes[i].nb_redir_stdout
+			+ exec->pipes[i].nb_dredir_right
+			+ exec->pipes[i].nb_dredir_left;
 		if (nb_redir)
 			exec->pipes[i].redir = free_redir(exec->pipes[i].redir);
 		i++;
@@ -123,4 +78,3 @@ void	free_everything(t_exec *exec, int *childpid, t_env *new_env)
 	free_exec(exec);
 	free_env(new_env);
 }
-

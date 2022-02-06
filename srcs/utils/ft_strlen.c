@@ -6,7 +6,7 @@
 /*   By: nel-masr <nel-masr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 10:38:33 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/02 17:45:19 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 20:17:15 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 size_t	ft_strlen(char const *s)
 {
-	int i;
+	int	i;
 
 	if (!s)
 		return (0);

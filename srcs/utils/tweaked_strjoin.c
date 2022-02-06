@@ -6,7 +6,7 @@
 /*   By: nel-masr <nel-masr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/19 11:34:17 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/04 21:02:10 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 20:23:17 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,8 @@ char	*tweaked_strjoin(char const *s1, char const *s2, char const sep)
 	int		j;
 	char	*result;
 
-	//if (!s1 || !s2)
-	//	return (NULL);
-	if (!(result = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 2))))
+	result = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 2));
+	if (!result)
 		return (NULL);
 	i = 0;
 	j = 0;

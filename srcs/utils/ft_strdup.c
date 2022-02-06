@@ -6,7 +6,7 @@
 /*   By: nel-masr <nel-masr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/18 15:18:15 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/01/11 15:04:25 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 20:16:22 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ char	*ft_strdup(const char *s)
 	j = 0;
 	while (s[j])
 		j++;
-	if (!(target = malloc((j + 1) * sizeof(char))))
+	target = malloc((j + 1) * sizeof(char));
+	if (!target)
 		return (NULL);
 	while (s[i])
 	{

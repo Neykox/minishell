@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/06 13:16:21 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 14:39:33 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 	i = -1;
 	exec->save = 0;
 	exec->flag = 0;
+	exec->status = 0;
 	exec->nb_pipe = count_token(lxr, PIPE, 0, 0);
 	exec->pipes = malloc(sizeof(t_pipes) * (exec->nb_pipe + 1));
 	if (!(exec->pipes))
