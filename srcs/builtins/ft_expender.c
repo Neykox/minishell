@@ -147,6 +147,34 @@ int	ft_strlen_target(char *str)
 	return (i);
 }
 
+char	*remove_spaces(char *str)
+{
+	int	i;
+	int	s;
+
+	i = 0;
+	s = 0;
+	if (str == NULL)
+		return (NULL);
+	while (str[i] && str[s])
+	{
+		while (str[s] && str[s] == ' ')
+		{
+			if (i > 0 && str[i] != ' ')
+			{
+				str[i] = ' ';
+				i++;
+			}
+			s++;
+		}
+		str[i] = str[s];
+		i++;
+		s++;
+	}
+	str[i] = '\0';
+	return (str);
+}
+
 char	*ft_expander(t_env *envp, char *target)//remove $ before sending target
 {
 	char	*tmp;
@@ -163,6 +191,7 @@ char	*ft_expander(t_env *envp, char *target)//remove $ before sending target
 			if (ft_strncmp(target, envp->line, ft_strlen_target(target)) == 0)
 			{
 				return (ft_strdup(&envp->line[i]));
+				// return (remove_spaces(ft_strdup(&envp->line[i])));
 				// return (envp->line);//target has been found
 			}
 		}
