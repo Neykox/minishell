@@ -19,13 +19,15 @@ char	*ft_copy_till_exp(char *line)
 
 	i = 0;
 	tmp = NULL;
-	while ((line[i] && line[i] != '$') || ((line[i] == '$' && (line[i + 1] == '\0' || line[i + 1] == ' '))))
+	while ((line[i] && line[i] != '$') || ((line[i] == '$' &&
+		(line[i + 1] == '\0' || line[i + 1] == ' '))))
 		i++;
 	tmp = malloc(sizeof(char) * (i + 1));
 	if (tmp == NULL)
 		return (NULL);
 	i = 0;
-	while ((line[i] && line[i] != '$') || ((line[i] == '$' && (line[i + 1] == '\0' || line[i + 1] == ' '))))
+	while ((line[i] && line[i] != '$') || ((line[i] == '$' &&
+		(line[i + 1] == '\0' || line[i + 1] == ' '))))
 	{
 		tmp[i] = line[i];
 		i++;
@@ -34,33 +36,50 @@ char	*ft_copy_till_exp(char *line)
 	return (tmp);
 }
 
+int	free_exp(int *ret, char *tmp, char *exp, int i)
+{
+	if (i == 1)
+	{
+		if (exp == NULL)
+		{
+			if (tmp != NULL)
+				free(tmp);
+			*ret = -2;
+			return (0);
+		}
+	}
+	else if (i == 2)
+	{
+		if (exp)
+			free(exp);
+		if (tmp == NULL)
+		{
+			*ret =-2;
+			return (0);
+		}
+	}
+	return (1);
+}
+
 char	*check_exp(char *value, t_env *envp, int *ret)
 {
 	int		i;
-	char *tmp = NULL;
+	char 	*tmp;
 	char	*exp;
 
 	i = 0;
+	tmp = NULL;
 	exp = NULL;
 	while (value[i])
 	{
 		if (value[i] == '$' && (value[i + 1] != '\0' && value[i + 1] != ' '))
 		{
 			exp = ft_expander(envp, &value[i + 1]);
-			if (exp == NULL)
-			{
-				if (tmp != NULL)
-					free(tmp);
-				*ret = -2;
+			if (free_exp(ret, tmp, exp, 1) == 0)
 				return (NULL);
-			}
 			tmp = ft_strjoin_utils_echo(tmp, exp);
-			free(exp);
-			if (tmp == NULL)
-			{
-				*ret =-2;
+			if (free_exp(ret, tmp, exp, 2) == 0)
 				return (NULL);
-			}
 			i++;
 			if (value[i] == '?' && (value[i + 1] == '\0' || value[i + 1] == ' ' || value[i + 1] == '$'))
 				i++;
@@ -70,20 +89,11 @@ char	*check_exp(char *value, t_env *envp, int *ret)
 		else
 		{
 			exp = ft_copy_till_exp(&value[i]);
-			if (exp == NULL)
-			{
-				if (tmp != NULL)
-					free(tmp);
-				*ret = -2;
+			if (free_exp(ret, tmp, exp, 1) == 0)
 				return (NULL);
-			}
 			tmp = ft_strjoin_utils_echo(tmp, exp);
-			free(exp);
-			if (tmp == NULL)
-			{
-				*ret = -2;
+			if (free_exp(ret, tmp, exp, 2) == 0)
 				return (NULL);
-			}
 			while ((value[i] && value[i] != '$') || ((value[i] == '$' && (value[i + 1] == '\0' || value[i + 1] == ' '))))
 				i++;
 		}
@@ -91,22 +101,17 @@ char	*check_exp(char *value, t_env *envp, int *ret)
 	if (i == 0)
 	{
 		tmp = ft_strdup(value);
-		if (tmp == NULL)
-		{
-			*ret = -2;
-			return (NULL);
-		}
+		if (free_exp(ret, tmp, exp, 2) == 0)
+				return (NULL);
 	}
 	return (tmp);
 }
 
-int    ft_get_expand(t_lxr *lxr, t_env *envp)
+int	ft_get_expand(t_lxr *lxr, t_env *envp, int ret)
 {
-    char    *tmp;
-    int		ret;
+	char	*tmp;
 
-    tmp = NULL;
-    ret = 0;
+	tmp = NULL;
 	while (lxr)
 	{
 		if (lxr->token == 0 || lxr->token == 5)
@@ -126,7 +131,6 @@ int    ft_get_expand(t_lxr *lxr, t_env *envp)
 			if (lxr->value == NULL)
 				return (-2);
 		}
-		// NEED MESSAGE D'ERREUR
 		lxr = lxr->next;
 	}
 	return (0);
@@ -147,38 +151,39 @@ int	ft_strlen_target(char *str)
 	return (i);
 }
 
-char	*remove_spaces(char *str)
+char    *remove_spaces(char *str, int i, int s, char *tmp)
 {
-	int	i;
-	int	s;
-
-	i = 0;
-	s = 0;
 	if (str == NULL)
 		return (NULL);
-	while (str[i] && str[s])
+	tmp = ft_strdup(str);
+	if (tmp == NULL)
+	{
+		free(str);
+		return (NULL);
+	}
+	while (str[s])
 	{
 		while (str[s] && str[s] == ' ')
+			s++;
+		if (str[s] && s > 0 && str[s - 1] == ' ')
+			if (i > 0 && tmp[i - 1] != ' ')
+				tmp[i++] = ' ';
+		while (str[s] && str[s] != ' ')
 		{
-			if (i > 0 && str[i] != ' ')
-			{
-				str[i] = ' ';
-				i++;
-			}
+			tmp[i] = str[s];
+			i++;
 			s++;
 		}
-		str[i] = str[s];
-		i++;
-		s++;
 	}
-	str[i] = '\0';
-	return (str);
+	tmp[i] = '\0';
+	free(str);
+	return (tmp);
 }
 
-char	*ft_expander(t_env *envp, char *target)//remove $ before sending target
+char	*ft_expander(t_env *envp, char *target)
 {
 	char	*tmp;
-	int	i;
+	int		i;
 
 	while (envp)
 	{
@@ -189,11 +194,7 @@ char	*ft_expander(t_env *envp, char *target)//remove $ before sending target
 		{
 			i++;
 			if (ft_strncmp(target, envp->line, ft_strlen_target(target)) == 0)
-			{
-				return (ft_strdup(&envp->line[i]));
-				// return (remove_spaces(ft_strdup(&envp->line[i])));
-				// return (envp->line);//target has been found
-			}
+				return (remove_spaces(ft_strdup(&envp->line[i]), 0, 0, NULL));
 		}
 		envp = envp->next;
 	}

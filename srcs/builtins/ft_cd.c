@@ -12,30 +12,11 @@
 
 #include "../../includes/minishell.h"
 
-// chdir(path_name);
-// On success, zero is returned.  On error, -1 is returned, and
-//        errno is set to indicate the error.
-
-char	*remove_eg(char *str)
-{
-	int	i;
-	char	*tmp;
-
-	i = 0;
-	tmp = NULL;
-	while (str[i] && str[i] != '=')
-		i++;
-	if ( str[i] == '=')
-		i++;
-	tmp = ft_strdup(&str[i]);
-	return (tmp);
-}
-
 char	*find_in_env(t_env *envp, char *line, int *ret)
 {
-	t_env *tmp;
+	t_env	*tmp;
 	char	*str;
-	int	eg;
+	int		eg;
 
 	eg = 0;
 	str = NULL;
@@ -56,11 +37,11 @@ char	*find_in_env(t_env *envp, char *line, int *ret)
 	return (NULL);
 }
 
-int modif_oldpwd(t_env *env)
+int	modif_oldpwd(t_env *env)
 {
-	char *line;
-	char *oldpwd[3];
-	int ret;
+	char	*line;
+	char	*oldpwd[3];
+	int		ret;
 
 	ret = 0;
 	oldpwd[0] = NULL;
@@ -74,7 +55,7 @@ int modif_oldpwd(t_env *env)
 	if (oldpwd[1] == NULL)
 		return (-2);
 	oldpwd[2] = NULL;
-	ret = ft_export(oldpwd, env);
+	ret = ft_export(oldpwd, env, NULL);
 	free(line);
 	free(oldpwd[1]);
 	if (ret == -2)
@@ -84,16 +65,16 @@ int modif_oldpwd(t_env *env)
 	return (0);
 }
 
-int modif_pwd(t_env *env)
+int	modif_pwd(t_env *env)
 {
-	char *line;
-	char *pwd[3];
-	int ret;
+	char	*line;
+	char	*pwd[3];
+	int		ret;
 
 	line = NULL;
 	ret = 0;
 	pwd[0] = NULL;
-	line = getcwd(NULL, 0);// si le malloc de getcwd fail, check errno
+	line = getcwd(NULL, 0);
 	if (line == NULL)
 		return (-2);
 	pwd[1] = ft_strjoin_utils("PWD=", line);
@@ -101,7 +82,7 @@ int modif_pwd(t_env *env)
 	if (pwd[1] == NULL)
 		return (-2);
 	pwd[2] = NULL;
-	ret = ft_export(pwd, env);
+	ret = ft_export(pwd, env, NULL);
 	free(pwd[1]);
 	if (ret == -2)
 		return (-2);
@@ -110,9 +91,26 @@ int modif_pwd(t_env *env)
 	return (0);
 }
 
+int	ft_cd_2(t_env *env, int ret)
+{
+	ret = modif_oldpwd(env);
+	if (ret == -2)
+	{
+		g_error = 1;
+		return (-2);
+	}
+	ret = modif_pwd(env);
+	if (ret == -2 || ret == -3)
+	{
+		g_error = 1;
+		return (ret);
+	}
+	return (g_error = 0);
+}
+
 int	ft_cd(char **cmds, int nb_cmds, t_env *env)
 {
-	int		ret;
+	int	ret;
 
 	ret = 0;
 	if (nb_cmds > 2)
@@ -129,17 +127,5 @@ int	ft_cd(char **cmds, int nb_cmds, t_env *env)
 	}
 	if (ret == -1)
 		return (g_error = 1);
-	ret = modif_oldpwd(env);
-	if (ret == -2)
-	{
-		g_error = 1;
-		return (-2);
-	}
-	ret = modif_pwd(env);
-	if (ret == -2 || ret == -3)
-	{
-		g_error = 1;
-		return (ret);
-	}
-	return (g_error = 0);
+	return (ft_cd_2(env, ret));
 }

@@ -12,39 +12,8 @@
 
 #include "../../includes/minishell.h"
 
-// int check_echo_flag(char **cmds, int *n)
-// {
-// 	int i;
-// 	int	j;
-
-// 	j = 1;
-// 	while (cmds[j] && cmds[j][0] == '-' && cmds[j][1] == 'n')
-// 	{
-// 		i = 2;
-// 		while (cmds[j][i] && cmds[j][i] == 'n')
-// 			i++;
-// 		if (cmds[j][i] != '\0')
-// 		{
-// 			if (j > 1)
-// 				*n = 1;
-// 			return (j);
-// 		}
-// 		j++;
-// 	}
-// 	if (cmds[1] && j == 1 && cmds[j][i] == '\0')
-// 		*n = 1;
-// 	else
-// 		*n = 0;
-// 	return (1);
-// }
-
-int check_echo_flag(char **cmds, int *n)
+int	check_echo_flag(char **cmds, int *n, int i, int j)
 {
-	int i;
-	int	j;
-
-	j = 1;
-	i = 0;
 	while (cmds[1] && cmds[j])
 	{
 		if (cmds[j][0] == '-' && cmds[j][1] == 'n')
@@ -70,45 +39,10 @@ int check_echo_flag(char **cmds, int *n)
 	return (j);
 }
 
-// int	ft_echo(t_pipes *pipes)
-// {
-// 	int	n;
-// 	int	i;
-// 	char	*ret;
-
-// 	ret = NULL;
-// 	if (pipes->cmds[1])
-// 		i = check_echo_flag(pipes->cmds[1], &n);
-// 	while (pipes->cmds[1] && pipes->cmds[i])
-// 	{
-// 		ret = ft_strjoin_utils(ret, pipes->cmds[i]);
-// 		if (ret == NULL)
-// 			return (-2);
-// 		i++;
-// 		if (pipes->cmds[i])
-// 		{
-// 			ret = ft_strjoin_utils(ret, " ");
-// 			if (ret == NULL)
-// 				return (-2);
-// 		}
-// 	}
-// 	if (n == 0 || !(pipes->cmds[1]))
-// 		ret = ft_strjoin_utils(ret, "\n");
-// 	else
-// 		ret = ft_strjoin_utils(ret, "");
-// 	if (ret == NULL)
-// 		return (-2);
-// 	write(1, ret, ft_strlen(ret));
-// 	free(ret);
-// 	return (0);
-// }
-
 char	*ft_strjoin_utils_echo(char *line, char *buf)
 {
 	char	*line2;
 
-	// if (buf == NULL)//new if
-	// 	return (NULL);
 	line2 = ft_strdup(buf);
 	if (line2 == NULL)
 		return (NULL);
@@ -150,32 +84,20 @@ char	*ft_strjoin_echo(char *s1, char *s2, int i)
 	return (ret);
 }
 
-int	ft_echo(char **cmds)//should return -2 not set ret2 to -2, ret2 is reset before exit too
+int	ft_echo(char **cmds, int i, int n, char *ret)
 {
-	int	n;
-	int	i;
-	char	*ret;
-	int	ret2;
-
-	ret = NULL;
-	i = check_echo_flag(cmds, &n);
+	i = check_echo_flag(cmds, &n, 0, 1);
 	while (cmds[1] && cmds[i])
 	{
 		ret = ft_strjoin_utils_echo(ret, cmds[i]);
 		if (ret == NULL)
-		{
-			ret2 = -2;
 			return (g_error = 1);
-		}
 		i++;
 		if (cmds[i])
 		{
 			ret = ft_strjoin_utils_echo(ret, " ");
 			if (ret == NULL)
-			{
-				ret2 = -2;
 				return (g_error = 1);
-			}
 		}
 	}
 	if (n == 0 || !(cmds[1]))
@@ -183,13 +105,10 @@ int	ft_echo(char **cmds)//should return -2 not set ret2 to -2, ret2 is reset bef
 	else
 		ret = ft_strjoin_utils_echo(ret, "");
 	if (ret == NULL)
-	{
-		ret2 = -2;
 		return (g_error = 1);
-	}
-	ret2 = write(1, ret, ft_strlen(ret));
+	i = write(1, ret, ft_strlen(ret));
 	free(ret);
-	if (ret2 < 0)
+	if (i < 0)
 		return (g_error = 1);
 	return (g_error = 0);
 }

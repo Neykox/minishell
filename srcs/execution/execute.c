@@ -137,15 +137,15 @@ int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env, int nb_pipe)
 	if (nb_cmds == 0)
 		return (1);
 	if (!(ft_strncmp(cmds[0], "echo", 4)))
-		ret = ft_echo(cmds);
+		ret = ft_echo(cmds, 0, 0, NULL);
 	else if (!(ft_strncmp(cmds[0], "unset", 5)))
-		ret = ft_unset(cmds, new_env);
+		ret = ft_unset(cmds, new_env, NULL);
 	else if (!(ft_strncmp(cmds[0], "cd", 2)))
 		ret = ft_cd(cmds, nb_cmds, new_env);
 	else if (!(ft_strncmp(cmds[0], "pwd", 3)))
 		ret = ft_pwd();
 	else if (!(ft_strncmp(cmds[0], "export", 6)))
-		ret = ft_export(cmds, new_env);
+		ret = ft_export(cmds, new_env, NULL);
 	else if (!(ft_strncmp(cmds[0], "env", 3)))
 		ret = ft_env(new_env);
 	else if (!(ft_strncmp(cmds[0], "exit", 4)))
@@ -159,7 +159,7 @@ int	builtin_checker(char **cmds, int nb_cmds, t_env *new_env, int nb_pipe)
 	return (ret);
 }
 
-int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
+int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env, struct sigaction sa)
 {
 	int	i;
 	int	j;
@@ -213,6 +213,9 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 		}
 		else if (childpid[i] == 0)
 		{
+			sa.sa_handler = SIG_DFL;
+			sigaction(SIGINT, &sa, NULL);
+			sigaction(SIGQUIT, &sa, NULL);
 			if (j < exec->nb_pipe)
 			{
 				if (dup2(pipefd[j][1], 1) < 0)
@@ -293,6 +296,16 @@ int	pipe_things_up(t_exec *exec, int **pipefd, char **envp, t_env *new_env)
 		if (WIFEXITED(status))
 		{
 			g_error = WEXITSTATUS(status);
+			if (modif_interro(new_env, ft_itoa(g_error)) == -2)
+				return (-1);
+		}
+		else if (WIFSIGNALED(status))
+		{
+			g_error = WTERMSIG(status) + 128;
+			if (g_error == 131)
+				write(1, "Quit (core dumped)\n", 20);
+			else if (g_error == 130)
+				write(1, "\n", 1);
 			if (modif_interro(new_env, ft_itoa(g_error)) == -2)
 				return (-1);
 		}
@@ -398,7 +411,7 @@ int	execute(t_exec *exec, char **envp, t_env *new_env, struct sigaction sa)
 		i++;
 	}
 	//print_pipes(exec);
-	pipe_things_up(exec, pipefd, envp, new_env);
+	pipe_things_up(exec, pipefd, envp, new_env, sa);
 	free_pipefd(pipefd, exec->nb_pipe);
 	return (0);
 }

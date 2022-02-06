@@ -184,11 +184,7 @@ char	*tweaked_strjoin(char const *s1, char const *s2, char const sep);
  */
 
 void	ft_signal_heredoc(int sig);
-// void	ft_signal_heredoc(int sig, siginfo_t *sa, void *data);
 void	ft_signal(int sig);
-// void	ft_signal(int sig, siginfo_t *sa, void *data);
-void	ft_signal2(int sig);
-// void	ft_signal2(int sig, siginfo_t *sa, void *data);
 
 /*
  * BUILTINS
@@ -197,6 +193,8 @@ void	ft_signal2(int sig);
 // int	ft_exit(int status, t_env *new_env, int nb_pipe);
 int	ft_exit(char *status, t_env *new_env, int nb_pipe);
 
+char	*remove_eg(char *str);
+
 char	*find_in_env(t_env *envp, char *line, int *ret);
 int modif_oldpwd(t_env *env);
 int	ft_cd(char **cmds, int nb_cmds, t_env *env);
@@ -204,9 +202,11 @@ int	ft_cd(char **cmds, int nb_cmds, t_env *env);
 
 char	*ft_strjoin_utils_echo(char *line, char *buf);
 char	*ft_strjoin_echo(char *s1, char *s2, int i);
-// int check_echo_flag(char *ag, int *n);
-int check_echo_flag(char **cmds, int *n);
-int	ft_echo(char **cmds);
+// int check_echo_flag(char **cmds, int *n);
+
+int check_echo_flag(char **cmds, int *n, int i, int j);
+// int	ft_echo(char **cmds);
+int	ft_echo(char **cmds, int i, int n, char *ret);
 
 int	ft_pwd(void);
 int	ft_env(t_env *envp);
@@ -214,7 +214,7 @@ int	ft_env(t_env *envp);
 char    *ft_copy_till_exp(char *line);
 // char	*check_exp(t_lxr *lxr, t_env *envp, int *ret);
 char	*check_exp(char *value, t_env *envp, int *ret);
-int	ft_get_expand(t_lxr *lxr, t_env *envp);
+int	ft_get_expand(t_lxr *lxr, t_env *envp, int ret);
 char    *ft_expander(t_env *envp, char *target);
 
 int	ft_isalpha_underscore(int c);
@@ -226,18 +226,21 @@ int not_in_env(t_env *envp, char *line);
 int add_line(t_env *envp, char *line);
 int modif_interro(t_env *envp, char *error);
 // int ft_export(t_lxr *lxr, t_env *envp);
-int	ft_export(char **cmds, t_env *envp);
+// int	ft_export(char **cmds, t_env *envp);
+int	ft_export(char **cmds, t_env *envp, char *line);
 
 void    ft_lstdelone(t_env *lst);
 // int check_value_unset(t_lxr *lxr, char **line);
 int check_value_unset(char *cmds, char **line);
 void    find_line(t_env *envp, char *line);
 // int ft_unset(t_lxr *lxr, t_env *envp);
-int ft_unset(char **cmds, t_env *envp);
+// int ft_unset(char **cmds, t_env *envp);
+int	ft_unset(char **cmds, t_env *envp, char *line);
 
 void    ft_lstclear(t_env **lst);
 void    ft_lstadd_back(t_env **alst, t_env *new);
 t_env   *ft_lstnew(char *line);
-t_env *ft_copy_env(char **envp);
+// t_env *ft_copy_env(char **envp);
+t_env	*ft_copy_env(char **envp, int i, t_env *tmp);
 
 #endif
