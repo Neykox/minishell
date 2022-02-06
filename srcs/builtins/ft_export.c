@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:41:05 by user42            #+#    #+#             */
-/*   Updated: 2022/02/04 21:08:00 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 20:52:43 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	ft_export(char **cmds, t_env *envp, char *line)
 		error = check_value_export(cmds[i], &line);
 		if (error == -2)
 			return (free_export(error, i, ret, envp));
-		if (ft_isalpha_underscore(cmds[i][0]) == 0)
+		if (ft_isalpha_underscore(cmds[i][0]) == 0 || error == -1)
 			error = write_invalid_id_export(cmds[i], &ret);
 		if (error == 0)
 			error = add_line(envp, line);

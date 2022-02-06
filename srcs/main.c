@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:53:56 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/06 20:35:09 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 20:42:42 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int ac, char **av, char **envp)
 	t_exec	*exec;
 	int		ret;
 	
-	// (void)ac;
+	(void)ac;
 	(void)av;
 	g_error = 0;
 	ret = 0;

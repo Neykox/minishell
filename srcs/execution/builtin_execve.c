@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 18:22:23 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/06 18:31:15 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/06 20:46:18 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,15 +88,15 @@ int	builtin_checker(t_exec *exec, t_env *new_env, int ret, int i)
 	if (exec->pipes[i].nb_cmds == 0)
 		return (1);
 	if (!(ft_strncmp(exec->pipes[i].cmds[0], "echo", 5)))
-		ret = ft_echo(exec->pipes[i].cmds);
+		ret = ft_echo(exec->pipes[i].cmds, 0, 0, NULL);
 	else if (!(ft_strncmp(exec->pipes[i].cmds[0], "unset", 6)))
-		ret = ft_unset(exec->pipes[i].cmds, new_env);
+		ret = ft_unset(exec->pipes[i].cmds, new_env, NULL);
 	else if (!(ft_strncmp(exec->pipes[i].cmds[0], "cd", 3)))
 		ret = ft_cd(exec->pipes[i].cmds, exec->pipes[i].nb_cmds, new_env);
 	else if (!(ft_strncmp(exec->pipes[i].cmds[0], "pwd", 4)))
 		ret = ft_pwd();
 	else if (!(ft_strncmp(exec->pipes[i].cmds[0], "export", 7)))
-		ret = ft_export(exec->pipes[i].cmds, new_env);
+		ret = ft_export(exec->pipes[i].cmds, new_env, NULL);
 	else if (!(ft_strncmp(exec->pipes[i].cmds[0], "env", 4)))
 		ret = ft_env(new_env);
 	else if (!(ft_strncmp(exec->pipes[i].cmds[0], "exit", 5)))
@@ -115,13 +115,13 @@ void	check_builtin(t_exec *exec, char *cmd, t_env *new_env)
 	int	i;
 
 	i = 0;
-	if (!(ft_strncmp(cmd, "cd", 2)) || !(ft_strncmp(cmd, "unset", 6))
-		|| !(ft_strncmp(cmd, "exit", 4)))
+	if (!(ft_strncmp(cmd, "cd", 3)) || !(ft_strncmp(cmd, "unset", 7))
+		|| !(ft_strncmp(cmd, "exit", 5)))
 	{
 		builtin_checker(exec, new_env, 0, i);
 		exec->flag = 1;
 	}
-	if (!(ft_strncmp(cmd, "export", 6)) && exec->pipes[i].cmds[1])
+	if (!(ft_strncmp(cmd, "export", 7)) && exec->pipes[i].cmds[1])
 	{
 		builtin_checker(exec, new_env, 0, i);
 		exec->flag = 1;
