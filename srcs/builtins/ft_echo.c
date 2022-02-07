@@ -32,7 +32,7 @@ int	check_echo_flag(char **cmds, int *n, int i, int j)
 		}
 		j++;
 	}
-	if (cmds[1] && (j > 1 || cmds[j][i] == '\0'))
+	if (cmds[1] && (j > 1 || (cmds[j][i] == '\0' && i > 0)))
 		*n = 1;
 	else
 		*n = 0;

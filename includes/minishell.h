@@ -101,7 +101,7 @@ void	print_fd(t_redir *redir);
  * LEXER
  */
 
-t_lxr		*lexer(t_lxr *lexer, char *line);
+t_lxr	*lexer(t_lxr *lexer, char *line);
 t_lxr	*tokenize(t_lxr *lexer, char *line, int *i);
 t_lxr	*check_notop(t_lxr *tmp, char *line, int *i);
 t_lxr	*check_quote(t_lxr *tmp, char *line, int *i, char quote);
@@ -145,7 +145,8 @@ char	**parse_commands(int nb_cmds, t_lxr *lxr, int pos);
  */
 
 int		execute(t_exec *exec, char **envp, t_env *new_env, struct sigaction sa);
-int		heredoc_implementation(t_redir *redir, struct sigaction sa, t_env *new_env);
+int		heredoc_implementation(t_redir *redir, struct sigaction sa,
+			t_env *new_env);
 
 void	close_redir_fd(t_redir *redir);
 t_redir	*open_redir_fd(t_redir *redir, struct sigaction sa, t_env *new_env);
@@ -155,7 +156,8 @@ void	check_builtin(t_exec *exec, char *cmd, t_env *new_env);
 int		builtin_checker(t_exec *exec, t_env *new_env, int ret, int i);
 void	exec_commands(char **cmds, char **envp, t_env *new_env, t_exec *exec);
 void	search_and_execute(t_env *tmp, char **envp, char **cmds);
-int		handle_dot_slash(t_exec *exec, char **envp, char **cmds, t_env *new_env);
+int		handle_dot_slash(t_exec *exec, char **envp, char **cmds,
+			t_env *new_env);
 
 int		exec_redir(t_redir *redir);
 int		open_pipe(t_exec *exec, t_env *new_env);
@@ -192,8 +194,8 @@ int		ft_notop(int c);
 char	*ft_strdup(const char *s);
 size_t	ft_strlen(char const *s);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
-char    *ft_strjoin_utils(char *line, char *buf);
-char    *ft_strjoin(char const *s1, char const *s2, int i);
+char	*ft_strjoin_utils(char *line, char *buf);
+char	*ft_strjoin(char const *s1, char const *s2, int i);
 char	**ft_split(char const *s, char c);
 char	**tweaked_split(char const *s, char c);
 void	t_free_that_string(char **tab);
@@ -234,7 +236,8 @@ int		ft_env(t_env *envp);
 
 int		write_invalid_arg_exit(char *cmds);
 void	ft_exit_free(t_exec *exec, t_env *new_env);
-int		ft_exit_failled_write(t_exec *exec, t_env *env, char *cpy, char **status);
+int		ft_exit_failled_write(t_exec *exec, t_env *env, char *cpy,
+			char **status);
 int		ft_exit_writes(t_exec *exec, t_env *env, char *cpy, char **status);
 int		ft_exit(char **status, t_env *new_env, t_exec *exec, int i);
 

@@ -58,7 +58,9 @@ int	ft_exit_writes(t_exec *exec, t_env *env, char *cpy, char **status)
 	i = 0;
 	while (status[1] && status[1][i])
 	{
-		if (ft_isnum(status[1][i]) == 0)
+		if (i == 0 && (status[1][i] == '-' || status[1][i] == '+'))
+			;
+		else if (ft_isnum(status[1][i]) == 0)
 		{
 			ft_exit_free(exec, env);
 			exit(write_invalid_arg_exit(cpy));
