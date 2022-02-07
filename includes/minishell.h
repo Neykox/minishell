@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/07 11:51:14 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/07 12:24:40 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,57 +210,69 @@ void	ft_signal(int sig);
  * BUILTINS
  */
 
-// int	ft_exit(int status, t_env *new_env, int nb_pipe);
 int	ft_exit(char *status, t_env *new_env, t_exec *exec/*int nb_pipe*/);
+
+char	*find_in_env(t_env *envp, char *line, int *ret);
+int	modif_oldpwd(t_env *env);
+int	modif_pwd(t_env *env);
+int	ft_cd_2(t_env *env, int ret);
+int	ft_cd(char **cmds, int nb_cmds, t_env *env);
 
 char	*remove_eg(char *str);
 
-char	*find_in_env(t_env *envp, char *line, int *ret);
-int modif_oldpwd(t_env *env);
-int	ft_cd(char **cmds, int nb_cmds, t_env *env);
+
+void	ft_lstclear(t_env **lst);
+void	ft_lstadd_back(t_env **alst, t_env *new);
+t_env	*ft_lstnew(char *line);
+t_env	*ft_copy_env(char **envp, int i, t_env *tmp);
 
 
+int	check_echo_flag(char **cmds, int *n, int i, int j);
 char	*ft_strjoin_utils_echo(char *line, char *buf);
 char	*ft_strjoin_echo(char *s1, char *s2, int i);
-// int check_echo_flag(char **cmds, int *n);
-
-int check_echo_flag(char **cmds, int *n, int i, int j);
-// int	ft_echo(char **cmds);
 int	ft_echo(char **cmds, int i, int n, char *ret);
 
-int	ft_pwd(void);
+
 int	ft_env(t_env *envp);
 
-char    *ft_copy_till_exp(char *line);
-// char	*check_exp(t_lxr *lxr, t_env *envp, int *ret);
+//exit
+int write_invalid_arg_exit(char *cmds);
+int	ft_isnum(int c);
+int	ft_exit(char *status, t_env *new_env, int nb_pipe);
+
+
+//expender
+char	*ft_copy_till_exp(char *line);
+int	free_exp(int *ret, char *tmp, char *exp, int i);
 char	*check_exp(char *value, t_env *envp, int *ret);
 int	ft_get_expand(t_lxr *lxr, t_env *envp, int ret);
-char    *ft_expander(t_env *envp, char *target);
+int	ft_strlen_target(char *str);
+char    *remove_spaces(char *str, int i, int s, char *tmp);
+char	*ft_expander(t_env *envp, char *target);
+
+
+int	modif_interro(t_env *envp, char *error);
+int	write_invalid_id_export(char *cmds, int *export_ret);
+int	write_no_arg(t_env *env, int ret, int eg);
+int	free_export(int error, int i, int ret, t_env *envp);
+int	ft_export(char **cmds, t_env *envp, char *line);
 
 int	ft_isalpha_underscore(int c);
 int	ft_isalnum_underscore(int c);
-char    *copy_till_eg(char *line);
-// int check_value_export(t_lxr *lxr, char **line);
-int check_value_export(char *cmds, char **line);
-int not_in_env(t_env *envp, char *line);
-int add_line(t_env *envp, char *line);
-int modif_interro(t_env *envp, char *error);
-// int ft_export(t_lxr *lxr, t_env *envp);
-// int	ft_export(char **cmds, t_env *envp);
-int	ft_export(char **cmds, t_env *envp, char *line);
+int	check_value_export(char *cmds, char **line);
+int	not_in_env(t_env *envp, char *line);
+int	add_line(t_env *envp, char *line);
 
-void    ft_lstdelone(t_env *lst);
-// int check_value_unset(t_lxr *lxr, char **line);
-int check_value_unset(char *cmds, char **line);
-void    find_line(t_env *envp, char *line);
-// int ft_unset(t_lxr *lxr, t_env *envp);
-// int ft_unset(char **cmds, t_env *envp);
+
+int	ft_pwd(void);
+
+
+int	check_size(char *env, char *line);
+void	find_line(t_env *envp, char *line);
+int	write_invalid_id_unset(char *cmds, int *unset_ret);
+int	free_unset(int error, char *line, int i);
 int	ft_unset(char **cmds, t_env *envp, char *line);
 
-void    ft_lstclear(t_env **lst);
-void    ft_lstadd_back(t_env **alst, t_env *new);
-t_env   *ft_lstnew(char *line);
-// t_env *ft_copy_env(char **envp);
-t_env	*ft_copy_env(char **envp, int i, t_env *tmp);
+int	check_value_unset(char *cmds, char **line);
 
 #endif
