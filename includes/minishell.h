@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/06 18:53:24 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/07 11:51:14 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ void	ft_signal(int sig);
  */
 
 // int	ft_exit(int status, t_env *new_env, int nb_pipe);
-int	ft_exit(char *status, t_env *new_env, int nb_pipe);
+int	ft_exit(char *status, t_env *new_env, t_exec *exec/*int nb_pipe*/);
 
 char	*remove_eg(char *str);
 

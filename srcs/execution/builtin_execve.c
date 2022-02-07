@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 18:22:23 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/06 20:46:18 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/07 11:44:43 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,8 @@ int	builtin_checker(t_exec *exec, t_env *new_env, int ret, int i)
 	else if (!(ft_strncmp(exec->pipes[i].cmds[0], "env", 4)))
 		ret = ft_env(new_env);
 	else if (!(ft_strncmp(exec->pipes[i].cmds[0], "exit", 5)))
-		ret = ft_exit(exec->pipes[i].cmds[1], new_env, exec->nb_pipe);
+		//ret = ft_exit(exec->pipes[i].cmds[1], new_env, exec->nb_pipe);
+		ret= ft_exit(exec->pipes[i].cmds[1], new_env, exec);
 	else
 		ret = -10;
 	if (ret == -3 || ret == -2 || ret == 1)
