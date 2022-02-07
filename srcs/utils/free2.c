@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 19:52:51 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/06 19:57:12 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/07 21:26:08 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ t_redir	*free_redir(t_redir *redir)
 	{
 		tmp = node;
 		node = node->next;
-		if (redir->redir)
-			free(redir->redir);
+		if (tmp->redir)
+			free(tmp->redir);
 		free(tmp);
 	}
 	redir = NULL;

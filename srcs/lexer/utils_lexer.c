@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:44:54 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/07 14:44:46 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/07 21:44:49 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,7 @@ int	malloc_quote(char *line, int j, int k, char quote)
 		k++;
 		j++;
 	}
+	if (k == -1)
+		k = 0;
 	return (k);
 }
