@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/07 16:21:04 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/07 16:24:19 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ extern int				g_error;
 typedef struct s_lxr	t_lxr;
 typedef struct s_redir	t_redir;
 
-struct	s_lxr
+struct		s_lxr
 {
 	int		token;
 	char	*value;
@@ -57,7 +57,7 @@ typedef struct s_env
 	struct s_env	*next;
 }					t_env;
 
-struct	s_redir
+struct		s_redir
 {
 	char	*redir;
 	int		type;
@@ -87,7 +87,7 @@ typedef struct s_exec
 	int		**pipefd;
 }					t_exec;
 
-int	main(int ac, char **av, char **envp);
+int		main(int ac, char **av, char **envp);
 
 /*
  * PRINT
@@ -182,6 +182,7 @@ void	free_pipefd(int **pipefd, int nb_pipe);
  * UTILS
  */
 
+int		ft_isnum(int c);
 int		ft_size_itoa(int n);
 char	*ft_reverse(char *tab);
 char	*ft_itoa(int n);
@@ -211,8 +212,6 @@ void	ft_signal(int sig);
  * BUILTINS
  */
 
-int		ft_exit(char *status, t_env *new_env, t_exec *exec/*int nb_pipe*/);
-
 char	*find_in_env(t_env *envp, char *line, int *ret);
 int		modif_oldpwd(t_env *env);
 int		modif_pwd(t_env *env);
@@ -221,36 +220,34 @@ int		ft_cd(char **cmds, int nb_cmds, t_env *env);
 
 char	*remove_eg(char *str);
 
-
 void	ft_lstclear(t_env **lst);
 void	ft_lstadd_back(t_env **alst, t_env *new);
 t_env	*ft_lstnew(char *line);
 t_env	*ft_copy_env(char **envp, int i, t_env *tmp);
-
 
 int		check_echo_flag(char **cmds, int *n, int i, int j);
 char	*ft_strjoin_utils_echo(char *line, char *buf);
 char	*ft_strjoin_echo(char *s1, char *s2, int i);
 int		ft_echo(char **cmds, int i, int n, char *ret);
 
+int		ft_env(t_env *envp);
 
-int	ft_env(t_env *envp);
+int		write_invalid_arg_exit(char *cmds);
+void	ft_exit_free(t_exec *exec, t_env *new_env);
+int		ft_exit_failled_write(t_exec *exec, t_env *env, char *cpy, char **status);
+int		ft_exit_writes(t_exec *exec, t_env *env, char *cpy, char **status);
+int		ft_exit(char **status, t_env *new_env, t_exec *exec, int i);
 
-//exit
-int 	write_invalid_arg_exit(char *cmds);
-int		ft_isnum(int c);
-//int	ft_exit(char *status, t_env *new_env, int nb_pipe);
-
-
-//expender
 char	*ft_copy_till_exp(char *line);
 int		free_exp(int *ret, char *tmp, char *exp, int i);
-char	*check_exp(char *value, t_env *envp, int *ret);
+char	*check_exp_2(char *tmp, int *ret, t_env *env, char *value);
+char	*check_exp_3(char *tmp, int *ret, char *value, int *i);
+char	*check_exp(char *value, t_env *envp, int *ret, int i);
+
 int		ft_get_expand(t_lxr *lxr, t_env *envp, int ret);
 int		ft_strlen_target(char *str);
-char    *remove_spaces(char *str, int i, int s, char *tmp);
+char	*remove_spaces(char *str, int i, int s, char *tmp);
 char	*ft_expander(t_env *envp, char *target);
-
 
 int		modif_interro(t_env *envp, char *error);
 int		write_invalid_id_export(char *cmds, int *export_ret);
@@ -264,16 +261,14 @@ int		check_value_export(char *cmds, char **line);
 int		not_in_env(t_env *envp, char *line);
 int		add_line(t_env *envp, char *line);
 
-
 int		ft_pwd(void);
-
 
 int		check_size(char *env, char *line);
 void	find_line(t_env *envp, char *line);
-int	write_invalid_id_unset(char *cmds, int *unset_ret);
-int	free_unset(int error, char *line, int i);
-int	ft_unset(char **cmds, t_env *envp, char *line);
+int		write_invalid_id_unset(char *cmds, int *unset_ret);
+int		free_unset(int error, char *line, int i);
+int		ft_unset(char **cmds, t_env *envp, char *line);
 
-int	check_value_unset(char *cmds, char **line);
+int		check_value_unset(char *cmds, char **line);
 
 #endif
