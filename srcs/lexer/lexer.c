@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 15:19:46 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/01 17:22:12 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/07 14:33:42 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ t_lxr	*lexer(t_lxr *lexer, char *line)
 	i = 0;
 	if (!line[i])
 		lexer = tokenize(lexer, line, &i);
-	while (line[i])
+	while (line && line[i])
 	{
 		lexer = tokenize(lexer, line, &i);
 		if (lexer == NULL)

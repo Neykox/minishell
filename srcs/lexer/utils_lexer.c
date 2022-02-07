@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:44:54 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/06 13:03:59 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/07 14:44:46 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,15 @@ void	print_parsing_error(char *value, int ret)
 		write(2, "'", 1);
 		write(2, "\n", 1);
 	}
+}
+
+int	malloc_quote(char *line, int j, int k, char quote)
+{
+	j++;
+	while (line[j] != quote && line[j])
+	{
+		k++;
+		j++;
+	}
+	return (k);
 }
