@@ -29,7 +29,7 @@ void	check_evar(char **line, t_env *new_env)
 
 	if (*line)
 	{
-		tmp = check_exp(*line, new_env, &ret);
+		tmp = check_exp(*line, new_env, &ret, 0);
 		free(*line);
 		*line = ft_strdup(tmp);
 		free(tmp);

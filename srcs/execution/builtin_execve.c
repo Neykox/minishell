@@ -101,7 +101,7 @@ int	builtin_checker(t_exec *exec, t_env *new_env, int ret, int i)
 		ret = ft_env(new_env);
 	else if (!(ft_strncmp(exec->pipes[i].cmds[0], "exit", 5)))
 		//ret = ft_exit(exec->pipes[i].cmds[1], new_env, exec->nb_pipe);
-		ret= ft_exit(exec->pipes[i].cmds[1], new_env, exec);
+		ret= ft_exit(exec->pipes[i].cmds, new_env, exec, 0);
 	else
 		ret = -10;
 	if (ret == -3 || ret == -2 || ret == 1)
