@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 13:04:50 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/06 13:12:00 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/08 14:09:22 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,35 @@ int	check_spaces_in_cmd(char **cmds, int nb_cmds)
 	return (0);
 }
 
-char	**clc(char **cmds, int *nb_cmds)
+int	do_we_split(char *tmp, int *nb_cmds, int *tokens)
+{
+	int	i;
+
+	i = 0;
+	while (i < *(nb_cmds))
+	{
+		if (tokens[i] == DQUOTE || tokens[i] == SQUOTE)
+		{
+			free(tmp);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+char	**clc(char **cmds, int *nb_cmds, int *tokens)
 {
 	char	*tmp;
 	char	**result;
 	int		i;
 
-	i = 1;
 	tmp = ft_strdup(cmds[0]);
 	if (tmp == NULL)
 		return (NULL);
+	if (do_we_split(tmp, nb_cmds, tokens) == 1)
+		return (cmds);
+	i = 1;
 	while (i < *(nb_cmds) && cmds[i])
 	{
 		tmp = tweaked_strjoin(tmp, cmds[i], ' ');
@@ -50,7 +69,6 @@ char	**clc(char **cmds, int *nb_cmds)
 			return (NULL);
 		i++;
 	}
-	i = 0;
 	t_free_that_string(cmds);
 	result = ft_split(tmp, ' ');
 	free(tmp);
@@ -74,7 +92,7 @@ t_exec	*check_cmds(t_exec *exec)
 		ret = check_spaces_in_cmd(exec->pipes[i].cmds, exec->pipes[i].nb_cmds);
 		if (ret)
 			exec->pipes[i].cmds = clc(exec->pipes[i].cmds,
-					&exec->pipes[i].nb_cmds);
+					&exec->pipes[i].nb_cmds, exec->pipes[i].tokens);
 		i++;
 	}
 	return (exec);

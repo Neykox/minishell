@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 15:54:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/07 21:49:22 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/08 14:28:04 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct s_pipes
 	int		nb_dredir_left;
 	t_redir	*redir;
 	char	**cmds;
-	int		token;
+	int		*tokens;
 }				t_pipes;
 
 typedef struct s_exec
@@ -94,7 +94,7 @@ int		main(int ac, char **av, char **envp);
  * PRINT
  */
 
-void			print_lxr(t_lxr *lxr);
+void	print_lxr(t_lxr *lxr);
 void	print_pipes(t_exec *exec);
 void	print_fd(t_redir *redir);
 
@@ -133,13 +133,19 @@ t_exec	*check_cmds(t_exec *exec);
 t_lxr	*move_tmp(t_lxr *tmp, int pos);
 
 int		check_spaces_in_cmd(char **cmds, int nb_cmds);
-char	**clc(char **cmds, int *nb_cmds);
+char	**clc(char **cmds, int *nb_cmds, int *tokens);
 t_exec	*check_cmds(t_exec *exec);
 
 int		count_commands(t_lxr *lxr, int pos, int ret);
 char	**find_cmds_cont(t_lxr **tmp, char **cmds, int *i);
 char	**find_commands(t_lxr *tmp, char **cmds, int *i);
 char	**parse_commands(int nb_cmds, t_lxr *lxr, int pos);
+
+int		*find_tokens_cont(t_lxr **tmp, int *tokens, int *i);
+int		*find_tokens(t_lxr *tmp, int *tokens, int *i);
+int		*parse_tokens(int nb_cmds, t_lxr *lxr, int pos);
+
+t_exec	*init_exec(t_exec *exec);
 
 /*
  * EXECUTION

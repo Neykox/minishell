@@ -1,6 +1,6 @@
 SRCS = 	srcs/main.c \
 		srcs/lexer/lexer.c srcs/lexer/check_quote_notop.c srcs/lexer/syntax_checker.c srcs/lexer/utils_lexer.c \
-		srcs/parsing/parser.c srcs/parsing/utils_parsing.c srcs/parsing/check_cmds.c srcs/parsing/commands.c \
+		srcs/parsing/parser.c srcs/parsing/utils_parsing.c srcs/parsing/check_cmds.c srcs/parsing/commands.c srcs/parsing/tokens.c \
 		srcs/execution/execute.c srcs/execution/heredoc.c srcs/execution/init.c srcs/execution/builtin_execve.c srcs/execution/child_process.c srcs/execution/exec_utils.c \
 		srcs/utils/ft_notop.c srcs/utils/ft_strdup.c srcs/utils/print.c srcs/utils/ft_strlen.c  srcs/utils/ft_strncmp.c srcs/utils/ft_str_join_utils.c srcs/utils/tweaked_strjoin.c srcs/utils/ft_memmove.c srcs/utils/ft_split.c srcs/utils/tweaked_split.c srcs/utils/tweaked_strdup.c srcs/utils/ft_add_char.c srcs/utils/free1.c srcs/utils/free2.c srcs/utils/ft_memset.c srcs/utils/ft_atoi.c srcs/utils/ft_itoa.c srcs/utils/ft_isnum.c \
 		srcs/signaux/prompt_sig.c \

@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 18:33:25 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/07 21:06:14 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/08 14:38:48 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int	open_pipe(t_exec *exec, t_env *new_env)
 	{
 		if (pipe(exec->pipefd[i]) == -1)
 		{
-			printf("pipe a foire: %d\n", errno);
 			g_error = 1;
 			if (modif_interro(new_env, ft_itoa(g_error)) == -2)
 				return (-1);
