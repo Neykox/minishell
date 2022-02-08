@@ -21,7 +21,7 @@ int	ft_get_expand(t_lxr *lxr, t_env *envp, int ret)
 	{
 		if (lxr->token == 0 || lxr->token == 5)
 		{
-			tmp = check_exp(lxr->value, envp, &ret, 0);
+			tmp = check_exp(lxr->value, envp, &ret, 0, lxr->token);
 			if (ret == -2)
 			{
 				if (tmp != NULL)
@@ -40,6 +40,35 @@ int	ft_get_expand(t_lxr *lxr, t_env *envp, int ret)
 	}
 	return (0);
 }
+
+// int	ft_get_expand(t_lxr *lxr, t_env *envp, int ret)
+// {
+// 	char	*tmp;
+
+// 	tmp = NULL;
+// 	while (lxr)
+// 	{
+// 		if (lxr->token == 0 || lxr->token == 5)
+// 		{
+// 			tmp = check_exp(lxr->value, envp, &ret, 0);
+// 			if (ret == -2)
+// 			{
+// 				if (tmp != NULL)
+// 					free(tmp);
+// 				return (-2);
+// 			}
+// 			if (lxr->value[0] == '$' && tmp[0] == '\0')
+// 				lxr->token = -2;
+// 			free(lxr->value);
+// 			lxr->value = ft_strdup(tmp);
+// 			free(tmp);
+// 			if (lxr->value == NULL)
+// 				return (-2);
+// 		}
+// 		lxr = lxr->next;
+// 	}
+// 	return (0);
+// }
 
 int	ft_strlen_target(char *str)
 {
@@ -85,7 +114,7 @@ char	*remove_spaces(char *str, int i, int s, char *tmp)
 	return (tmp);
 }
 
-char	*ft_expander(t_env *envp, char *target)
+char	*ft_expander(t_env *envp, char *target, int tokem)
 {
 	char	*tmp;
 	int		i;
@@ -99,8 +128,11 @@ char	*ft_expander(t_env *envp, char *target)
 		{
 			i++;
 			if (ft_strncmp(target, envp->line, ft_strlen_target(target)) == 0)
-				// return (remove_spaces(ft_strdup(&envp->line[i]), 0, 0, NULL));
+			{
+				if (tokem == 0)
+					return (remove_spaces(ft_strdup(&envp->line[i]), 0, 0, NULL));
 				return (ft_strdup(&envp->line[i]));
+			}
 		}
 		envp = envp->next;
 	}

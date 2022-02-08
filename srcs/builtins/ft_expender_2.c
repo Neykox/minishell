@@ -77,7 +77,7 @@ char	*ft_strjoin_utils_exp(char *line, char *buf)
 	return (line);
 }
 
-char	*check_exp_2(char *tmp, int *ret, t_env *env, char *value)
+char	*check_exp_2(char *tmp, int *ret, t_env *env, char *value, int token)
 {
 	char	*exp;
 	// int		i;
@@ -85,7 +85,7 @@ char	*check_exp_2(char *tmp, int *ret, t_env *env, char *value)
 
 	// i = 0;
 	// temp = 0;
-	exp = ft_expander(env, value);
+	exp = ft_expander(env, value, token);
 	if (free_exp(ret, tmp, exp, 1) == 0)
 		return (NULL);
 	if (exp[0] == ' ')
@@ -127,7 +127,7 @@ char	*check_exp_3(char *tmp, int *ret, char *value, int *i)
 	return (tmp);
 }
 
-char	*check_exp(char *value, t_env *envp, int *ret, int i)
+char	*check_exp(char *value, t_env *envp, int *ret, int i, int token)
 {
 	char	*tmp;
 
@@ -136,7 +136,7 @@ char	*check_exp(char *value, t_env *envp, int *ret, int i)
 	{
 		if (value[i] == '$' && (value[i + 1] != '\0' && value[i + 1] != ' '))
 		{
-			tmp = check_exp_2(tmp, ret, envp, &value[i + 1]);
+			tmp = check_exp_2(tmp, ret, envp, &value[i + 1], token);
 			i++;
 			if (value[i] == '?' && (value[i + 1] == '\0'
 					|| value[i + 1] == ' ' || value[i + 1] == '$'))

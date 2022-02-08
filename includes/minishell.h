@@ -48,6 +48,7 @@ struct		s_lxr
 {
 	int		token;
 	char	*value;
+	char *tmp;
 	t_lxr	*next;
 };
 
@@ -250,14 +251,14 @@ int		ft_exit(char **status, t_env *new_env, t_exec *exec, int i);
 
 char	*ft_copy_till_exp(char *line);
 int		free_exp(int *ret, char *tmp, char *exp, int i);
-char	*check_exp_2(char *tmp, int *ret, t_env *env, char *value);
+char	*check_exp_2(char *tmp, int *ret, t_env *env, char *value, int token);
 char	*check_exp_3(char *tmp, int *ret, char *value, int *i);
-char	*check_exp(char *value, t_env *envp, int *ret, int i);
+char	*check_exp(char *value, t_env *envp, int *ret, int i, int token);
 
 int		ft_get_expand(t_lxr *lxr, t_env *envp, int ret);
 int		ft_strlen_target(char *str);
 char	*remove_spaces(char *str, int i, int s, char *tmp);
-char	*ft_expander(t_env *envp, char *target);
+char	*ft_expander(t_env *envp, char *target, int tokem);
 
 int		modif_interro(t_env *envp, char *error);
 int		write_invalid_id_export(char *cmds, int *export_ret);
