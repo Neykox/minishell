@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 18:14:20 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/06 14:39:33 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/08 14:27:15 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,7 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 	int	i;
 
 	i = -1;
-	exec->save = 0;
-	exec->flag = 0;
-	exec->status = 0;
+	exec = init_exec(exec);
 	exec->nb_pipe = count_token(lxr, PIPE, 0, 0);
 	exec->pipes = malloc(sizeof(t_pipes) * (exec->nb_pipe + 1));
 	if (!(exec->pipes))
@@ -107,6 +105,7 @@ int	parse_values(t_lxr *lxr, t_exec *exec)
 		exec->pipes[i].redir = parse_redir(lxr, i, exec->pipes[i].redir,
 				exec->pipes[i]);
 		exec->pipes[i].nb_cmds = count_commands(lxr, i, 0);
+		exec->pipes[i].tokens = parse_tokens(exec->pipes[i].nb_cmds, lxr, i);
 		if (exec->pipes[i].nb_cmds)
 			exec->pipes[i].cmds = parse_commands(exec->pipes[i].nb_cmds,
 					lxr, i);

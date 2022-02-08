@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:44:54 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/07 21:44:49 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/08 14:27:06 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,12 @@ int	malloc_quote(char *line, int j, int k, char quote)
 	if (k == -1)
 		k = 0;
 	return (k);
+}
+
+t_exec	*init_exec(t_exec *exec)
+{
+	exec->save = 0;
+	exec->flag = 0;
+	exec->status = 0;
+	return (exec);
 }

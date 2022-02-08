@@ -6,7 +6,7 @@
 /*   By: nel-masr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 14:07:11 by nel-masr          #+#    #+#             */
-/*   Updated: 2022/02/06 19:55:38 by nel-masr         ###   ########.fr       */
+/*   Updated: 2022/02/08 13:40:56 by nel-masr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,10 @@ void	free_exec(t_exec *exec)
 	while (i <= exec->nb_pipe)
 	{
 		if (exec->pipes[i].nb_cmds)
+		{
 			free_cmds(exec->pipes[i].cmds, exec->pipes[i].nb_cmds);
+			free(exec->pipes[i].tokens);
+		}
 		nb_redir = exec->pipes[i].nb_redir_stdin
 			+ exec->pipes[i].nb_redir_stdout
 			+ exec->pipes[i].nb_dredir_right
