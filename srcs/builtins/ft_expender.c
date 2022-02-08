@@ -99,7 +99,8 @@ char	*ft_expander(t_env *envp, char *target)
 		{
 			i++;
 			if (ft_strncmp(target, envp->line, ft_strlen_target(target)) == 0)
-				return (remove_spaces(ft_strdup(&envp->line[i]), 0, 0, NULL));
+				// return (remove_spaces(ft_strdup(&envp->line[i]), 0, 0, NULL));
+				return (ft_strdup(&envp->line[i]));
 		}
 		envp = envp->next;
 	}

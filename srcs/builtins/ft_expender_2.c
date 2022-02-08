@@ -61,13 +61,50 @@ int	free_exp(int *ret, char *tmp, char *exp, int i)
 	return (1);
 }
 
+char	*ft_strjoin_utils_exp(char *line, char *buf)
+{
+	char	*line2;
+
+	line2 = ft_strdup(buf);
+	if (line2 == NULL)
+		return (NULL);
+	if (line == NULL)
+		return (line2);
+	line = ft_strjoin_echo(line, line2, 0);
+	free (line2);
+	if (line == NULL)
+		return (NULL);
+	return (line);
+}
+
 char	*check_exp_2(char *tmp, int *ret, t_env *env, char *value)
 {
 	char	*exp;
+	// int		i;
+	// int temp;
 
+	// i = 0;
+	// temp = 0;
 	exp = ft_expander(env, value);
 	if (free_exp(ret, tmp, exp, 1) == 0)
 		return (NULL);
+	if (exp[0] == ' ')
+	{
+		tmp = ft_strjoin_utils_echo(tmp, " ");
+		if (tmp == NULL)
+		{
+			free(exp);
+			return (NULL);
+		}
+		// if (value[i] == '?' && (value[i + 1] == '\0'
+		// 			|| value[i + 1] == ' ' || value[i + 1] == '$'))
+		// 	i++;
+		// while (ft_isalnum_underscore(value[i]) == 1)
+		// 	i++;
+	}
+	// while (exp[temp])
+	// 	temp++;
+	// if ((temp > 0 && exp[temp - 1] == ' ') || (exp[0] == '\0' && value[i] == ' '))
 	tmp = ft_strjoin_utils_echo(tmp, exp);
 	if (free_exp(ret, tmp, exp, 2) == 0)
 		return (NULL);
